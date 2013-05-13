@@ -1,4 +1,4 @@
-.field-box, .field-u_otros {
+.field-box, .field-u_otros,.field-ados_los_c, .field-sep_edif  {
 
     position: relative;
     float: left;
@@ -6,4 +6,3 @@
     margin-left: 5%;
 
 }
-

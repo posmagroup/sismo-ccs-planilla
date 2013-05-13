@@ -5,6 +5,7 @@ from models import Direccion
 from models import Condicion_Terreno
 from models import Tipo_Estructural
 from models import Uso
+from  models import Irregularidad
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
@@ -59,9 +60,34 @@ class UsoAdmin(admin.ModelAdmin):
         }
 
 
+
+class IrregularidadAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('a_viga_alt','p_entrep_b'),
+                ('p_column_c','disc_eje_c'),
+                ('abert_losa', 'f_asim_mas'),
+                ('aus_mur_1d','ados_los_l'),
+                ('ados_los_c'),
+                ('sep_edif'),
+
+            )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+
 admin.site.register(Entrevistado)
 admin.site.register(Direccion)
 admin.site.register(Uso,UsoAdmin)
+admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstrcuturalAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
 

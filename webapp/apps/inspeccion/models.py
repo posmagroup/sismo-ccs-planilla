@@ -195,6 +195,48 @@ class  Uso(models.Model):
         return u' Usos, consultar para mas detalles. '
 
 
+class Irregularidad(models.Model):
+
+
+    """
+    Purpose:
+        Defines a  model for handling irregularity
+         to include in the inspection model
+
+    Features:
+        1) sep_edif field is mandatory.
+    """
+
+    a_viga_alt = models.BooleanField("Ausencia de vigas altas en una o dos direcciones",default= False)
+    p_entrep_b = models.BooleanField("Presencia de al menos  un entrepiso debil ó blando",default= False)
+    p_column_c = models.BooleanField("Presencia de columnas cortas",default= False)
+    disc_eje_c = models.BooleanField("Discontinuidad de ejes de columnas",default= False)
+    abert_losa = models.BooleanField("Aberturas significativas en losas",default= False)
+    f_asim_mas = models.BooleanField("Fuerte asimetría de masas o rigideces en planta",default= False)
+    aus_mur_1d = models.BooleanField("Ausencia de muros en una dirección",default= False)
+    ados_los_l = models.BooleanField("Adosamiento: losa contra losa",default= False)
+    ados_los_c = models.BooleanField("Adosamiento:losa contra columna",default= False)
+    sep_edif = models.IntegerField("Separacion entre edifcio (cm)",default=0)
+
+
+    class  Meta:
+
+        verbose_name ='Irregularidad'
+        verbose_name_plural ='Irregularidades'
+
+    def __unicode__(self):
+
+        return u' Irregularidades, consultar para mas detalles. '
+
+
+
+
+
+
+
+
+
+
 
 
 
