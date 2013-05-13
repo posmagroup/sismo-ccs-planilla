@@ -1,10 +1,9 @@
-.field-box{
+.field-box, .field-u_otros {
 
     position: relative;
     float: left;
     width: 500px;
     margin-left: 5%;
-
 
 }
 

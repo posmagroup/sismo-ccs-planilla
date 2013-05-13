@@ -156,6 +156,49 @@ class Tipo_Estructural(models.Model):
 
 
 
+class  Uso(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling uses
+         to include in the inspection model
+
+    Features:
+        1) All fields are not mandatory.
+    """
+    u_gubernam = models.BooleanField("Uso Gubernamental",default= False)
+    u_bomberos = models.BooleanField("Uso Bomberos",default= False)
+    u_pr_civil = models.BooleanField("Uso Protección Civil",default= False)
+    u_policial = models.BooleanField("Uso Policial",default= False)
+    u_militar = models.BooleanField("Uso Militar",default= False)
+    u_med_asis = models.BooleanField("Uso Médico Asistencial",default= False)
+    u_educativ = models.BooleanField("Uso Educativo",default= False)
+    u_viv_pop = models.BooleanField("Uso Vivienda Popular",default= False)
+    u_viv_unif = models.BooleanField("Uso Vivienda Unifamiliar",default= False)
+    u_viv_mult = models.BooleanField("Uso Vivienda Multifamiliar",default= False)
+    u_dep_recr = models.BooleanField("Uso Deportivo-Recreativo",default= False)
+    u_cultural = models.BooleanField("Uso Cultural",default= False)
+    u_industri = models.BooleanField("Uso Industrial",default= False)
+    u_comercia = models.BooleanField("Uso Comercial",default= False)
+    u_oficina = models.BooleanField("Uso Oficina",default= False)
+    u_religios = models.BooleanField("Uso Religioso",default= False)
+    u_otros = models.BooleanField("Otros Usos",default= False)
+
+
+    class  Meta:
+
+        verbose_name ='Uso'
+        verbose_name_plural ='Usos'
+
+    def __unicode__(self):
+
+        return u' Usos, consultar para mas detalles. '
+
+
+
+
+
+
 
 
 
