@@ -6,6 +6,7 @@ from models import Condicion_Terreno
 from models import Tipo_Estructural
 from models import Uso
 from  models import Irregularidad
+from  models import Grado_Deterioro
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
@@ -83,9 +84,27 @@ class IrregularidadAdmin(admin.ModelAdmin):
         }
 
 
+class Grado_DeterioroAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('ec_agri_es','ea_corr_ac'),
+                ('agrietamie','e_mantenim'),
+
+
+            )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
 
 admin.site.register(Entrevistado)
 admin.site.register(Direccion)
+admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstrcuturalAdmin)

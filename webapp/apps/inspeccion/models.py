@@ -232,9 +232,47 @@ class Irregularidad(models.Model):
 
 
 
+class Grado_Deterioro(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling damage
+         to include in the inspection model
+
+    Features:
+        1) sep_edif field is mandatory.
+    """
+
+    # Defining possible choices
+    # for the ec_agri_es,ea_corr_ac,agrietamie fields in the model.
+    GRADO_DETERIORO_CHOICES = (
+        ('1', 'Ninguno'),
+        ('2', 'Moderado'),
+        ('3', 'Severo')
+    )
+
+    # Defining possible choices
+    # for the e_mantenim field in the model.
+    GRADO_DETERIORO_MANTENIMIENTO_CHOICES = (
+        ('1', 'Bueno'),
+        ('2', 'Regular'),
+        ('3', 'Bajo')
+    )
+
+    ec_agri_es = models.CharField("Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    ea_corr_ac = models.CharField("Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    agrietamie = models.CharField("Agrietamiento en paredes de relleno",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    e_mantenim = models.CharField("Estado general de mantenimiento",max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
 
 
+    class  Meta:
 
+        verbose_name ='Grado de Deterioro'
+        verbose_name_plural ='Grados de Deterioro'
+
+    def __unicode__(self):
+
+        return u' Grados de Deterioro, consultar para mas detalles. '
 
 
 
