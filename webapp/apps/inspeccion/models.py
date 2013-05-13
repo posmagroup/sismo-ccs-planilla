@@ -112,3 +112,60 @@ class Condicion_Terreno(models.Model):
         return u' Condicion: Forma del Terreno %s ' % (self.forma_terr)
 
 
+
+
+class Tipo_Estructural(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling structures types
+         to include in the inspection model
+
+    Features:
+        1) All fields are not mandatory.
+    """
+    pca = models.BooleanField("Pórticos de concreto armado",default= False)
+    pcap = models.BooleanField("Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",default= False)
+    mca2d = models.BooleanField("Muros de concreto armado en dos direcciones horizontales",default= False)
+    mca1d = models.BooleanField("Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel",default= False)
+    pa = models.BooleanField("Pórticos de acero",default= False)
+    papt = models.BooleanField("Pórticos de acero con perfiles tubulares",default= False)
+    pad = models.BooleanField("Pórticos de acero diagonalizados",default= False)
+    pac = models.BooleanField("Pórticos de acero con cerchas",default= False)
+    pre = models.BooleanField("Sistemas pre-fabricados a base de grandes paneles o de pórticos",default= False)
+    mmc = models.BooleanField("Sistemas cuyos elementos portantes sean muros de mampostería confinada",default= False)
+    mmnc = models.BooleanField("Sistemas cuyos elementos portantes sean muros de mampostería no confinada",default= False)
+    vb = models.BooleanField("Viviendas de bahareque de un piso",default= False)
+    vcp = models.BooleanField("Viviendas de construcción precaria (tiera, madera, zinc, etc.)",default= False)
+    n_pisos_cf = models.BooleanField("N° de pisos confinados",default= False)
+    n_pisos_nc = models.BooleanField("N° de pisos NO confinados",default= False)
+    n_pisos_bc = models.BooleanField("N° pisos sistema mixto de baja calidad",default= False)
+    esq_planta = models.BooleanField("Esquema en  Planta",default= False)
+    esq_elevac = models.BooleanField("Esquema en Elevacion",default= False)
+
+    class  Meta:
+
+        verbose_name ='Tipo Estructural'
+        verbose_name_plural ='Tipos Estructurales'
+
+    def __unicode__(self):
+
+        return u' Tipo Estructural, consultar para mas detalles. '
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 
-from usuario.models import  UserProfile
+from models import  UserProfile
 
 
 
