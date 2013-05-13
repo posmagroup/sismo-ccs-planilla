@@ -13,10 +13,10 @@ class Entrevistado(models.Model):
         1) All fields are mandatory.
     """
 
-    cod_ocup = models.CharField("Relacion con la Edif",max_length=100)
-    nom_entrev = models.CharField("Nombre y apellido",max_length=100)
-    tlf_entrev = models.CharField("Telefono",max_length=100)
-    email_entr = models.EmailField("Correo Electronico",max_length=100)
+    cod_ocup = models.CharField(verbose_name="Relacion con la Edif",help_text="descripcion",max_length=100)
+    nom_entrev = models.CharField(verbose_name="Nombre y apellido",help_text="descripcion",max_length=100)
+    tlf_entrev = models.CharField(verbose_name="Telefono",help_text="descripcion",max_length=100)
+    email_entr = models.EmailField(verbose_name="Correo Electronico",help_text="descripcion",max_length=100)
 
     class  Meta:
 
@@ -39,9 +39,9 @@ class Direccion(models.Model):
         1) All fields are mandatory.
     """
 
-    calle = models.CharField("Calle",max_length=100)
-    avenida = models.CharField("Avenida",max_length=100)
-    pto_referencia = models.CharField("Punto de referencia",max_length=100)
+    calle = models.CharField(verbose_name="Calle",help_text="descripcion",max_length=100)
+    avenida = models.CharField(verbose_name="Avenida",help_text="descripcion",max_length=100)
+    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="descripcion",max_length=100)
 
     class  Meta:
 
@@ -94,12 +94,12 @@ class Condicion_Terreno(models.Model):
         ('2',  'Mayor a H del talud')
         )
 
-    forma_terr = models.CharField("Forma del terreno",max_length=1,choices=FORMA_TERRENO_CHOICES)
-    pend_terr =  models.CharField("Pendiente del terreno",max_length=1, choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
-    l_m_ladera = models.BooleanField("Localizada sobre la mitad superior de la ladera",default= False, blank=True)
-    pend_talud = models.CharField("Pendiente del talud",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
-    sep_talud = models.CharField("Separacion del talud",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
-    drenaje = models.BooleanField("Drenajes",default= False, blank=False)
+    forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="descripcion",choices=FORMA_TERRENO_CHOICES)
+    pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="descripcion",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
+    l_m_ladera = models.BooleanField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="descripcion",default= False, blank=True)
+    pend_talud = models.CharField(verbose_name="Pendiente del talud",help_text="descripcion",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
+    sep_talud = models.CharField(verbose_name="Separacion del talud",help_text="descripcion",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
+    drenaje = models.BooleanField(verbose_name="Drenajes",help_text="descripcion",default= False, blank=False)
 
 
     class  Meta:
@@ -124,24 +124,24 @@ class Tipo_Estructural(models.Model):
     Features:
         1) All fields are not mandatory.
     """
-    pca = models.BooleanField("Pórticos de concreto armado",default= False)
-    pcap = models.BooleanField("Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",default= False)
-    mca2d = models.BooleanField("Muros de concreto armado en dos direcciones horizontales",default= False)
-    mca1d = models.BooleanField("Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel",default= False)
-    pa = models.BooleanField("Pórticos de acero",default= False)
-    papt = models.BooleanField("Pórticos de acero con perfiles tubulares",default= False)
-    pad = models.BooleanField("Pórticos de acero diagonalizados",default= False)
-    pac = models.BooleanField("Pórticos de acero con cerchas",default= False)
-    pre = models.BooleanField("Sistemas pre-fabricados a base de grandes paneles o de pórticos",default= False)
-    mmc = models.BooleanField("Sistemas cuyos elementos portantes sean muros de mampostería confinada",default= False)
-    mmnc = models.BooleanField("Sistemas cuyos elementos portantes sean muros de mampostería no confinada",default= False)
-    vb = models.BooleanField("Viviendas de bahareque de un piso",default= False)
-    vcp = models.BooleanField("Viviendas de construcción precaria (tiera, madera, zinc, etc.)",default= False)
-    n_pisos_cf = models.BooleanField("N° de pisos confinados",default= False)
-    n_pisos_nc = models.BooleanField("N° de pisos NO confinados",default= False)
-    n_pisos_bc = models.BooleanField("N° pisos sistema mixto de baja calidad",default= False)
-    esq_planta = models.BooleanField("Esquema en  Planta",default= False)
-    esq_elevac = models.BooleanField("Esquema en Elevacion",default= False)
+    pca = models.BooleanField(verbose_name="Pórticos de concreto armado",help_text="descripcion",default= False)
+    pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",help_text="descripcion",default= False)
+    mca2d = models.BooleanField(verbose_name="Muros de concreto armado en dos direcciones horizontales",help_text="descripcion",default= False)
+    mca1d = models.BooleanField(verbose_name="Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel",help_text="descripcion",default= False)
+    pa = models.BooleanField(verbose_name="Pórticos de acero",help_text="descripcion",default= False)
+    papt = models.BooleanField(verbose_name="Pórticos de acero con perfiles tubulares",help_text="descripcion",default= False)
+    pad = models.BooleanField(verbose_name="Pórticos de acero diagonalizados",help_text="descripcion",default= False)
+    pac = models.BooleanField(verbose_name="Pórticos de acero con cerchas",help_text="descripcion",default= False)
+    pre = models.BooleanField(verbose_name="Sistemas pre-fabricados a base de grandes paneles o de pórticos",help_text="descripcion",default= False)
+    mmc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería confinada",help_text="descripcion",default= False)
+    mmnc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería no confinada",help_text="descripcion",default= False)
+    vb = models.BooleanField(verbose_name="Viviendas de bahareque de un piso",help_text="descripcion",default= False)
+    vcp = models.BooleanField(verbose_name="Viviendas de construcción precaria (tiera, madera, zinc, etc.)",help_text="descripcion",default= False)
+    n_pisos_cf = models.BooleanField(verbose_name="N° de pisos confinados",help_text="descripcion",default= False)
+    n_pisos_nc = models.BooleanField(verbose_name="N° de pisos NO confinados",help_text="descripcion",default= False)
+    n_pisos_bc = models.BooleanField(verbose_name="N° pisos sistema mixto de baja calidad",help_text="descripcion",default= False)
+    esq_planta = models.BooleanField(verbose_name="Esquema en  Planta",help_text="descripcion",default= False)
+    esq_elevac = models.BooleanField(verbose_name="Esquema en Elevacion",help_text="descripcion",default= False)
 
     class  Meta:
 
@@ -166,23 +166,23 @@ class  Uso(models.Model):
     Features:
         1) All fields are not mandatory.
     """
-    u_gubernam = models.BooleanField("Uso Gubernamental",default= False)
-    u_bomberos = models.BooleanField("Uso Bomberos",default= False)
-    u_pr_civil = models.BooleanField("Uso Protección Civil",default= False)
-    u_policial = models.BooleanField("Uso Policial",default= False)
-    u_militar = models.BooleanField("Uso Militar",default= False)
-    u_med_asis = models.BooleanField("Uso Médico Asistencial",default= False)
-    u_educativ = models.BooleanField("Uso Educativo",default= False)
-    u_viv_pop = models.BooleanField("Uso Vivienda Popular",default= False)
-    u_viv_unif = models.BooleanField("Uso Vivienda Unifamiliar",default= False)
-    u_viv_mult = models.BooleanField("Uso Vivienda Multifamiliar",default= False)
-    u_dep_recr = models.BooleanField("Uso Deportivo-Recreativo",default= False)
-    u_cultural = models.BooleanField("Uso Cultural",default= False)
-    u_industri = models.BooleanField("Uso Industrial",default= False)
-    u_comercia = models.BooleanField("Uso Comercial",default= False)
-    u_oficina = models.BooleanField("Uso Oficina",default= False)
-    u_religios = models.BooleanField("Uso Religioso",default= False)
-    u_otros = models.BooleanField("Otros Usos",default= False)
+    u_gubernam = models.BooleanField(verbose_name="Uso Gubernamental",help_text="descripcion",default= False)
+    u_bomberos = models.BooleanField(verbose_name="Uso Bomberos",help_text="descripcion",default= False)
+    u_pr_civil = models.BooleanField(verbose_name="Uso Protección Civil",help_text="descripcion",default= False)
+    u_policial = models.BooleanField(verbose_name="Uso Policial",help_text="descripcion",default= False)
+    u_militar = models.BooleanField(verbose_name="Uso Militar",help_text="descripcion",default= False)
+    u_med_asis = models.BooleanField(verbose_name="Uso Médico Asistencial",help_text="descripcion",default= False)
+    u_educativ = models.BooleanField(verbose_name="Uso Educativo",help_text="descripcion",default= False)
+    u_viv_pop = models.BooleanField(verbose_name="Uso Vivienda Popular",help_text="descripcion",default= False)
+    u_viv_unif = models.BooleanField(verbose_name="Uso Vivienda Unifamiliar",help_text="descripcion",default= False)
+    u_viv_mult = models.BooleanField(verbose_name="Uso Vivienda Multifamiliar",help_text="descripcion",default= False)
+    u_dep_recr = models.BooleanField(verbose_name="Uso Deportivo-Recreativo",help_text="descripcion",default= False)
+    u_cultural = models.BooleanField(verbose_name="Uso Cultural",help_text="descripcion",default= False)
+    u_industri = models.BooleanField(verbose_name="Uso Industrial",help_text="descripcion",default= False)
+    u_comercia = models.BooleanField(verbose_name="Uso Comercial",help_text="descripcion",default= False)
+    u_oficina = models.BooleanField(verbose_name="Uso Oficina",help_text="descripcion",default= False)
+    u_religios = models.BooleanField(verbose_name="Uso Religioso",help_text="descripcion",default= False)
+    u_otros = models.BooleanField(verbose_name="Otros Usos",help_text="descripcion",default= False)
 
 
     class  Meta:
@@ -207,16 +207,16 @@ class Irregularidad(models.Model):
         1) sep_edif field is mandatory.
     """
 
-    a_viga_alt = models.BooleanField("Ausencia de vigas altas en una o dos direcciones",default= False)
-    p_entrep_b = models.BooleanField("Presencia de al menos  un entrepiso debil ó blando",default= False)
-    p_column_c = models.BooleanField("Presencia de columnas cortas",default= False)
-    disc_eje_c = models.BooleanField("Discontinuidad de ejes de columnas",default= False)
-    abert_losa = models.BooleanField("Aberturas significativas en losas",default= False)
-    f_asim_mas = models.BooleanField("Fuerte asimetría de masas o rigideces en planta",default= False)
-    aus_mur_1d = models.BooleanField("Ausencia de muros en una dirección",default= False)
-    ados_los_l = models.BooleanField("Adosamiento: losa contra losa",default= False)
-    ados_los_c = models.BooleanField("Adosamiento:losa contra columna",default= False)
-    sep_edif = models.IntegerField("Separacion entre edifcio (cm)",default=0)
+    a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",help_text="descripcion",default= False)
+    p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso debil ó blando",help_text="descripcion",default= False)
+    p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",help_text="descripcion",default= False)
+    disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas",help_text="descripcion",default= False)
+    abert_losa = models.BooleanField(verbose_name="Aberturas significativas en losas",help_text="descripcion",default= False)
+    f_asim_mas = models.BooleanField(verbose_name="Fuerte asimetría de masas o rigideces en planta",help_text="descripcion",default= False)
+    aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",help_text="descripcion",default= False)
+    ados_los_l = models.BooleanField(verbose_name="Adosamiento: losa contra losa",help_text="descripcion",default= False)
+    ados_los_c = models.BooleanField(verbose_name="Adosamiento:losa contra columna",help_text="descripcion",default= False)
+    sep_edif = models.IntegerField(verbose_name="Separacion entre edifcio (cm)",help_text="descripcion",default=0)
 
 
     class  Meta:
@@ -259,10 +259,10 @@ class Grado_Deterioro(models.Model):
         ('3', 'Bajo')
     )
 
-    ec_agri_es = models.CharField("Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    ea_corr_ac = models.CharField("Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    agrietamie = models.CharField("Agrietamiento en paredes de relleno",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    e_mantenim = models.CharField("Estado general de mantenimiento",max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
+    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto" , help_text="Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero:" , help_text=" Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="descripcion",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento", help_text="descripcion", max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
 
 
     class  Meta:
@@ -276,8 +276,10 @@ class Grado_Deterioro(models.Model):
 
 
 
+help_text="descripcion"
 
 
+#class Estructura(models.Model):
 
 
 
