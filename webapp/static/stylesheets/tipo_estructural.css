@@ -6,3 +6,15 @@
     margin-left: 5%;
 
 }
+
+.aligned label{
+
+
+    width: 16em;
+
+
+}
+
+form .aligned p.help {
+    padding-left: 143px;
+}

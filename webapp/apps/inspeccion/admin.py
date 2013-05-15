@@ -95,7 +95,7 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
             )
         }),
-        )
+    )
 
     class Media:
         css = {

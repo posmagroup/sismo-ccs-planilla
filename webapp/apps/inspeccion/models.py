@@ -13,10 +13,10 @@ class Entrevistado(models.Model):
         1) All fields are mandatory.
     """
 
-    cod_ocup = models.CharField(verbose_name="Relacion con la Edif",help_text="descripcion",max_length=100)
-    nom_entrev = models.CharField(verbose_name="Nombre y apellido",help_text="descripcion",max_length=100)
-    tlf_entrev = models.CharField(verbose_name="Telefono",help_text="descripcion",max_length=100)
-    email_entr = models.EmailField(verbose_name="Correo Electronico",help_text="descripcion",max_length=100)
+    cod_ocup = models.CharField(verbose_name="Condición del Ocupante",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100)
+    nom_entrev = models.CharField(verbose_name="Nombre completo del Ocupante",help_text="Nombre completo de la persona entrevistada",max_length=100)
+    tlf_entrev = models.CharField(verbose_name="Teléfono del Ocupante",help_text="Teléfono de de la persona entrevistada",max_length=100)
+    email_entr = models.EmailField(verbose_name="E-Mail del Ocupante",help_text="Correo Electrónico de la persona entrevistada",max_length=100)
 
     class  Meta:
 
@@ -39,9 +39,9 @@ class Direccion(models.Model):
         1) All fields are mandatory.
     """
 
-    calle = models.CharField(verbose_name="Calle",help_text="descripcion",max_length=100)
-    avenida = models.CharField(verbose_name="Avenida",help_text="descripcion",max_length=100)
-    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="descripcion",max_length=100)
+    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100)
+    avenida = models.CharField(verbose_name="Avenida",help_text="Avenida donde se realizó la inspección",max_length=100)
+    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100)
 
     class  Meta:
 
@@ -94,12 +94,12 @@ class Condicion_Terreno(models.Model):
         ('2',  'Mayor a H del talud')
         )
 
-    forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="descripcion",choices=FORMA_TERRENO_CHOICES)
-    pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="descripcion",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
-    l_m_ladera = models.BooleanField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="descripcion",default= False, blank=True)
-    pend_talud = models.CharField(verbose_name="Pendiente del talud",help_text="descripcion",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
-    sep_talud = models.CharField(verbose_name="Separacion del talud",help_text="descripcion",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
-    drenaje = models.BooleanField(verbose_name="Drenajes",help_text="descripcion",default= False, blank=False)
+    forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="Forma del terreno donde está emplazada la edificación",choices=FORMA_TERRENO_CHOICES)
+    pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="Grado de Inclinación del terreno cada 100 metros",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
+    l_m_ladera = models.BooleanField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="Ubicación de la edificacion en una ladera con respecto a la altura total del terreno. Responde la pregunta ¿La edificación esta construida en la mitad superior de la ladera?",default= False, blank=True)
+    pend_talud = models.CharField(verbose_name="Pendiente del talud",help_text="Grado de inclinación del terreno en el talud",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
+    sep_talud = models.CharField(verbose_name="Separacion del talud",help_text="separación que existe entre la edificación y el talud en metros",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
+    drenaje = models.BooleanField(verbose_name="Drenajes",help_text="Si la edificaicón esta ubicada sobre el curso de una quebrada, o un cauce intermitente",default= False, blank=False)
 
 
     class  Meta:
@@ -259,10 +259,10 @@ class Grado_Deterioro(models.Model):
         ('3', 'Bajo')
     )
 
-    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto" , help_text="Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero:" , help_text=" Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos:",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="descripcion",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento", help_text="descripcion", max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
+    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de concreto como: columnas, vigas, muros o losas, en términos de agrietamiento en éstos, presencia de corrosión del acero de refuezo, pérdida del recubrimiento entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de acero como: sistema de piso, columnas, vigas o arriostramientos de perfiles de sección abierta o cerrada, en términos de pandeo, fractura en conexiones, corrosión entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="Describe la presencia de grietas en las paredes de bolques de concreto o arcilla, si estas presentan una abertura mayor a los 2mm.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento", help_text="Describe el estado de mantenimiento en general de la estructura en terminos de humedad o filtración, deterioro y abandono.", max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
 
 
     class  Meta:
@@ -276,7 +276,6 @@ class Grado_Deterioro(models.Model):
 
 
 
-help_text="descripcion"
 
 
 #class Estructura(models.Model):
