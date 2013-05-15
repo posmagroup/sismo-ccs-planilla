@@ -13,7 +13,7 @@ class Condicion_TerrenoAdmin(admin.ModelAdmin):
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
-class Tipo_EstrcuturalAdmin(admin.ModelAdmin):
+class Tipo_EstructuralAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
@@ -107,7 +107,7 @@ admin.site.register(Direccion)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
-admin.site.register(Tipo_Estructural,Tipo_EstrcuturalAdmin)
+admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
 
 

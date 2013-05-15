@@ -124,24 +124,53 @@ class Tipo_Estructural(models.Model):
     Features:
         1) All fields are not mandatory.
     """
-    pca = models.BooleanField(verbose_name="Pórticos de concreto armado",help_text="descripcion",default= False)
-    pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",help_text="descripcion",default= False)
-    mca2d = models.BooleanField(verbose_name="Muros de concreto armado en dos direcciones horizontales",help_text="descripcion",default= False)
-    mca1d = models.BooleanField(verbose_name="Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel",help_text="descripcion",default= False)
-    pa = models.BooleanField(verbose_name="Pórticos de acero",help_text="descripcion",default= False)
-    papt = models.BooleanField(verbose_name="Pórticos de acero con perfiles tubulares",help_text="descripcion",default= False)
-    pad = models.BooleanField(verbose_name="Pórticos de acero diagonalizados",help_text="descripcion",default= False)
-    pac = models.BooleanField(verbose_name="Pórticos de acero con cerchas",help_text="descripcion",default= False)
-    pre = models.BooleanField(verbose_name="Sistemas pre-fabricados a base de grandes paneles o de pórticos",help_text="descripcion",default= False)
-    mmc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería confinada",help_text="descripcion",default= False)
-    mmnc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería no confinada",help_text="descripcion",default= False)
-    vb = models.BooleanField(verbose_name="Viviendas de bahareque de un piso",help_text="descripcion",default= False)
-    vcp = models.BooleanField(verbose_name="Viviendas de construcción precaria (tiera, madera, zinc, etc.)",help_text="descripcion",default= False)
-    n_pisos_cf = models.BooleanField(verbose_name="N° de pisos confinados",help_text="descripcion",default= False)
-    n_pisos_nc = models.BooleanField(verbose_name="N° de pisos NO confinados",help_text="descripcion",default= False)
-    n_pisos_bc = models.BooleanField(verbose_name="N° pisos sistema mixto de baja calidad",help_text="descripcion",default= False)
-    esq_planta = models.BooleanField(verbose_name="Esquema en  Planta",help_text="descripcion",default= False)
-    esq_elevac = models.BooleanField(verbose_name="Esquema en Elevacion",help_text="descripcion",default= False)
+
+    # Defining possible choices
+    # for the esq_planta field in the model.
+    ESQUEMA_PLANTA_CHOICES = (
+        ('1', 'H'),
+        ('2', 'T'),
+        ('3', 'U ó C'),
+        ('4', 'L'),
+        ('5', 'Cajón'),
+        ('6', 'Esbeltez Horizontal'),
+        ('7', ' Ninguno')
+
+    )
+
+
+    # Defining possible choices
+    # for the esq_elevac field in the model.
+    ESQUEMA_ELEVACION_CHOICES = (
+        ('1', 'T'),
+        ('2', 'Piramide'),
+        ('3', 'Invertida'),
+        ('4', 'Piramidal'),
+        ('5', 'U'),
+        ('6', 'L'),
+        ('7', ' Rectangular'),
+        ('7', ' Esbeltez Vertical'),
+        ('7', ' Ninguno'),
+
+    )
+    pca = models.BooleanField(verbose_name="Pórticos de concreto armado",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",default= False)
+    pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",default= False)
+    mca2d = models.BooleanField(verbose_name="Muros de concreto armado en dos direcciones horizontales",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en dos direcciones ortogonales, en proporciones de área transversal similar o mayor al 25%.",default= False)
+    mca1d = models.BooleanField(verbose_name="Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en una direccion o poca área transversal de muro en la direccion ortogonal (menor al 25%).",default= False)
+    pa = models.BooleanField(verbose_name="Pórticos de acero",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metalicos de sección abierta tanto en columnas como vigas.",default= False)
+    papt = models.BooleanField(verbose_name="Pórticos de acero con perfiles tubulares",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metalicos de sección cerrada tanto en columnas como vigas.",default= False)
+    pad = models.BooleanField(verbose_name="Pórticos de acero diagonalizados",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metalicos de sección abierta o cerrada tanto en columnas como vigas, con arriostramientos concentricos o excentricos.",default= False)
+    pac = models.BooleanField(verbose_name="Pórticos de acero con cerchas",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metalicos de sección abierta tanto en columnas como vigas y sistema de losa de entrepiso o techo compuesto por cerchas metálicas.",default= False)
+    pre = models.BooleanField(verbose_name="Sistemas pre-fabricados a base de grandes paneles o de pórticos",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por paneles o pórticos de concreto armado prefabricados en taller.",default= False)
+    mmc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería confinada",help_text="Sistema resistente a cargas verticales y horizontales donde  los estructurales son los muros de mamposteria confinados por machones y viga en la totalidad de su perímetro.",default= False)
+    mmnc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería no confinada",help_text="Sistema resistente a cargas verticales y horizontales donde los estructurales son los muros de mamposteria no confinados por machones o viga en la totalidad de su perímetro.",default= False)
+    vb = models.BooleanField(verbose_name="Viviendas de bahareque de un piso",help_text="Sistema estructural rural de un piso formado por troncos de caña o similar y barro como material aglomerante, con techo liviano.",default= False)
+    vcp = models.BooleanField(verbose_name="Viviendas de construcción precaria (tiera, madera, zinc, etc.)",help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales reciclados o livianos, como zinc, madera, tierra.",default= False)
+    n_pisos_cf = models.BooleanField(verbose_name="N° de pisos confinados",help_text="Números de pisos confinados que posee la estrutura. Se cumple la condición de confinado cuando las paredes presentan machones y viga de corona en su perímetro.",default= False)
+    n_pisos_nc = models.BooleanField(verbose_name="N° de pisos NO confinados",help_text="Números de pisos no confinados que posee la estrutura. Se cumple la condición de no confinado cuando las paredes no presentan machones o vigas de corona en su perímetro.",default= False)
+    n_pisos_bc = models.BooleanField(verbose_name="N° pisos sistema mixto de baja calidad",help_text="Números de pisos de sistemas conformado por pórticos de concreto o acero sin diseño según la normas vigente para la época construcción.",default= False)
+    esq_planta = models.CharField(verbose_name="Esquema en  Planta",max_length=1,choices=ESQUEMA_PLANTA_CHOICES,help_text="Describe la forma de la planta del edificio, es decir, vista desde arriba. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal' se cumpla cuando el cociente entre el largo y ancho del menor rectangula que inscriba al edificio en planta sea mayor a 5.")
+    esq_elevac = models.CharField(verbose_name="Esquema en Elevacion",max_length=1,choices=ESQUEMA_ELEVACION_CHOICES,help_text="Describe la forma de elevación del edificio, es decir, vista desde un lateral. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Vertical' se cumpla cuando el cociente entre la altura del edificio y la menor dimensión en planta exceda a 4.")
 
     class  Meta:
 
