@@ -1,0 +1,41 @@
+.field-box, .field-u_otros,.field-ados_los_c, .field-sep_edif  {
+
+    position: relative;
+    float: left;
+    width: 500px;
+    margin-left: 5%;
+
+}
+
+.aligned label{
+
+
+    width: 16em;
+
+
+}
+
+form .aligned p.help {
+    padding-left: 143px;
+}
+
+
+
+ #irregularidad_form p.help {
+    padding-left: 13px;
+}
+
+
+#uso_form p.help {
+    padding-left: 99px;
+}
+
+
+#tipo_estructural_form p.help {
+    padding-left: 0px;
+}
+.field-sep_edif .required{
+
+
+    width: 18em;
+}
