@@ -5,8 +5,9 @@ from models import Direccion
 from models import Condicion_Terreno
 from models import Tipo_Estructural
 from models import Uso
-from  models import Irregularidad
-from  models import Grado_Deterioro
+from models import Irregularidad
+from models import Grado_Deterioro
+from models import Periodo_Construccion
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
@@ -102,6 +103,13 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+
+class Periodo_ConstruccionAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
 admin.site.register(Entrevistado)
 admin.site.register(Direccion)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
@@ -109,5 +117,5 @@ admin.site.register(Uso,UsoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
-
+admin.site.register(Periodo_Construccion,Periodo_ConstruccionAdmin)
 
