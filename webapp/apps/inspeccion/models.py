@@ -207,16 +207,16 @@ class Irregularidad(models.Model):
         1) sep_edif field is mandatory.
     """
 
-    a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",help_text="descripcion",default= False)
-    p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso debil ó blando",help_text="descripcion",default= False)
-    p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",help_text="descripcion",default= False)
-    disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas",help_text="descripcion",default= False)
-    abert_losa = models.BooleanField(verbose_name="Aberturas significativas en losas",help_text="descripcion",default= False)
-    f_asim_mas = models.BooleanField(verbose_name="Fuerte asimetría de masas o rigideces en planta",help_text="descripcion",default= False)
-    aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",help_text="descripcion",default= False)
-    ados_los_l = models.BooleanField(verbose_name="Adosamiento: losa contra losa",help_text="descripcion",default= False)
-    ados_los_c = models.BooleanField(verbose_name="Adosamiento:losa contra columna",help_text="descripcion",default= False)
-    sep_edif = models.IntegerField(verbose_name="Separacion entre edifcio (cm)",help_text="descripcion",default=0)
+    a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",help_text="Irregularidad que describe la ausencia de vigas altas en una o dos direcciones ortogonales de la estructural. Una viga alta es considerada cuando su altura es mayor que el espesor o altura de la losa.",default= False)
+    p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso debil ó blando",help_text="Irregularidad que describe la presencia de una planta baja o entrepiso libre o blando. Esta condición se cumple cuando:i) la diferencia de la sección transversal de paredes de un piso con respecto a las siguientes es más del 50%, ii) más del 50% de los pórticos de un piso no presentan paredes o iii) cuando existe una discontinuidad en vertical de elementos resistentes como la presencia de muros y luego cambia a columnas.",default= False)
+    p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",help_text="Irregularidad caracterizada cuando una o varias columnas de concreto armado presenta una porción de su altura sin restricciones laterales como paredes. Esta condición no se cumple cuando la totalidad de la altura presenta o carece de restricciones laterales.",default= False)
+    disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas",help_text="Irregularidad que describe la interrupción o variación en planta de los ejes de elementos verticales, muro o columna en dos pisos consecutivos. La variación debe ser mayor a 1/3 de la dimensión horizontal del miembro inferior en la dirección del deslizamiento.",default= False)
+    abert_losa = models.BooleanField(verbose_name="Aberturas significativas en losas",help_text="Irregularidad que describe cuando el área total de aberturas de un piso sea mayor a un 20% del area total de la planta.",default= False)
+    f_asim_mas = models.BooleanField(verbose_name="Fuerte asimetría de masas o rigideces en planta",help_text="Irregularidad que describe la presencia  de muros estructurales, paredes, núcleo de ascensores, núcleo de escaleras u otro, excéntricas en la estructura, que generen asimetría de masas y/o rigideces.",default= False)
+    aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",help_text="Irregularidad que describe la ausencia de muros en una dirección, esta condicion se cumple en los sistemas estructurales con muros en una dirección.",default= False)
+    ados_los_l = models.BooleanField(verbose_name="Adosamiento: losa contra losa",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso se encuentran a la misma cota o elevación.",default= False)
+    ados_los_c = models.BooleanField(verbose_name="Adosamiento:losa contra columna",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso no se encuentran a la misma cota o elevación.",default= False)
+    sep_edif = models.IntegerField(verbose_name="Separacion entre edifcio (cm)",help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento de lo contrario no.",default=0)
 
 
     class  Meta:

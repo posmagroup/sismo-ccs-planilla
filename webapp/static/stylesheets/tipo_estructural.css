@@ -18,3 +18,15 @@
 form .aligned p.help {
     padding-left: 143px;
 }
+
+
+
+ #irregularidad_form p.help {
+    padding-left: 13px;
+}
+
+.field-sep_edif .required{
+
+
+    width: 18em;
+}
