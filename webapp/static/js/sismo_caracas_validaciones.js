@@ -29,6 +29,35 @@
 
 
 
+    function desaparecer_opciones (opciones){
+
+
+
+        for (i=0;i<opciones.length;i++)
+        {
+
+            $('.'+opciones[i]).hide();
+
+
+        }
+
+    }
+
+    function aparecer_opciones (opciones){
+
+
+        for (i=0;i<opciones.length;i++)
+        {
+
+            $('.'+opciones[i]).show();
+
+        }
+
+    }
+
+
+
+
     $(document).ready(function($) {
         // you can now use jquery / javascript here...
 
@@ -52,6 +81,44 @@
                     desactivar_opciones(opciones);
                     opciones=["id_pend_talud","id_sep_talud"];
                     activar_opciones(opciones);
+                }
+            }
+        });
+
+
+
+        //validacion en el admin para el periodo de construccion.
+        opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
+        desaparecer_opciones(opciones);
+        $('#id_periodo').change(function() {
+            periodo = $('#id_periodo').val();
+            if (periodo == 1){
+
+                opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
+                desaparecer_opciones(opciones);
+                opciones=["field-anio_inici"];
+                aparecer_opciones(opciones);
+
+            }
+            else{
+                if (periodo == 2){
+
+                    opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
+                    desaparecer_opciones(opciones);
+                    opciones=["field-anio_inici", "field-anio_fin",];
+                    aparecer_opciones(opciones);
+
+                }
+                if (periodo == 3){
+
+                    opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
+                    desaparecer_opciones(opciones);
+                    opciones=[ "field-anio_fin",];
+                    aparecer_opciones(opciones);
+
+                }
+                else{
+
                 }
             }
         });

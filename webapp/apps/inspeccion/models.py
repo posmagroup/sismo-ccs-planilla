@@ -305,13 +305,55 @@ class Grado_Deterioro(models.Model):
 
 
 
+class Periodo_Construccion(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling the
+        time frames.
+
+    Features:
+        1) fecha_infer is calculated according to
+        user choice.
+    """
+
+    # Defining possible choices
+    # for the periodo field in the model.
+    PERIODO_CHOICES = (
+        ('1', 'Antes'),
+        ('2', 'Entre'),
+        ('3', 'Despues')
+        )
+    anio_exact = models.CharField(verbose_name="Año Exacto" , help_text="Año exacto de construccion",max_length=5, null= True, blank=True)
+    periodo = models.CharField(verbose_name="Periodo" , help_text="Describe el periodo de construccion en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
+    anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el periodo",max_length=5, null= True, blank=True)
+    anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el periodo",max_length=5, null= True, blank=True)
+    fecha_infer = models.BooleanField(default=False)
 
 
+    class  Meta:
+
+        verbose_name ='Año de Construcción'
+        verbose_name_plural ='Años de Construcción'
+
+    def __unicode__(self):
+
+        return u' Años de Construcción, consultar para mas detalles. '
+
+
+
+#
+#
+#
 #class Estructura(models.Model):
-
-
-
-
+#
+#
+#nombre_n = models.CharField(verbose_name="Condición del Ocupante",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100)
+#n_pisos
+#n_semi_sot
+#n_sotanos
+#
+#
 
 
 
