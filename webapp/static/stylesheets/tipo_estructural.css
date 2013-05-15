@@ -25,6 +25,10 @@ form .aligned p.help {
     padding-left: 13px;
 }
 
+#uso_form p.help {
+    padding-left: 99px;
+}
+
 .field-sep_edif .required{
 
 
