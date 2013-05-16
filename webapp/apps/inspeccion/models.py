@@ -2,6 +2,107 @@
 from django.db import models
 
 
+
+
+class  Inspeccion(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling Inspections
+
+    Features:
+        1) All fields are mandatory.
+    """
+
+    codigo_sc = models.CharField(verbose_name="Código SismoCaracas",help_text="Codificación paralela, asignada internamente para el manejo de los datos",max_length=100)
+    fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levanto la información de Campo mediante la planilla de inspección",auto_now=False)
+    hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inicio la inspección",max_length=100)
+    hora_fin = models.CharField(verbose_name="Hora de culminacion",help_text="Hora en que se termino la inspección",max_length=100)
+    c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se coloco en la planilla de inspeccion de FUNVISIS",max_length=100)
+
+    class  Meta:
+
+        verbose_name ='Inspeccion'
+        verbose_name_plural ='Inspecciones'
+
+    def __unicode__(self):
+
+        return u'Inspeccion, consultar para mas detalles. '
+
+
+
+
+class Estructura(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling Estrcutures
+        to include in the inspection model
+
+    Features:
+        1) All fields are not mandatory.
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    nombre_n = models.CharField(verbose_name="Nombre del Inmueble",help_text="Nombre o número de la casa o edificio",max_length=100)
+    n_pisos = models.IntegerField(verbose_name="Número de Pisos",help_text="Número de pisos que posee la estructura",default=0)
+    n_semi_sot = models.IntegerField(verbose_name="Número de Semi-Sotanos",help_text="Número de semi-sotanos que posee la extructura",default=0)
+    n_sotanos = models.IntegerField(verbose_name="Número de Sotanos",help_text="Número de sotanos que posee la extructura",default=0)
+    habitantes = models.IntegerField(verbose_name="Total Habitantes",help_text="Número de Peronas que habitan el Inmueble",default=0)
+    t_o_maniana = models.BooleanField(verbose_name="Turno de Ocupacion Matutino",help_text="Ocupación por parte de los habitantes del inmueble durante la maniana  ",default= False)
+    t_o_tarde = models.BooleanField(verbose_name="Turno de Ocupacion Vespertino",help_text="Ocupación por parte de los habitantes del inmueble durante la tarde  ",default= False)
+    t_o_noche = models.BooleanField(verbose_name="Turno de Ocupacion Noctuno",help_text="Ocupación por parte de los habitantes del inmueble durante la noche",default= False)
+
+    class  Meta:
+
+        verbose_name =' Estructura'
+        verbose_name_plural =' Estructuras'
+
+    def __unicode__(self):
+
+        return u'  Estructura, consultar para mas detalles. '
+
+
+
+
+
+class Periodo_Construccion(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling the
+        time frames.
+
+    Features:
+        1) fecha_infer is calculated according to
+        user choice.
+    """
+
+    # Defining possible choices
+    # for the periodo field in the model.
+    PERIODO_CHOICES = (
+        ('1', 'Antes'),
+        ('2', 'Entre'),
+        ('3', 'Despues')
+        )
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    anio_exact = models.CharField(verbose_name="Año Exacto" , help_text="Año exacto de construccion",max_length=5, null= True, blank=True)
+    periodo = models.CharField(verbose_name="Periodo" , help_text="Describe el periodo de construccion en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
+    anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el periodo",max_length=5, null= True, blank=True)
+    anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el periodo",max_length=5, null= True, blank=True)
+    fecha_infer = models.BooleanField(default=False)
+
+
+    class  Meta:
+
+        verbose_name ='Año de Construcción'
+        verbose_name_plural ='Años de Construcción'
+
+    def __unicode__(self):
+
+        return u' Años de Construcción, consultar para mas detalles. '
+
+
+
 class Entrevistado(models.Model):
 
     """
@@ -12,7 +113,7 @@ class Entrevistado(models.Model):
     Features:
         1) All fields are mandatory.
     """
-
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     cod_ocup = models.CharField(verbose_name="Condición del Ocupante",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100)
     nom_entrev = models.CharField(verbose_name="Nombre completo del Ocupante",help_text="Nombre completo de la persona entrevistada",max_length=100)
     tlf_entrev = models.CharField(verbose_name="Teléfono del Ocupante",help_text="Teléfono de de la persona entrevistada",max_length=100)
@@ -38,7 +139,7 @@ class Direccion(models.Model):
     Features:
         1) All fields are mandatory.
     """
-
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100)
     avenida = models.CharField(verbose_name="Avenida",help_text="Avenida donde se realizó la inspección",max_length=100)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100)
@@ -93,7 +194,7 @@ class Condicion_Terreno(models.Model):
         ('1', 'Menor a H del talud'),
         ('2',  'Mayor a H del talud')
         )
-
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="Forma del terreno donde está emplazada la edificación",choices=FORMA_TERRENO_CHOICES)
     pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="Grado de Inclinación del terreno cada 100 metros",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
     l_m_ladera = models.BooleanField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="Ubicación de la edificacion en una ladera con respecto a la altura total del terreno. Responde la pregunta ¿La edificación esta construida en la mitad superior de la ladera?",default= False, blank=True)
@@ -153,6 +254,7 @@ class Tipo_Estructural(models.Model):
         ('7', ' Ninguno'),
 
     )
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     pca = models.BooleanField(verbose_name="Pórticos de concreto armado",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",default= False)
     pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",default= False)
     mca2d = models.BooleanField(verbose_name="Muros de concreto armado en dos direcciones horizontales",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en dos direcciones ortogonales, en proporciones de área transversal similar o mayor al 25%.",default= False)
@@ -195,6 +297,7 @@ class  Uso(models.Model):
     Features:
         1) All fields are not mandatory.
     """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     u_gubernam = models.BooleanField(verbose_name="Uso Gubernamental",help_text="Uso de la estructura",default= False)
     u_bomberos = models.BooleanField(verbose_name="Uso Bomberos",help_text="Uso de la estructura",default= False)
     u_pr_civil = models.BooleanField(verbose_name="Uso Protección Civil",help_text="Uso de la estructura",default= False)
@@ -235,7 +338,7 @@ class Irregularidad(models.Model):
     Features:
         1) sep_edif field is mandatory.
     """
-
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",help_text="Irregularidad que describe la ausencia de vigas altas en una o dos direcciones ortogonales de la estructural. Una viga alta es considerada cuando su altura es mayor que el espesor o altura de la losa.",default= False)
     p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso debil ó blando",help_text="Irregularidad que describe la presencia de una planta baja o entrepiso libre o blando. Esta condición se cumple cuando:i) la diferencia de la sección transversal de paredes de un piso con respecto a las siguientes es más del 50%, ii) más del 50% de los pórticos de un piso no presentan paredes o iii) cuando existe una discontinuidad en vertical de elementos resistentes como la presencia de muros y luego cambia a columnas.",default= False)
     p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",help_text="Irregularidad caracterizada cuando una o varias columnas de concreto armado presenta una porción de su altura sin restricciones laterales como paredes. Esta condición no se cumple cuando la totalidad de la altura presenta o carece de restricciones laterales.",default= False)
@@ -287,7 +390,7 @@ class Grado_Deterioro(models.Model):
         ('2', 'Regular'),
         ('3', 'Bajo')
     )
-
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de concreto como: columnas, vigas, muros o losas, en términos de agrietamiento en éstos, presencia de corrosión del acero de refuezo, pérdida del recubrimiento entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
     ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de acero como: sistema de piso, columnas, vigas o arriostramientos de perfiles de sección abierta o cerrada, en términos de pandeo, fractura en conexiones, corrosión entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
     agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="Describe la presencia de grietas en las paredes de bolques de concreto o arcilla, si estas presentan una abertura mayor a los 2mm.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
@@ -302,65 +405,5 @@ class Grado_Deterioro(models.Model):
     def __unicode__(self):
 
         return u' Grados de Deterioro, consultar para mas detalles. '
-
-
-
-class Periodo_Construccion(models.Model):
-
-    """
-    Purpose:
-        Defines a  model for handling the
-        time frames.
-
-    Features:
-        1) fecha_infer is calculated according to
-        user choice.
-    """
-
-    # Defining possible choices
-    # for the periodo field in the model.
-    PERIODO_CHOICES = (
-        ('1', 'Antes'),
-        ('2', 'Entre'),
-        ('3', 'Despues')
-        )
-    anio_exact = models.CharField(verbose_name="Año Exacto" , help_text="Año exacto de construccion",max_length=5, null= True, blank=True)
-    periodo = models.CharField(verbose_name="Periodo" , help_text="Describe el periodo de construccion en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
-    anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el periodo",max_length=5, null= True, blank=True)
-    anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el periodo",max_length=5, null= True, blank=True)
-    fecha_infer = models.BooleanField(default=False)
-
-
-    class  Meta:
-
-        verbose_name ='Año de Construcción'
-        verbose_name_plural ='Años de Construcción'
-
-    def __unicode__(self):
-
-        return u' Años de Construcción, consultar para mas detalles. '
-
-
-
-#
-#
-#
-#class Estructura(models.Model):
-#
-#
-#nombre_n = models.CharField(verbose_name="Condición del Ocupante",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100)
-#n_pisos
-#n_semi_sot
-#n_sotanos
-#
-#
-
-
-
-
-
-
-
-
 
 

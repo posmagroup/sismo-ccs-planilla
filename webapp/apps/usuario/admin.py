@@ -28,16 +28,6 @@ class UserAdmin(UserAdmin):
 #    )
 
 
-class UserProfileCreationForm(UserCreationForm):
-    """
-    A form that overrides the UserCreationForm
-    """
-    class Meta:
-        model = User
-        fields = ("username", "groups")
-
-UserAdmin.add_form = UserProfileCreationForm
-
 admin.site.unregister(Site)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
