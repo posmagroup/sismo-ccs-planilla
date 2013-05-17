@@ -22,12 +22,9 @@ class UserAdmin(UserAdmin):
     inlines = (UserInline, )
     list_display = ('username',  'is_active', 'date_joined', 'is_staff')
 
-    def get_form(self, request, obj=None, **kwargs):
-        self.exclude = ("user_personal_info")
-        ## Dynamically overriding
-        self.fieldsets[2][1]["fields"] = ('is_active', 'is_staff','is_superuser','groups')
-        form = super(UserAdmin,self).get_form(request, obj, **kwargs)
-        return form
+    
+
+
 
 class  UserProfileAdmin(admin.ModelAdmin):
 

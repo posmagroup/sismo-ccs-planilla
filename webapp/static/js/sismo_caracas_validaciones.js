@@ -37,6 +37,7 @@
         {
 
             $('.'+opciones[i]).hide();
+            $('#'+opciones[i]).hide();
 
 
         }
@@ -50,6 +51,7 @@
         {
 
             $('.'+opciones[i]).show();
+            $('#'+opciones[i]).show();
 
         }
 
@@ -67,20 +69,20 @@
             forma_terreno = $('#id_forma_terr').val();
             if (forma_terreno == 1){
                 opciones=["id_pend_terr","id_l_m_ladera","id_pend_talud", "id_sep_talud"];
-                desactivar_opciones(opciones);
+                desaparecer_opciones(opciones);
             }
             else{
                 if (forma_terreno == 2){
                     opciones=["id_pend_talud", "id_sep_talud"];
-                    desactivar_opciones(opciones);
+                    desaparecer_opciones(opciones);
                     opciones=["id_pend_terr","id_l_m_ladera"];
-                    activar_opciones(opciones);
+                    aparecer_opciones(opciones);
                 }
                 else{
                     opciones=["id_pend_terr","id_l_m_ladera"];
-                    desactivar_opciones(opciones);
+                    desaparecer_opciones(opciones);
                     opciones=["id_pend_talud","id_sep_talud"];
-                    activar_opciones(opciones);
+                    aparecer_opciones(opciones);
                 }
             }
         });
@@ -169,28 +171,35 @@
 
 
         //validacion en el admin para la condicion del terreno.
+
+        opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
+        desaparecer_opciones(opciones);
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
             forma_terreno = $('#id_condicion_terreno_set-0-forma_terr').val();
             if (forma_terreno == 1){
-                opciones=["id_condicion_terreno_set-0-pend_terr","id_condicion_terreno_set-0-l_m_ladera","id_condicion_terreno_set-0-pend_talud", "id_condicion_terreno_set-0-sep_talud"];
-                desactivar_opciones(opciones);
+                opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
+                desaparecer_opciones(opciones);
             }
             else{
                 if (forma_terreno == 2){
-                    opciones=["id_condicion_terreno_set-0-pend_talud", "id_condicion_terreno_set-0-sep_talud"];
-                    desactivar_opciones(opciones);
-                    opciones=["id_condicion_terreno_set-0-pend_terr","id_condicion_terreno_set-0-l_m_ladera"];
-                    activar_opciones(opciones);
+
+                    opciones=["field-pend_talud", "field-sep_talud"];
+                    desaparecer_opciones(opciones);
+                    opciones=["field-pend_terr","field-l_m_ladera"];
+                    aparecer_opciones(opciones);
                 }
                 else{
-                    opciones=["id_condicion_terreno_set-0-pend_terr","id_condicion_terreno_set-0-l_m_ladera"];
-                    desactivar_opciones(opciones);
-                    opciones=["id_condicion_terreno_set-0-pend_talud","id_condicion_terreno_set-0-sep_talud"];
-                    activar_opciones(opciones);
+
+                    opciones=["field-pend_terr","field-l_m_ladera"];
+                    desaparecer_opciones(opciones);
+                    opciones=["field-pend_talud", "field-sep_talud"];
+                    aparecer_opciones(opciones);
                 }
             }
         });
     });
+
+
 
 
 })(django.jQuery);
