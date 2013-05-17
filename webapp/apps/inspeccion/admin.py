@@ -17,6 +17,12 @@ class Condicion_TerrenoAdmin(admin.ModelAdmin):
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
 class Tipo_EstructuralAdmin(admin.ModelAdmin):
 
     fieldsets = (
@@ -40,6 +46,11 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
                 'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 class UsoAdmin(admin.ModelAdmin):
 
@@ -64,7 +75,11 @@ class UsoAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
-
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 class IrregularidadAdmin(admin.ModelAdmin):
 
@@ -87,6 +102,12 @@ class IrregularidadAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
 
 class Grado_DeterioroAdmin(admin.ModelAdmin):
 
@@ -106,16 +127,53 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
+
+
+class EntrevistadoAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class EstructuraAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class DireccionAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
 class EntrevistadoInline(admin.StackedInline):
     model = Entrevistado
     can_delete = False
@@ -124,34 +182,25 @@ class EntrevistadoInline(admin.StackedInline):
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class EstructuraInline(admin.StackedInline):
     model = Estructura
     can_delete = False
-    verbose_name_plural = 'Identificacion y ubicacion de la edificacion'
+    verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class DireccionInline(admin.StackedInline):
     model = Direccion
     can_delete = False
-    verbose_name_plural = 'Identificacion y ubicacion de la edificacion'
+    verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class UsoInline(admin.StackedInline):
     model = Uso
     can_delete = False
-    verbose_name_plural = 'Uso de la edificacion'
+    verbose_name_plural = 'Uso de la edificación'
     max_num = 1
     fieldsets = (
         (None, {
@@ -175,21 +224,16 @@ class UsoInline(admin.StackedInline):
         }
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class Periodo_ConstruccionInline(admin.StackedInline):
     model = Periodo_Construccion
     can_delete = False
-    verbose_name_plural = 'Año de construccion'
+    verbose_name_plural = 'Año de construcción'
     max_num = 1
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
+
 class Condicion_TerrenoInline(admin.StackedInline):
     model = Condicion_Terreno
     can_delete = False
@@ -201,9 +245,6 @@ class Condicion_TerrenoInline(admin.StackedInline):
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class Tipo_EstructuralInline(admin.StackedInline):
     model = Tipo_Estructural
     can_delete = False
@@ -234,9 +275,6 @@ class Tipo_EstructuralInline(admin.StackedInline):
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class IrregularidadInline(admin.StackedInline):
     model = Irregularidad
     can_delete = False
@@ -263,10 +301,6 @@ class IrregularidadInline(admin.StackedInline):
         }
 
 
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class Grado_DeterioroInline(admin.StackedInline):
     model = Grado_Deterioro
     can_delete = False
@@ -291,7 +325,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 
-# Define a new User admin
+
 class InspeccionAdmin(admin.ModelAdmin):
     inlines = ( EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Periodo_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
@@ -299,9 +333,9 @@ class InspeccionAdmin(admin.ModelAdmin):
 
 
 
-admin.site.register(Entrevistado)
-admin.site.register(Direccion)
-admin.site.register(Estructura)
+admin.site.register(Entrevistado,EntrevistadoAdmin)
+admin.site.register(Direccion,DireccionAdmin)
+admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
