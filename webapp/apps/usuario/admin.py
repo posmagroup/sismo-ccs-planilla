@@ -21,8 +21,10 @@ class UserInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
     inlines = (UserInline, )
     list_display = ('username',  'is_active', 'date_joined', 'is_staff')
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
 
-    
+
 
 
 

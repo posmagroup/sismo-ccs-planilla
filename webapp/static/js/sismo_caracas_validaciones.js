@@ -2,6 +2,10 @@
 (function($) {
 
 
+
+
+    //$("div:contains('Información personal')").hide();
+
     function desactivar_opciones (opciones){
 
 
@@ -62,6 +66,12 @@
 
     $(document).ready(function($) {
         // you can now use jquery / javascript here...
+
+
+
+        $("fieldset:contains('Información personal')").hide();
+
+
 
 
         //validacion en el admin para la condicion del terreno.
