@@ -30,6 +30,10 @@ class  Inspeccion(models.Model):
         return u'Inspección, consultar para mas detalles. '
 
 
+    def save(self, force_insert=False, force_update=False, using=None):
+        return 0
+
+
 
 
 class Estructura(models.Model):
@@ -56,6 +60,8 @@ class Estructura(models.Model):
 
         verbose_name =' Estructura'
         verbose_name_plural =' Estructuras'
+
+    
 
     def __unicode__(self):
 
