@@ -57,16 +57,18 @@ class UsoAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                ('u_gubernam','u_bomberos'),
-                ('u_pr_civil','u_policial'),
-                ('u_militar', 'u_med_asis'),
-                ('u_educativ','u_viv_pop'),
-                ('u_viv_unif','u_viv_mult'),
-                ('u_dep_recr','u_cultural'),
-                ('u_industri','u_comercia'),
-                ('u_oficina','u_religios'),
-                ('u_otros'),
-                )
+
+
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ),
         }),
         )
 
@@ -75,11 +77,6 @@ class UsoAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 class IrregularidadAdmin(admin.ModelAdmin):
 
@@ -205,17 +202,19 @@ class UsoInline(admin.StackedInline):
     fieldsets = (
         (None, {
             'fields': (
-                ('u_gubernam','u_bomberos'),
-                ('u_pr_civil','u_policial'),
-                ('u_militar', 'u_med_asis'),
-                ('u_educativ','u_viv_pop'),
-                ('u_viv_unif','u_viv_mult'),
-                ('u_dep_recr','u_cultural'),
-                ('u_industri','u_comercia'),
-                ('u_oficina','u_religios'),
-                ('u_otros'),
-                )
-        }),
+
+
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ),
+            }),
         )
 
     class Media:

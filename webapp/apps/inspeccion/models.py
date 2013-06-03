@@ -61,7 +61,7 @@ class Estructura(models.Model):
         verbose_name =' Estructura'
         verbose_name_plural =' Estructuras'
 
-    
+
 
     def __unicode__(self):
 
@@ -304,23 +304,23 @@ class  Uso(models.Model):
         1) All fields are not mandatory.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    u_gubernam = models.BooleanField(verbose_name="Uso Gubernamental",help_text="Uso de la estructura",default= False)
-    u_bomberos = models.BooleanField(verbose_name="Uso Bomberos",help_text="Uso de la estructura",default= False)
-    u_pr_civil = models.BooleanField(verbose_name="Uso Protección Civil",help_text="Uso de la estructura",default= False)
-    u_policial = models.BooleanField(verbose_name="Uso Policial",help_text="Uso de la estructura",default= False)
-    u_militar = models.BooleanField(verbose_name="Uso Militar",help_text="Uso de la estructura",default= False)
-    u_med_asis = models.BooleanField(verbose_name="Uso Médico Asistencial",help_text="Uso de la estructura",default= False)
-    u_educativ = models.BooleanField(verbose_name="Uso Educativo",help_text="Uso de la estructura",default= False)
-    u_viv_pop = models.BooleanField(verbose_name="Uso Vivienda Popular",help_text="Uso de la estructura",default= False)
-    u_viv_unif = models.BooleanField(verbose_name="Uso Vivienda Unifamiliar",help_text="Uso de la estructura",default= False)
-    u_viv_mult = models.BooleanField(verbose_name="Uso Vivienda Multifamiliar",help_text="Uso de la estructura",default= False)
-    u_dep_recr = models.BooleanField(verbose_name="Uso Deportivo-Recreativo",help_text="Uso de la estructura",default= False)
-    u_cultural = models.BooleanField(verbose_name="Uso Cultural",help_text="Uso de la estructura",default= False)
-    u_industri = models.BooleanField(verbose_name="Uso Industrial",help_text="Uso de la estructura",default= False)
-    u_comercia = models.BooleanField(verbose_name="Uso Comercial",help_text="Uso de la estructura",default= False)
-    u_oficina = models.BooleanField(verbose_name="Uso Oficina",help_text="Uso de la estructura",default= False)
-    u_religios = models.BooleanField(verbose_name="Uso Religioso",help_text="Uso de la estructura",default= False)
-    u_otros = models.BooleanField(verbose_name="Otros Usos",help_text="Uso de la estructura",default= False)
+    u_gubernam = models.BooleanField(verbose_name="Gubernamental",help_text=" ",default= False)
+    u_bomberos = models.BooleanField(verbose_name="Bomberos",help_text=" ",default= False)
+    u_pr_civil = models.BooleanField(verbose_name="Protección Civil",help_text=" ",default= False)
+    u_policial = models.BooleanField(verbose_name="Policial",help_text=" ",default= False)
+    u_militar = models.BooleanField(verbose_name="Militar",help_text=" ",default= False)
+    u_med_asis = models.BooleanField(verbose_name="Médico Asistencial",help_text=" ",default= False)
+    u_educativ = models.BooleanField(verbose_name="Educativo",help_text=" ",default= False)
+    u_viv_pop = models.BooleanField(verbose_name="Vivienda Popular",help_text=" ",default= False)
+    u_viv_unif = models.BooleanField(verbose_name="Vivienda Unifamiliar",help_text=" ",default= False)
+    u_viv_mult = models.BooleanField(verbose_name="Vivienda Multifamiliar",help_text=" ",default= False)
+    u_dep_recr = models.BooleanField(verbose_name="Deportivo-Recreativo",help_text=" ",default= False)
+    u_cultural = models.BooleanField(verbose_name="Cultural",help_text=" ",default= False)
+    u_industri = models.BooleanField(verbose_name="Industrial",help_text=" ",default= False)
+    u_comercia = models.BooleanField(verbose_name="Comercial",help_text=" ",default= False)
+    u_oficina = models.BooleanField(verbose_name="Oficina",help_text=" ",default= False)
+    u_religios = models.BooleanField(verbose_name="Religioso",help_text=" ",default= False)
+    u_otros = models.BooleanField(verbose_name="Otros",help_text=" ",default= False)
 
 
     class  Meta:
