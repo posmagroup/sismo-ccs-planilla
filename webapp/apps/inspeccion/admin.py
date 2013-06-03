@@ -135,11 +135,11 @@ class Periodo_ConstruccionAdmin(admin.ModelAdmin):
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
+#    def get_model_perms(self, request):
+#        """
+#        Return empty perms dict thus hiding the model from admin index.
+#        """
+#        return {}
 
 
 
@@ -222,15 +222,15 @@ class UsoInline(admin.StackedInline):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
-
-class Periodo_ConstruccionInline(admin.StackedInline):
-    model = Periodo_Construccion
-    can_delete = False
-    verbose_name_plural = 'Año de construcción'
-    max_num = 1
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
+#
+#class Periodo_ConstruccionInline(admin.StackedInline):
+#    model = Periodo_Construccion
+#    can_delete = False
+#    verbose_name_plural = 'Año de construcción'
+#    max_num = 1
+#
+#    class  Media:
+#        js = ("js/sismo_caracas_validaciones.js",)
 
 
 class Condicion_TerrenoInline(admin.StackedInline):
@@ -326,7 +326,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Periodo_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
 
 

@@ -90,8 +90,6 @@ class Periodo_Construccion(models.Model):
         ('2', 'Entre'),
         ('3', 'Despues de')
         )
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    anio_exact = models.CharField(verbose_name="Año Exacto" , help_text="Año exacto de construcciòn",max_length=5, null= True, blank=True)
     periodo = models.CharField(verbose_name="Período" , help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
     anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el período",max_length=5, null= True, blank=True)
     anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el período",max_length=5, null= True, blank=True)
@@ -100,12 +98,25 @@ class Periodo_Construccion(models.Model):
 
     class  Meta:
 
-        verbose_name ='Año de Construcción'
-        verbose_name_plural ='Años de Construcción'
+        verbose_name ='Período de Construcción'
+        verbose_name_plural ='Período de Construcción'
 
     def __unicode__(self):
 
-        return u' Años de Construcción, consultar para mas detalles. '
+
+        if (self.periodo == '1'):
+
+            return u' Período de Construcción: Antes de %s' % self.anio_inici
+
+        if (self.periodo == '2'):
+
+            return u' Período de Construcción: Entre  %s y %s' % (self.anio_inici,self.anio_fin)
+
+        if (self.periodo == '3'):
+
+            return u' Período de Construcción: Despues de  %s ' % self.anio_fin
+
+        return u' Período de Construcción: consultar para mas detalles. '
 
 
 
