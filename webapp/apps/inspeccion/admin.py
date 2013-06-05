@@ -36,6 +36,7 @@ class ParticipanteAdmin(admin.ModelAdmin):
 class ParticipanteInline(admin.StackedInline):
     model = Participante
     can_delete = False
+    can_add = False
     verbose_name_plural = 'Datos de los participantes'
     max_num = 1
 

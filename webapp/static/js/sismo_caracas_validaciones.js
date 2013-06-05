@@ -3,7 +3,6 @@
 
 
 
-
     //$("div:contains('Información personal')").hide();
 
     function desactivar_opciones (opciones){
@@ -66,6 +65,38 @@
 
     $(document).ready(function($) {
         // you can now use jquery / javascript here...
+
+
+
+        $('.inline-group h2').each(function () {
+
+
+            val = $(this).html().toLowerCase();
+
+            val2  = val[0].toUpperCase() + val.slice(1);
+
+            $(this).html(val2);
+           
+
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
