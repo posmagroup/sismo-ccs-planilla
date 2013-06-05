@@ -76,7 +76,7 @@
             val2  = val[0].toUpperCase() + val.slice(1);
 
             $(this).html(val2);
-           
+
 
 
 

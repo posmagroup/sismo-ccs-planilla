@@ -197,8 +197,8 @@ class Periodo_ConstruccionAdmin(admin.ModelAdmin):
         }),
         )
 
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
+#    class  Media:
+#        js = ("js/sismo_caracas_validaciones.js",)
 
 
 #    def get_model_perms(self, request):

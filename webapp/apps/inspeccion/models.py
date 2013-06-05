@@ -49,10 +49,16 @@ class Participante(models.Model):
     Features:
         1) All fields are not mandatory.
     """
+
+
+    limit_inspector  = models.Q(groups__name='Inspector')
+    limit_revisor  = models.Q(groups__name='Revisor')
+    limit_supervisor  = models.Q(groups__name='Supervisor')
+
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    inspector = models.ForeignKey(User, verbose_name='Inspector', help_text='Usuario que inspeccionó la planilla.', related_name='inspector_planilla')
-    revisor = models.ForeignKey(User, verbose_name='Revisor', help_text='Usuario que revisó la planilla.', related_name='revisor_planilla')
-    supervisor = models.ForeignKey(User, verbose_name='Supervisor', help_text='Supervisor de  la planilla.', related_name='supervisor_planilla')
+    inspector = models.ForeignKey(User, verbose_name='Inspector', help_text='Usuario que inspeccionó la planilla.', related_name='inspector_planilla', limit_choices_to=limit_inspector)
+    revisor = models.ForeignKey(User, verbose_name='Revisor', help_text='Usuario que revisó la planilla.', related_name='revisor_planilla', limit_choices_to=limit_revisor)
+    supervisor = models.ForeignKey(User, verbose_name='Supervisor', help_text='Supervisor de  la planilla.', related_name='supervisor_planilla',limit_choices_to=limit_supervisor)
 
     class  Meta:
 
