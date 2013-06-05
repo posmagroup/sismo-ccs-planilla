@@ -12,8 +12,7 @@ from models import Estructura
 from models import Inspeccion
 from models import Anio_Construccion
 from models import  Participante
-
-
+from models import  Capacidad_Ocupacion
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -170,6 +169,61 @@ class UsoInline(admin.StackedInline):
 
 
 #endregion
+
+#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
+
+
+class Capacidad_OcupacionAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('habitantes','t_o_manana'),
+                ('t_o_tarde','t_o_noche'),
+
+
+                ),
+            }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class Capacidad_OcupacionInline(admin.StackedInline):
+    model = Capacidad_Ocupacion
+    can_delete = False
+    verbose_name_plural = 'Capacidad de Ubicación'
+    max_num = 1
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('habitantes','t_o_manana'),
+                ('t_o_tarde','t_o_noche'),
+
+
+                ),
+            }),
+        )
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
+
 
 
 
@@ -411,7 +465,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
@@ -424,6 +478,7 @@ admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
+admin.site.register(Capacidad_Ocupacion,Capacidad_OcupacionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)

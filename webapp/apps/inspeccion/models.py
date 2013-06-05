@@ -147,7 +147,6 @@ class Estructura(models.Model):
 
 #endregion
 
-
 #region  5.uso de la Edificación (Modelo Uso)
 
 class  Uso(models.Model):
@@ -193,6 +192,40 @@ class  Uso(models.Model):
 
 
 #endregion
+
+#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
+
+class Capacidad_Ocupacion(models.Model):
+
+    """
+    Purpose:
+
+
+    Features:
+        1) .
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    habitantes = models.IntegerField(verbose_name="Número de personas que ocupan el inmueble")
+    t_o_manana = models.BooleanField(default=False,verbose_name="Ocupación durante la mañana")
+    t_o_tarde = models.BooleanField(default=False,verbose_name="Ocupación  durante la tarde")
+    t_o_noche = models.BooleanField(default=False,verbose_name="Ocupación durante la noche")
+
+
+    class  Meta:
+
+        verbose_name ='Capacidad de Ubicación'
+        verbose_name_plural ='Capacidad de Ubicación'
+
+
+    def __unicode__(self):
+
+        return u'Capacidad de Ubicación,consultar para mas detalles. '
+
+
+
+#endregion
+
+
 
 
 class Periodo_Construccion(models.Model):
