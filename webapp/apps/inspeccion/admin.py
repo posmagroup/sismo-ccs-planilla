@@ -2,7 +2,6 @@
 from django.contrib import admin
 
 from models import Entrevistado
-from models import Direccion
 from models import Condicion_Terreno
 from models import Tipo_Estructural
 from models import Uso
@@ -104,10 +103,24 @@ class EstructuraInline(admin.StackedInline):
             'fields': (
                 ('nombre_n','n_pisos'),
                 ('n_semi_sot','n_sotanos'),
+                ('ciudad','municipio'),
+                ('parroquia','urb_barrio'),
+                ('sector','calle'),
+                ('manzana','parcela','pto_referencia'),
+              
 
                 )
         }),
         )
+
+
+
+
+
+
+
+
+
 
 
 #endregion
@@ -280,23 +293,6 @@ class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
 
 
-class DireccionAdmin(admin.ModelAdmin):
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
-
-
-
-
-class DireccionInline(admin.StackedInline):
-    model = Direccion
-    can_delete = False
-    verbose_name_plural = 'Identificación y ubicación de la edificación'
-    max_num = 1
-
 
 class UsoInline(admin.StackedInline):
     model = Uso
@@ -430,7 +426,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
@@ -441,7 +437,6 @@ class InspeccionAdmin(admin.ModelAdmin):
 
 admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
-admin.site.register(Direccion,DireccionAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)

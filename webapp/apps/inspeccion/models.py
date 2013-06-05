@@ -118,7 +118,17 @@ class Estructura(models.Model):
     n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
     n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",help_text="Número de semi-sotanos que posee la estructura",default=0)
     n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",default=0)
-#    habitantes = models.IntegerField(verbose_name="Total Habitantes",help_text="Número de Peronas que habitan el Inmueble",default=0)
+    ciudad = models.CharField(verbose_name="Ciudad",help_text="Ciudad donde se realizó la inspección",max_length=100,null= True, blank=True)
+    municipio = models.CharField(verbose_name="Municipio",help_text="Municipio donde se realizó la inspección",max_length=100,null= True, blank=True)
+    parroquia = models.CharField(verbose_name="Parroquia",help_text="Parroquia donde se realizó la inspección",max_length=100,null= True, blank=True)
+    urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",max_length=100,null= True, blank=True)
+    sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
+    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
+    manzana = models.CharField(verbose_name="Manzana Nº",help_text="Nº Manzana donde se realizó la inspección",max_length=100,null= True, blank=True)
+    parcela = models.CharField(verbose_name="Nº Parcela",help_text="Nº Parcela donde se realizó la inspección",max_length=100,null= True, blank=True)
+    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
+
+    #    habitantes = models.IntegerField(verbose_name="Total Habitantes",help_text="Número de Peronas que habitan el Inmueble",default=0)
 #    t_o_manana = models.BooleanField(verbose_name="Turno de Ocupación Matutino",help_text="Ocupación por parte de los habitantes del inmueble durante la mañana  ",default= False)
 #    t_o_tarde = models.BooleanField(verbose_name="Turno de Ocupaciòn Vespertino",help_text="Ocupación por parte de los habitantes del inmueble durante la tarde  ",default= False)
 #    t_o_noche = models.BooleanField(verbose_name="Turno de Ocupación Noctuno",help_text="Ocupación por parte de los habitantes del inmueble durante la noche",default= False)
@@ -133,6 +143,7 @@ class Estructura(models.Model):
     def __unicode__(self):
 
         return u'  Estructura, consultar para mas detalles. '
+
 
 #endregion
 
@@ -215,31 +226,6 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
 
         return u'Año de Construcción, consultar para mas detalles. '
-
-
-class Direccion(models.Model):
-
-    """
-    Purpose:
-        Defines a  model for handling Interviewee s
-        address to include in the inspection model
-
-    Features:
-        1) All fields are mandatory.
-    """
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100)
-    avenida = models.CharField(verbose_name="Avenida",help_text="Avenida donde se realizó la inspección",max_length=100)
-    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100)
-
-    class  Meta:
-
-        verbose_name ='Dirección'
-        verbose_name_plural ='Direcciones'
-
-    def __unicode__(self):
-
-        return u' Dirección: calle: %s  -Avenida: %s  -Punto de Referencia: %s' % (self.calle,self.avenida, self.pto_referencia)
 
 
 class Condicion_Terreno(models.Model):
