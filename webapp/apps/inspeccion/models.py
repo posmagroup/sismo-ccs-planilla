@@ -1,8 +1,10 @@
 # -*- coding: utf8 -*-
+from django.contrib.auth.models import User
 from django.db import models
 
 
 
+#region  1.Datos Generales (Modelo Inspeccion)
 
 class  Inspeccion(models.Model):
 
@@ -11,14 +13,14 @@ class  Inspeccion(models.Model):
         Defines a  model for handling Inspections
 
     Features:
-        1) All fields are mandatory.
+        1) Some fields are mandatory.
     """
 
-    codigo_sc = models.CharField(verbose_name="Código SismoCaracas",help_text="Codificación paralela, asignada internamente para el manejo de los datos",max_length=100)
+    #codigo_sc = models.CharField(verbose_name="Código SismoCaracas",help_text="Codificación paralela, asignada internamente para el manejo de los datos",max_length=100)
     fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False)
-    hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100)
-    hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100)
-    c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
+    hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
+    hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
+    #c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
 
     class  Meta:
 
@@ -32,6 +34,41 @@ class  Inspeccion(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None):
         return 0
+
+#endregion
+
+#region  2.Datos de los participantes (Modelo Participante)
+
+class Participante(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling users
+        to include in the inspection model
+
+    Features:
+        1) All fields are not mandatory.
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    inspector = models.ForeignKey(User, verbose_name='Inspector', help_text='Usuario que inspeccionó la planilla.', related_name='inspector_planilla')
+    revisor = models.ForeignKey(User, verbose_name='Revisor', help_text='Usuario que revisó la planilla.', related_name='revisor_planilla')
+    supervisor = models.ForeignKey(User, verbose_name='Supervisor', help_text='Supervisor de  la planilla.', related_name='supervisor_planilla')
+
+    class  Meta:
+
+        verbose_name ='Dato del participante'
+        verbose_name_plural ='Datos de los participantes'
+
+    def __unicode__(self):
+
+        return u'Datos de los participantes, consultar para mas detalles. '
+
+#endregion
+
+
+
+
+
 
 
 
@@ -106,17 +143,48 @@ class Periodo_Construccion(models.Model):
 
         if (self.periodo == '1'):
 
-            return u' Período de Construcción: Antes de %s' % self.anio_inici
+            return u'  Antes de %s' % self.anio_inici
 
         if (self.periodo == '2'):
 
-            return u' Período de Construcción: Entre  %s y %s' % (self.anio_inici,self.anio_fin)
+            return u'  Entre  %s y %s' % (self.anio_inici,self.anio_fin)
 
         if (self.periodo == '3'):
 
             return u' Período de Construcción: Despues de  %s ' % self.anio_fin
 
-        return u' Período de Construcción: consultar para mas detalles. '
+        return u'  consultar para mas detalles. '
+
+
+
+
+
+
+class Anio_Construccion(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling Estrcutures
+        to include in the inspection model
+
+    Features:
+        1) All fields are not mandatory.
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    periodo = models.ForeignKey(Periodo_Construccion,verbose_name="Periodo de Construccion",help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.")
+    anio = models.CharField(verbose_name="Año Exacto" , help_text="",max_length=1,null= True, blank=True)
+    fecha_inf = models.BooleanField(verbose_name="Fecha Inferida",help_text="",default= False)
+
+    class  Meta:
+
+        verbose_name ='Año de Construcción'
+        verbose_name_plural ='Años de Construcción'
+
+
+
+    def __unicode__(self):
+
+        return u'Año de Construcción, consultar para mas detalles. '
 
 
 

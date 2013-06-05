@@ -102,6 +102,8 @@
         //validacion en el admin para el periodo de construccion.
         opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
         desaparecer_opciones(opciones);
+        opciones=["field-periodo"];
+        aparecer_opciones(opciones);
         $('#id_periodo').change(function() {
             periodo = $('#id_periodo').val();
             opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];

@@ -11,6 +11,52 @@ from models import Grado_Deterioro
 from models import Periodo_Construccion
 from models import Estructura
 from models import Inspeccion
+from models import Anio_Construccion
+from models import  Participante
+
+
+
+#region  2.Datos de los participantes (Modelo Participante)
+
+class ParticipanteAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class ParticipanteInline(admin.StackedInline):
+    model = Participante
+    can_delete = False
+    verbose_name_plural = 'Datos de los participantes'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
+
+#endregion
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
@@ -77,6 +123,13 @@ class UsoAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
 
 class IrregularidadAdmin(admin.ModelAdmin):
 
@@ -132,14 +185,39 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('periodo','anio_inici', 'anio_fin'),
+
+                ('fecha_infer')
+
+                )
+        }),
+        )
+
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
+
 
 #    def get_model_perms(self, request):
 #        """
 #        Return empty perms dict thus hiding the model from admin index.
 #        """
 #        return {}
+
+
+
+class Anio_ConstruccionAdmin(admin.ModelAdmin):
+
+        exclude = ('fecha_inf',)
+
+#    def get_model_perms(self, request):
+#        """
+#        Return empty perms dict thus hiding the model from admin index.
+#        """
+#        return {}
+
 
 
 
@@ -326,12 +404,16 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
+    verbose_name_plural = 'Datos Generales'
 
 
 
 
+#region  Registro de modelos  en el admin
+
+admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
 admin.site.register(Direccion,DireccionAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
@@ -342,4 +424,7 @@ admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
 admin.site.register(Periodo_Construccion,Periodo_ConstruccionAdmin)
+admin.site.register(Anio_Construccion,Anio_ConstruccionAdmin)
 
+
+#endregion

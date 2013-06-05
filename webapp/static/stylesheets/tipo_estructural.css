@@ -49,3 +49,11 @@ form .aligned p.help {
 .inline-group .aligned label {
     width: 17em;
 }
+
+
+
+.inline-related h3{
+
+    display: none;
+
+}
