@@ -32,7 +32,6 @@ class ParticipanteAdmin(admin.ModelAdmin):
         """
         return {}
 
-
 class ParticipanteInline(admin.StackedInline):
     model = Participante
     can_delete = False
@@ -42,8 +41,6 @@ class ParticipanteInline(admin.StackedInline):
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
-
-
 
 #endregion
 
@@ -56,7 +53,6 @@ class EntrevistadoAdmin(admin.ModelAdmin):
         Return empty perms dict thus hiding the model from admin index.
         """
         return {}
-
 
 class EntrevistadoInline(admin.StackedInline):
     model = Entrevistado
@@ -75,10 +71,6 @@ class EntrevistadoInline(admin.StackedInline):
         }),
         )
 
-
-
-
-
 #endregion
 
 #region  4.Identificación y ubicaicón de la edificación (Modelo Estructura)
@@ -90,7 +82,6 @@ class EstructuraAdmin(admin.ModelAdmin):
         Return empty perms dict thus hiding the model from admin index.
         """
         return {}
-
 
 class EstructuraInline(admin.StackedInline):
     model = Estructura
@@ -107,25 +98,78 @@ class EstructuraInline(admin.StackedInline):
                 ('parroquia','urb_barrio'),
                 ('sector','calle'),
                 ('manzana','parcela','pto_referencia'),
-              
+
 
                 )
         }),
         )
 
+#endregion
+
+#region  5.uso de la Edificación (Modelo Uso)
+
+class UsoAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
 
 
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ),
+            }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class UsoInline(admin.StackedInline):
+    model = Uso
+    can_delete = False
+    verbose_name_plural = 'Uso de la edificación'
+    max_num = 1
+    fieldsets = (
+        (None, {
+            'fields': (
 
 
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ('otro_uso')
+                ),
+            }),
+        )
 
-
-
-
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
 
 
 #endregion
-
-
 
 
 
@@ -169,36 +213,6 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
         """
         return {}
 
-class UsoAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-
-
-                ('u_gubernam','u_educativ'),
-                ('u_bomberos','u_dep_recr'),
-                ('u_pr_civil', 'u_cultural'),
-                ('u_policial','u_industri'),
-                ('u_militar','u_comercia'),
-                ('u_viv_pop','u_oficina'),
-                ('u_viv_unif','u_religios'),
-                ('u_viv_mult','u_otros'),
-                ('u_med_asis'),
-                ),
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 
 
@@ -292,35 +306,6 @@ class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
 
 
-
-
-class UsoInline(admin.StackedInline):
-    model = Uso
-    can_delete = False
-    verbose_name_plural = 'Uso de la edificación'
-    max_num = 1
-    fieldsets = (
-        (None, {
-            'fields': (
-
-
-                ('u_gubernam','u_educativ'),
-                ('u_bomberos','u_dep_recr'),
-                ('u_pr_civil', 'u_cultural'),
-                ('u_policial','u_industri'),
-                ('u_militar','u_comercia'),
-                ('u_viv_pop','u_oficina'),
-                ('u_viv_unif','u_religios'),
-                ('u_viv_mult','u_otros'),
-                ('u_med_asis'),
-                ),
-            }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 
 #
 #class Periodo_ConstruccionInline(admin.StackedInline):
