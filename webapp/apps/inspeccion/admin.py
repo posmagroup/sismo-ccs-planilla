@@ -26,6 +26,7 @@ class ParticipanteAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+
     def get_model_perms(self, request):
         """
         Return empty perms dict thus hiding the model from admin index.
@@ -47,10 +48,27 @@ class ParticipanteInline(admin.StackedInline):
 
 #endregion
 
+#region  3.Datos del entrevistado (Modelo Entrevistado)
+
+class EntrevistadoAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class EntrevistadoInline(admin.StackedInline):
+    model = Entrevistado
+    can_delete = False
+    verbose_name_plural = 'Datos del Entrevistado'
+    max_num = 1
 
 
 
 
+#endregion
 
 
 
@@ -222,13 +240,6 @@ class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
 
 
-class EntrevistadoAdmin(admin.ModelAdmin):
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 
 class EstructuraAdmin(admin.ModelAdmin):
@@ -248,13 +259,6 @@ class DireccionAdmin(admin.ModelAdmin):
         """
         return {}
 
-
-
-class EntrevistadoInline(admin.StackedInline):
-    model = Entrevistado
-    can_delete = False
-    verbose_name_plural = 'Datos del Entrevistado'
-    max_num = 1
 
 
 

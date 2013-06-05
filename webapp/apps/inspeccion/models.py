@@ -57,8 +57,8 @@ class Participante(models.Model):
 
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
     inspector = models.ForeignKey(User, verbose_name='Inspector', help_text='Usuario que inspeccionó la planilla.', related_name='inspector_planilla', limit_choices_to=limit_inspector)
-    revisor = models.ForeignKey(User, verbose_name='Revisor', help_text='Usuario que revisó la planilla.', related_name='revisor_planilla', limit_choices_to=limit_revisor)
-    supervisor = models.ForeignKey(User, verbose_name='Supervisor', help_text='Supervisor de  la planilla.', related_name='supervisor_planilla',limit_choices_to=limit_supervisor)
+    revisor = models.ForeignKey(User, verbose_name='Revisor', help_text='Usuario que revisó la planilla.', related_name='revisor_planilla', limit_choices_to=limit_revisor,null= True, blank=True)
+    supervisor = models.ForeignKey(User, verbose_name='Supervisor', help_text='Supervisor de  la planilla.', related_name='supervisor_planilla',limit_choices_to=limit_supervisor,null= True, blank=True)
 
     class  Meta:
 
@@ -73,6 +73,35 @@ class Participante(models.Model):
 
 
 
+#region  3.Datos del Entrevistado (Modelo Entrevistado)
+
+class Entrevistado(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling Interviewee
+        to include in the inspection model
+
+    Features:
+        1) All fields are mandatory.
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    cod_ocup = models.CharField(verbose_name="Relación con la Edif",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100,null= True, blank=True)
+    nom_entrev = models.CharField(verbose_name="Nombre y Apellido",help_text="Nombre completo de la persona entrevistada",max_length=100)
+    tlf_entrev = models.CharField(verbose_name="Teléfono",help_text="Teléfono  de la persona entrevistada",max_length=100,null= True, blank=True)
+    email_entr = models.EmailField(verbose_name="Correo Electrónico",help_text="Correo Electrónico de la persona entrevistada",max_length=100,null= True, blank=True)
+
+    class  Meta:
+
+        verbose_name ='Datos del Entrevistado'
+        verbose_name_plural ='Datos de los Entrevistados'
+
+    def __unicode__(self):
+
+        return u' Entrevistado: Nombre: %s  -Telefono: %s  -Email: %s' % (self.nom_entrev,self.tlf_entrev, self.email_entr)
+
+
+#endregion
 
 
 
@@ -191,33 +220,6 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
 
         return u'Año de Construcción, consultar para mas detalles. '
-
-
-
-class Entrevistado(models.Model):
-
-    """
-    Purpose:
-        Defines a  model for handling Interviewee
-        to include in the inspection model
-
-    Features:
-        1) All fields are mandatory.
-    """
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    cod_ocup = models.CharField(verbose_name="Condición del Ocupante",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100)
-    nom_entrev = models.CharField(verbose_name="Nombre completo del Ocupante",help_text="Nombre completo de la persona entrevistada",max_length=100)
-    tlf_entrev = models.CharField(verbose_name="Teléfono del Ocupante",help_text="Teléfono  de la persona entrevistada",max_length=100)
-    email_entr = models.EmailField(verbose_name="E-Mail del Ocupante",help_text="Correo Electrónico de la persona entrevistada",max_length=100)
-
-    class  Meta:
-
-        verbose_name ='Datos del Entrevistado'
-        verbose_name_plural ='Datos de los Entrevistados'
-
-    def __unicode__(self):
-
-        return u' Entrevistado: Nombre: %s  -Telefono: %s  -Email: %s' % (self.nom_entrev,self.tlf_entrev, self.email_entr)
 
 
 class Direccion(models.Model):
