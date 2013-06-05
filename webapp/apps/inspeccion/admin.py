@@ -66,12 +66,51 @@ class EntrevistadoInline(admin.StackedInline):
     max_num = 1
 
 
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('cod_ocup','nom_entrev'),
+                ('tlf_entrev','email_entr'),
+
+                )
+        }),
+        )
+
+
+
 
 
 #endregion
 
+#region  4.Identificación y ubicaicón de la edificación (Modelo Estructura)
+
+class EstructuraAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 
+class EstructuraInline(admin.StackedInline):
+    model = Estructura
+    can_delete = False
+    verbose_name_plural = 'Identificación y ubicación de la edificación'
+    max_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('nombre_n','n_pisos'),
+                ('n_semi_sot','n_sotanos'),
+
+                )
+        }),
+        )
+
+
+#endregion
 
 
 
@@ -241,16 +280,6 @@ class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
 
 
-
-class EstructuraAdmin(admin.ModelAdmin):
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
-
-
 class DireccionAdmin(admin.ModelAdmin):
 
     def get_model_perms(self, request):
@@ -259,14 +288,6 @@ class DireccionAdmin(admin.ModelAdmin):
         """
         return {}
 
-
-
-
-class EstructuraInline(admin.StackedInline):
-    model = Estructura
-    can_delete = False
-    verbose_name_plural = 'Identificación y ubicación de la edificación'
-    max_num = 1
 
 
 

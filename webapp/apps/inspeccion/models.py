@@ -71,8 +71,6 @@ class Participante(models.Model):
 
 #endregion
 
-
-
 #region  3.Datos del Entrevistado (Modelo Entrevistado)
 
 class Entrevistado(models.Model):
@@ -83,7 +81,7 @@ class Entrevistado(models.Model):
         to include in the inspection model
 
     Features:
-        1) All fields are mandatory.
+        1) Some fields are mandatory.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     cod_ocup = models.CharField(verbose_name="Relación con la Edif",help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",max_length=100,null= True, blank=True)
@@ -103,10 +101,7 @@ class Entrevistado(models.Model):
 
 #endregion
 
-
-
-
-
+#region  4.Identificación y ubicaicón de la edificación (Modelo Estructura)
 
 class Estructura(models.Model):
 
@@ -116,17 +111,17 @@ class Estructura(models.Model):
         to include in the inspection model
 
     Features:
-        1) All fields are not mandatory.
+        1) Some fields are not mandatory.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    nombre_n = models.CharField(verbose_name="Nombre del Inmueble",help_text="Nombre o número de la casa o edificio",max_length=100)
-    n_pisos = models.IntegerField(verbose_name="Número de Pisos",help_text="Número de pisos que posee la estructura",default=0)
-    n_semi_sot = models.IntegerField(verbose_name="Número de Semi-Sótanos",help_text="Número de semi-sotanos que posee la estructura",default=0)
-    n_sotanos = models.IntegerField(verbose_name="Número de Sótanos",help_text="Número de sótanos que posee la estructura",default=0)
-    habitantes = models.IntegerField(verbose_name="Total Habitantes",help_text="Número de Peronas que habitan el Inmueble",default=0)
-    t_o_manana = models.BooleanField(verbose_name="Turno de Ocupación Matutino",help_text="Ocupación por parte de los habitantes del inmueble durante la mañana  ",default= False)
-    t_o_tarde = models.BooleanField(verbose_name="Turno de Ocupaciòn Vespertino",help_text="Ocupación por parte de los habitantes del inmueble durante la tarde  ",default= False)
-    t_o_noche = models.BooleanField(verbose_name="Turno de Ocupación Noctuno",help_text="Ocupación por parte de los habitantes del inmueble durante la noche",default= False)
+    nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",max_length=100)
+    n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
+    n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",help_text="Número de semi-sotanos que posee la estructura",default=0)
+    n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",default=0)
+#    habitantes = models.IntegerField(verbose_name="Total Habitantes",help_text="Número de Peronas que habitan el Inmueble",default=0)
+#    t_o_manana = models.BooleanField(verbose_name="Turno de Ocupación Matutino",help_text="Ocupación por parte de los habitantes del inmueble durante la mañana  ",default= False)
+#    t_o_tarde = models.BooleanField(verbose_name="Turno de Ocupaciòn Vespertino",help_text="Ocupación por parte de los habitantes del inmueble durante la tarde  ",default= False)
+#    t_o_noche = models.BooleanField(verbose_name="Turno de Ocupación Noctuno",help_text="Ocupación por parte de los habitantes del inmueble durante la noche",default= False)
 
     class  Meta:
 
@@ -139,7 +134,7 @@ class Estructura(models.Model):
 
         return u'  Estructura, consultar para mas detalles. '
 
-
+#endregion
 
 
 
