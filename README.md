@@ -1,10 +1,6 @@
-sismo-ccs-planilla
-==================
+Sismo-Caracas: Instalación
+==========================
 
-Repositorio público para la primera fase del proyecto de Sismo Caracas.
-
-Instalación:
-============
 
 PostgreSQL:
 -----------
@@ -18,20 +14,20 @@ PostGIS:
 PostGIS es una extensión de postgresql para albergar data geográfica. Antes de descargar deben revisarse los requisitos de postgis en la documentación oficial: 
 http://www.postgis.org/documentation/manual-2.0/postgis_installation.html#id554707
 
-Para descargar la fuente de PostGIS y extraer::
+Para descargar la fuente de PostGIS y extraer:
 
 	$ wget http://download.osgeo.org/postgis/source/postgis-2.0.3.tar.gz
 	$ tar xzf postgis-2.0.3.tar.gz
 	$ cd postgis-2.0.3
 
-Luego, para instalar::
+Luego, para instalar:
 
 	$ ./configure
 	$ make
 	$ sudo make install
 	$ cd ..
 
-Para crear la base de datos con acceso a tipos de datos geográficos, debe ejecutarse los siguientes comandos en una consola de postgresql::
+Para crear la base de datos con acceso a tipos de datos geográficos, debe ejecutarse los siguientes comandos en una consola de postgresql:
 
 	$ createdb  <db name>
 	$ psql <db name>
@@ -57,7 +53,7 @@ Para más información, revisar la siguiente referencia:
 
 	https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/geolibs/#geospatial-libs
 
-Una vez que estén todas las dependencias instaladas, debe configurarse en el archivo ``settings.py`` para que use postgis como base de datos::
+Una vez que estén todas las dependencias instaladas, debe configurarse en el archivo ``settings.py`` para que use postgis como base de datos:
 
 	DATABASES = {
 		'default': {
@@ -67,7 +63,7 @@ Una vez que estén todas las dependencias instaladas, debe configurarse en el ar
 		}
 	}
 
-Y debe agregarse geodjango como aplicación instalada::
+Y debe agregarse geodjango como aplicación instalada:
 
 	INSTALLED_APPS = (
 		'django.contrib.admin',
@@ -84,7 +80,7 @@ Y debe agregarse geodjango como aplicación instalada::
 	)
 
 Si todo ha salido bien hasta ahora, podemos usar las clases y tipos definidos por geodjango. 
-Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección)::
+Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección):
 
 from django.contrib.gis.db import models
 
@@ -108,7 +104,7 @@ Importación de los datos:
 -------------------------
 
 Para hablitar el campo de tipo ``Polygon``, debemos importar la data de los shapefiles a la base de datos geográfica en formato postgis,
-para esto usaremos la herramienta ``LayerMapping`` de django. Hagamos un script con las siguientes instrucciones::
+para esto usaremos la herramienta ``LayerMapping`` de django. Hagamos un script con las siguientes instrucciones:
 
 	from django.contrib.gis.utils import LayerMapping
 	from apps.inspeccion.models import Inspeccion
