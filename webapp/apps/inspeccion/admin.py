@@ -11,8 +11,9 @@ from models import Periodo_Construccion
 from models import Estructura
 from models import Inspeccion
 from models import Anio_Construccion
-from models import  Participante
-from models import  Capacidad_Ocupacion
+from models import Participante
+from models import Capacidad_Ocupacion
+from models import Observacion
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -224,8 +225,78 @@ class Capacidad_OcupacionInline(admin.StackedInline):
         }
 #endregion
 
+#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
 
 
+class Periodo_ConstruccionAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/periodo_s.js",)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('periodo','anio_inici', 'anio_fin'),
+
+                ('fecha_infer')
+
+                )
+        }),
+        )
+
+
+class Anio_ConstruccionAdmin(admin.ModelAdmin):
+
+    exclude = ('fecha_inf',)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class Anio_ConstruccionInline(admin.StackedInline):
+    model = Anio_Construccion
+    can_delete = False
+    verbose_name_plural = 'Año de construcción'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
+#endregion
+
+
+
+#region  14.Observaciones (Modelo Observacion)
+
+
+class ObservacionAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class ObservacionInline(admin.StackedInline):
+    model = Observacion
+    can_delete = False
+    verbose_name_plural = 'Observaciones'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
+
+
+#endregion
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
@@ -322,54 +393,11 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
         """
         return {}
 
-class Periodo_ConstruccionAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('periodo','anio_inici', 'anio_fin'),
-
-                ('fecha_infer')
-
-                )
-        }),
-        )
-
-#    class  Media:
-#        js = ("js/sismo_caracas_validaciones.js",)
-
-
-#    def get_model_perms(self, request):
-#        """
-#        Return empty perms dict thus hiding the model from admin index.
-#        """
-#        return {}
-
-
-
-class Anio_ConstruccionAdmin(admin.ModelAdmin):
-
-        exclude = ('fecha_inf',)
-
-#    def get_model_perms(self, request):
-#        """
-#        Return empty perms dict thus hiding the model from admin index.
-#        """
-#        return {}
 
 
 
 
 
-#
-#class Periodo_ConstruccionInline(admin.StackedInline):
-#    model = Periodo_Construccion
-#    can_delete = False
-#    verbose_name_plural = 'Año de construcción'
-#    max_num = 1
-#
-#    class  Media:
-#        js = ("js/sismo_caracas_validaciones.js",)
 
 
 class Condicion_TerrenoInline(admin.StackedInline):
@@ -465,7 +493,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
