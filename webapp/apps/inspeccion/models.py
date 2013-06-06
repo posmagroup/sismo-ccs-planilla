@@ -225,8 +225,7 @@ class Capacidad_Ocupacion(models.Model):
 
 #endregion
 
-
-
+#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
 
 class Periodo_Construccion(models.Model):
 
@@ -292,7 +291,7 @@ class Anio_Construccion(models.Model):
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
     periodo = models.ForeignKey(Periodo_Construccion,verbose_name="Periodo de Construccion",help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.")
-    anio = models.CharField(verbose_name="Año Exacto" , help_text="",max_length=1,null= True, blank=True)
+    anio = models.CharField(verbose_name="Año" , help_text="",max_length=1,null= True, blank=True)
     fecha_inf = models.BooleanField(verbose_name="Fecha Inferida",help_text="",default= False)
 
     class  Meta:
@@ -305,6 +304,46 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
 
         return u'Año de Construcción, consultar para mas detalles. '
+
+
+#endregion
+
+
+
+
+
+#region  14.Observaciones (Modelo Observacion)
+
+class Observacion(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling the
+        time frames.
+
+    Features:
+        1) fecha_infer is calculated according to
+        user choice.
+    """
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    observacion = models.TextField()
+
+    class  Meta:
+
+        verbose_name ='Observación'
+        verbose_name_plural ='Observaciones'
+
+
+
+    def __unicode__(self):
+
+        return u'Observaciones, consultar para mas detalles. '
+
+
+
+
+#endregion
+
 
 
 class Condicion_Terreno(models.Model):
