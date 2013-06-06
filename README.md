@@ -82,7 +82,7 @@ Y debe agregarse geodjango como aplicación instalada:
 Si todo ha salido bien hasta ahora, podemos usar las clases y tipos definidos por geodjango. 
 Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección):
 
-from django.contrib.gis.db import models
+	from django.contrib.gis.db import models
 
 	class  Inspeccion(models.Model):
 
