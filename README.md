@@ -123,6 +123,6 @@ Para más información, revisar la documentación de django: https://docs.django
 Otros links de interés:
 -----------------------
 
-	* http://www.postgis.org/documentation/manual-2.0/postgis_installation.html#id554707
-	* http://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS
-	* https://docs.djangoproject.com/en/dev/ref/contrib/gis/
+* http://www.postgis.org/documentation/manual-2.0/postgis_installation.html#id554707
+* http://trac.osgeo.org/postgis/wiki/UsersWikiPostgreSQLPostGIS
+* https://docs.djangoproject.com/en/dev/ref/contrib/gis/
