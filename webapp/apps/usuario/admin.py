@@ -21,15 +21,24 @@ class UserInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
     inlines = (UserInline, )
     list_display = ('username',  'is_active', 'date_joined', 'is_staff')
-#    fieldsets = (
-#        (None, {'fields': ('username', 'password')}),
-#        (('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser')}),
-#        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
-#    )
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
+
+
+
+class  UserProfileAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 
 admin.site.unregister(Site)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(UserProfile)
+admin.site.register(UserProfile,UserProfileAdmin)
 

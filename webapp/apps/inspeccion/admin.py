@@ -2,7 +2,6 @@
 from django.contrib import admin
 
 from models import Entrevistado
-from models import Direccion
 from models import Condicion_Terreno
 from models import Tipo_Estructural
 from models import Uso
@@ -11,11 +10,233 @@ from models import Grado_Deterioro
 from models import Periodo_Construccion
 from models import Estructura
 from models import Inspeccion
+from models import Anio_Construccion
+from models import  Participante
+from models import  Capacidad_Ocupacion
+
+#region  2.Datos de los participantes (Modelo Participante)
+
+class ParticipanteAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class ParticipanteInline(admin.StackedInline):
+    model = Participante
+    can_delete = False
+    can_add = False
+    verbose_name_plural = 'Datos de los participantes'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+#endregion
+
+#region  3.Datos del entrevistado (Modelo Entrevistado)
+
+class EntrevistadoAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class EntrevistadoInline(admin.StackedInline):
+    model = Entrevistado
+    can_delete = False
+    verbose_name_plural = 'Datos del Entrevistado'
+    max_num = 1
+
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('cod_ocup','nom_entrev'),
+                ('tlf_entrev','email_entr'),
+
+                )
+        }),
+        )
+
+#endregion
+
+#region  4.Identificación y ubicaicón de la edificación (Modelo Estructura)
+
+class EstructuraAdmin(admin.ModelAdmin):
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class EstructuraInline(admin.StackedInline):
+    model = Estructura
+    can_delete = False
+    verbose_name_plural = 'Identificación y ubicación de la edificación'
+    max_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('nombre_n','n_pisos'),
+                ('n_semi_sot','n_sotanos'),
+                ('ciudad','municipio'),
+                ('parroquia','urb_barrio'),
+                ('sector','calle'),
+                ('manzana','parcela','pto_referencia'),
+
+
+                )
+        }),
+        )
+
+#endregion
+
+#region  5.uso de la Edificación (Modelo Uso)
+
+class UsoAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ),
+            }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class UsoInline(admin.StackedInline):
+    model = Uso
+    can_delete = False
+    verbose_name_plural = 'Uso de la edificación'
+    max_num = 1
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('u_gubernam','u_educativ'),
+                ('u_bomberos','u_dep_recr'),
+                ('u_pr_civil', 'u_cultural'),
+                ('u_policial','u_industri'),
+                ('u_militar','u_comercia'),
+                ('u_viv_pop','u_oficina'),
+                ('u_viv_unif','u_religios'),
+                ('u_viv_mult','u_otros'),
+                ('u_med_asis'),
+                ('otro_uso')
+                ),
+            }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+#endregion
+
+#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
+
+
+class Capacidad_OcupacionAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('habitantes','t_o_manana'),
+                ('t_o_tarde','t_o_noche'),
+
+
+                ),
+            }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class Capacidad_OcupacionInline(admin.StackedInline):
+    model = Capacidad_Ocupacion
+    can_delete = False
+    verbose_name_plural = 'Capacidad de Ubicación'
+    max_num = 1
+    fieldsets = (
+        (None, {
+            'fields': (
+
+
+                ('habitantes','t_o_manana'),
+                ('t_o_tarde','t_o_noche'),
+
+
+                ),
+            }),
+        )
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
+
+
+
 
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 class Tipo_EstructuralAdmin(admin.ModelAdmin):
 
@@ -40,29 +261,12 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
                 'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
-class UsoAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('u_gubernam','u_bomberos'),
-                ('u_pr_civil','u_policial'),
-                ('u_militar', 'u_med_asis'),
-                ('u_educativ','u_viv_pop'),
-                ('u_viv_unif','u_viv_mult'),
-                ('u_dep_recr','u_cultural'),
-                ('u_industri','u_comercia'),
-                ('u_oficina','u_religios'),
-                ('u_otros'),
-                )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 
 
 
@@ -87,6 +291,12 @@ class IrregularidadAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
 
 class Grado_DeterioroAdmin(admin.ModelAdmin):
 
@@ -106,90 +316,62 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
 
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
-class EntrevistadoInline(admin.StackedInline):
-    model = Entrevistado
-    can_delete = False
-    verbose_name_plural = 'Datos del Entrevistado'
-    max_num = 1
-
-
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
-class EstructuraInline(admin.StackedInline):
-    model = Estructura
-    can_delete = False
-    verbose_name_plural = 'Identificacion y ubicacion de la edificacion'
-    max_num = 1
-
-
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
-class DireccionInline(admin.StackedInline):
-    model = Direccion
-    can_delete = False
-    verbose_name_plural = 'Identificacion y ubicacion de la edificacion'
-    max_num = 1
-
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
-class UsoInline(admin.StackedInline):
-    model = Uso
-    can_delete = False
-    verbose_name_plural = 'Uso de la edificacion'
-    max_num = 1
     fieldsets = (
         (None, {
             'fields': (
-                ('u_gubernam','u_bomberos'),
-                ('u_pr_civil','u_policial'),
-                ('u_militar', 'u_med_asis'),
-                ('u_educativ','u_viv_pop'),
-                ('u_viv_unif','u_viv_mult'),
-                ('u_dep_recr','u_cultural'),
-                ('u_industri','u_comercia'),
-                ('u_oficina','u_religios'),
-                ('u_otros'),
+                ('periodo','anio_inici', 'anio_fin'),
+
+                ('fecha_infer')
+
                 )
         }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
+#    class  Media:
+#        js = ("js/sismo_caracas_validaciones.js",)
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
-class Periodo_ConstruccionInline(admin.StackedInline):
-    model = Periodo_Construccion
-    can_delete = False
-    verbose_name_plural = 'Año de construccion'
-    max_num = 1
+#    def get_model_perms(self, request):
+#        """
+#        Return empty perms dict thus hiding the model from admin index.
+#        """
+#        return {}
 
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
+
+class Anio_ConstruccionAdmin(admin.ModelAdmin):
+
+        exclude = ('fecha_inf',)
+
+#    def get_model_perms(self, request):
+#        """
+#        Return empty perms dict thus hiding the model from admin index.
+#        """
+#        return {}
+
+
+
+
+
+#
+#class Periodo_ConstruccionInline(admin.StackedInline):
+#    model = Periodo_Construccion
+#    can_delete = False
+#    verbose_name_plural = 'Año de construcción'
+#    max_num = 1
+#
+#    class  Media:
+#        js = ("js/sismo_caracas_validaciones.js",)
+
+
 class Condicion_TerrenoInline(admin.StackedInline):
     model = Condicion_Terreno
     can_delete = False
@@ -201,9 +383,6 @@ class Condicion_TerrenoInline(admin.StackedInline):
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class Tipo_EstructuralInline(admin.StackedInline):
     model = Tipo_Estructural
     can_delete = False
@@ -234,9 +413,6 @@ class Tipo_EstructuralInline(admin.StackedInline):
 
 
 
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class IrregularidadInline(admin.StackedInline):
     model = Irregularidad
     can_delete = False
@@ -263,10 +439,6 @@ class IrregularidadInline(admin.StackedInline):
         }
 
 
-
-# Adding UserProfile fields to the admin
-# Define an inline admin descriptor for User model
-# which acts a bit like a singleton
 class Grado_DeterioroInline(admin.StackedInline):
     model = Grado_Deterioro
     can_delete = False
@@ -291,22 +463,29 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 
-# Define a new User admin
+
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( EntrevistadoInline,EstructuraInline,DireccionInline, UsoInline,Periodo_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline )
     verbose_name = 'Datos Generales'
+    verbose_name_plural = 'Datos Generales'
 
 
 
 
-admin.site.register(Entrevistado)
-admin.site.register(Direccion)
-admin.site.register(Estructura)
+#region  Registro de modelos  en el admin
+
+admin.site.register(Participante,ParticipanteAdmin)
+admin.site.register(Entrevistado,EntrevistadoAdmin)
+admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
+admin.site.register(Capacidad_Ocupacion,Capacidad_OcupacionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
 admin.site.register(Periodo_Construccion,Periodo_ConstruccionAdmin)
+admin.site.register(Anio_Construccion,Anio_ConstruccionAdmin)
 
+
+#endregion
