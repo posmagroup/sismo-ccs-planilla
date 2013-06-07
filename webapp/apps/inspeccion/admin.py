@@ -308,6 +308,75 @@ class Condicion_TerrenoInline(admin.StackedInline):
 
 #endregion
 
+#region  9.Tipo Estructural (Modelo Tipo_Estructural)
+
+
+class Tipo_EstructuralAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('pca','pcap'),
+                ('mca2d','mca1d'),
+                ('pa', 'papt'),
+                ('pad','pac'),
+                ('pre','mmc'),
+                ('mmnc','vb'),
+                ('vcp'),
+#                ('n_pisos_nc','n_pisos_bc'),
+#                ('esq_planta','esq_elevac'),
+                )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+class Tipo_EstructuralInline(admin.StackedInline):
+    model = Tipo_Estructural
+    can_delete = False
+    verbose_name_plural = 'Tipo estructural'
+    max_num = 1
+
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('pca','pac'),
+                ('pcap','pre'),
+                ('mca2d', 'mmc'),
+                ('mca1d','mmnc'),
+                ('pa','pmbc'),
+                ('papt','vb'),
+                ('pad','vcp'),
+                #('n_pisos_nc','n_pisos_bc'),
+                #                ('esq_planta','esq_elevac'),
+                )
+        }),
+        )
+
+
+
+
+class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+#endregion
+
+
 #region  14.Observaciones (Modelo Observacion)
 
 
@@ -337,34 +406,6 @@ class ObservacionInline(admin.StackedInline):
 #endregion
 
 
-class Tipo_EstructuralAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('pca','pcap'),
-                ('mca2d','mca1d'),
-                ('pa', 'papt'),
-                ('pad','pac'),
-                ('pre','mmc'),
-                ('mmnc','vb'),
-                ('vcp','n_pisos_cf'),
-                ('n_pisos_nc','n_pisos_bc'),
-                ('esq_planta','esq_elevac'),
-            )
-        }),
-    )
-
-    class Media:
-        css = {
-                'all':("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 
 
@@ -426,35 +467,6 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
 
 
-
-
-
-class Tipo_EstructuralInline(admin.StackedInline):
-    model = Tipo_Estructural
-    can_delete = False
-    verbose_name_plural = 'Tipo estructural'
-    max_num = 1
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('pca','pcap'),
-                ('mca2d','mca1d'),
-                ('pa', 'papt'),
-                ('pad','pac'),
-                ('pre','mmc'),
-                ('mmnc','vb'),
-                ('vcp','n_pisos_cf'),
-                ('n_pisos_nc','n_pisos_bc'),
-                ('esq_planta','esq_elevac'),
-                )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 
 
 
