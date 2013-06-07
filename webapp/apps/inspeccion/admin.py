@@ -15,6 +15,7 @@ from models import Participante
 from models import Capacidad_Ocupacion
 from models import Observacion
 from models import Esquema_Planta
+from models import Esquema_Elevacion
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -377,7 +378,6 @@ class Media:
 
 #endregion
 
-
 #region  10.Esquema Planta (Modelo Esquema_Planta)
 
 
@@ -404,6 +404,41 @@ class Esquema_PlantaInline(admin.StackedInline):
     model = Esquema_Planta
     can_delete = False
     verbose_name_plural = 'Esquema de planta'
+    max_num = 1
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
+
+#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
+
+
+
+class Esquema_ElevacionAdmin(admin.ModelAdmin):
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+
+
+class Esquema_ElevacionInline(admin.StackedInline):
+    model = Esquema_Elevacion
+    can_delete = False
+    verbose_name_plural = 'Esquema de Elevación'
     max_num = 1
 
 
@@ -559,7 +594,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, Esquema_PlantaInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
@@ -570,6 +605,7 @@ class InspeccionAdmin(admin.ModelAdmin):
 
 admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Esquema_Planta,Esquema_PlantaAdmin)
+admin.site.register(Esquema_Elevacion,Esquema_ElevacionAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)

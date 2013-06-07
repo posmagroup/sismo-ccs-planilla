@@ -405,20 +405,7 @@ class Tipo_Estructural(models.Model):
 
 
 
-    # Defining possible choices
-    # for the esq_elevac field in the model.
-    ESQUEMA_ELEVACION_CHOICES = (
-        ('1', 'T'),
-        ('2', 'Piramide'),
-        ('3', 'Invertida'),
-        ('4', 'Piramidal'),
-        ('5', 'U'),
-        ('6', 'L'),
-        ('7', ' Rectangular'),
-        ('7', ' Esbeltez Vertical'),
-        ('7', ' Ninguno'),
 
-        )
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     pca = models.BooleanField(verbose_name="Pórticos de concreto armado",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",default= False)
     pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",default= False)
@@ -458,8 +445,6 @@ class Tipo_Estructural(models.Model):
 
 #endregion
 
-
-
 #region  10.Esquema Planta (Modelo Esquema_Planta)
 
 
@@ -488,7 +473,7 @@ class Esquema_Planta(models.Model):
         )
 
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    esq_planta = models.CharField(verbose_name="Esquema en  Planta",max_length=1,choices=ESQUEMA_PLANTA_CHOICES,help_text="Describe la forma de la planta del edificio, es decir, vista desde arriba. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal' se cumpla cuando el cociente entre el largo y ancho del menor rectangula que inscriba al edificio en planta sea mayor a 5.")
+    esq_planta = models.CharField(verbose_name="Esquema de  Planta",max_length=1,choices=ESQUEMA_PLANTA_CHOICES,help_text="Describe la forma de la planta del edificio, es decir, vista desde arriba. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal' se cumpla cuando el cociente entre el largo y ancho del menor rectangula que inscriba al edificio en planta sea mayor a 5.")
 
     class  Meta:
 
@@ -500,6 +485,54 @@ class Esquema_Planta(models.Model):
     def __unicode__(self):
 
         return u'Esquema Planta, consultar para mas detalles. '
+
+
+
+
+
+#endregion
+
+
+#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
+
+
+class Esquema_Elevacion(models.Model):
+
+    """
+    Purpose:
+
+
+    Features:
+        1) .
+    """
+
+    # Defining possible choices
+    # for the esq_elevac field in the model.
+    ESQUEMA_ELEVACION_CHOICES = (
+        ('1', 'T'),
+        ('2', 'Piramide Invertida'),
+        ('3', 'Piramidal'),
+        ('4', 'U'),
+        ('5', 'L'),
+        ('6', 'Rectangular'),
+        ('8', 'Esbeltez Vertical'),
+        ('9', 'Ninguno'),
+
+        )
+
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    esq_elevac = models.CharField(verbose_name="Esquema de Elevación",max_length=1,choices=ESQUEMA_ELEVACION_CHOICES,help_text="Describe la forma de elevación del edificio, es decir, vista desde un lateral. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Vertical' se cumpla cuando el cociente entre la altura del edificio y la menor dimensión en planta exceda a 4.")
+
+    class  Meta:
+
+        verbose_name ='Esquema Elevación'
+        verbose_name_plural ='Esquema Elevación'
+
+
+
+    def __unicode__(self):
+
+        return u'Esquema Elevación, consultar para mas detalles. '
 
 
 
