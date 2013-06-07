@@ -403,18 +403,6 @@ class Tipo_Estructural(models.Model):
         1) All fields are not mandatory.
     """
 
-    # Defining possible choices
-    # for the esq_planta field in the model.
-    ESQUEMA_PLANTA_CHOICES = (
-        ('1', 'H'),
-        ('2', 'T'),
-        ('3', 'U ó C'),
-        ('4', 'L'),
-        ('5', 'Cajón'),
-        ('6', 'Esbeltez Horizontal'),
-        ('7', ' Ninguno')
-
-        )
 
 
     # Defining possible choices
@@ -464,6 +452,55 @@ class Tipo_Estructural(models.Model):
     def __unicode__(self):
 
         return u' Tipo Estructural, consultar para mas detalles. '
+
+
+
+
+#endregion
+
+
+
+#region  10.Esquema Planta (Modelo Esquema_Planta)
+
+
+class Esquema_Planta(models.Model):
+
+    """
+    Purpose:
+
+
+    Features:
+        1) .
+    """
+
+    # Defining possible choices
+    # for the esq_planta field in the model.
+    ESQUEMA_PLANTA_CHOICES = (
+        ('1', 'H'),
+        ('2', 'T'),
+        ('3', 'U ó C'),
+        ('4', 'L'),
+        ('5', 'Cajón'),
+        ('6', 'Regular'),
+        ('7', 'Esbeltez Horizontal'),
+        ('8', ' Ninguno')
+
+        )
+
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    esq_planta = models.CharField(verbose_name="Esquema en  Planta",max_length=1,choices=ESQUEMA_PLANTA_CHOICES,help_text="Describe la forma de la planta del edificio, es decir, vista desde arriba. Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal' se cumpla cuando el cociente entre el largo y ancho del menor rectangula que inscriba al edificio en planta sea mayor a 5.")
+
+    class  Meta:
+
+        verbose_name ='Esquema Planta'
+        verbose_name_plural ='Esquema Planta'
+
+
+
+    def __unicode__(self):
+
+        return u'Esquema Planta, consultar para mas detalles. '
+
 
 
 

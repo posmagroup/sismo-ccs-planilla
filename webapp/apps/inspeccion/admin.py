@@ -14,6 +14,7 @@ from models import Anio_Construccion
 from models import Participante
 from models import Capacidad_Ocupacion
 from models import Observacion
+from models import Esquema_Planta
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -377,6 +378,41 @@ class Media:
 #endregion
 
 
+#region  10.Esquema Planta (Modelo Esquema_Planta)
+
+
+
+class Esquema_PlantaAdmin(admin.ModelAdmin):
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+
+
+class Esquema_PlantaInline(admin.StackedInline):
+    model = Esquema_Planta
+    can_delete = False
+    verbose_name_plural = 'Esquema de planta'
+    max_num = 1
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
+
 #region  14.Observaciones (Modelo Observacion)
 
 
@@ -523,7 +559,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, Esquema_PlantaInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
@@ -533,6 +569,7 @@ class InspeccionAdmin(admin.ModelAdmin):
 #region  Registro de modelos  en el admin
 
 admin.site.register(Participante,ParticipanteAdmin)
+admin.site.register(Esquema_Planta,Esquema_PlantaAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
