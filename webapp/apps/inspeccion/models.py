@@ -6,7 +6,28 @@ from django.conf import settings
 
 
 from django.contrib.gis.db import models
-#region  1.Datos Generales (Modelo Inspeccion)
+#region  1.Datos Generales (Modelo Inspeccion, Poligono)
+
+
+
+
+class Poligono(models.Model):
+
+
+    # acá viene la magia de geodjango
+    poligono = models.MultiPolygonField(null=True, blank=True)
+    objects = models.GeoManager()
+
+    class  Meta:
+
+        verbose_name ='Poligono'
+        verbose_name_plural ='Poligonos'
+
+    def __unicode__(self):
+
+        return u'Poligono %s ' % (self.id)
+
+
 
 class  Inspeccion(models.Model):
 
@@ -23,7 +44,7 @@ class  Inspeccion(models.Model):
     hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
     hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
     #c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
-
+    poligono = models.ForeignKey(Poligono,verbose_name="Polìgono", blank=True, null=True)
 
 
     class  Meta:
@@ -34,25 +55,6 @@ class  Inspeccion(models.Model):
     def __unicode__(self):
 
         return u'Inspección %s' % self.id
-
-
-
-
-class Poligono(models.Model):
-
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección", blank=True, null=True)
-    # acá viene la magia de geodjango
-    poligono = models.MultiPolygonField(null=True, blank=True)
-    objects = models.GeoManager()
-
-    class  Meta:
-
-        verbose_name ='Poligono'
-        verbose_name_plural ='Poligonos'
-
-    def __unicode__(self):
-
-        return u'Poligono %s' % self.id
 
 
 

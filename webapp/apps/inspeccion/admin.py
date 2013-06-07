@@ -46,7 +46,11 @@ class PoligonoInline(admin.StackedInline):
     max_num = 1
 
     class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
+        js = ("js/sismo_caracas_validaciones.js","js/OpenLayers.js",)
+        css = {
+            'all':("stylesheets/tipo_estructural.css","stylesheets/OpenLayer.css",)
+        }
+
 
 
 #endregion
@@ -644,7 +648,7 @@ class AnexoInline(admin.StackedInline):
 #region  Admin (inlines )de  Inspeccion
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( PoligonoInline,ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
