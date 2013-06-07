@@ -7,8 +7,10 @@ DEBUG = True
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', 
-        'NAME': os.path.join(settings.VAR_ROOT, 'sismo_caracas.db'),
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'sismocaracas',
+        'USER':'postgres',
+        'PASSWORD':'postgres',
     }
 }
 

@@ -14,6 +14,8 @@ from models import Anio_Construccion
 from models import Participante
 from models import Capacidad_Ocupacion
 from models import Observacion
+from models import Esquema_Planta
+from models import Esquema_Elevacion
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -231,14 +233,14 @@ class Capacidad_OcupacionInline(admin.StackedInline):
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
     class  Media:
-        js = ("js/periodo_s.js",)
+        js = ("js/periodo_construccion.js",)
 
     fieldsets = (
         (None, {
             'fields': (
                 ('periodo','anio_inici', 'anio_fin'),
 
-                ('fecha_infer')
+
 
                 )
         }),
@@ -261,6 +263,20 @@ class Anio_ConstruccionInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Año de construcción'
     max_num = 1
+    exclude = ('fecha_inf',)
+
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('anio','periodo'),
+
+
+
+                )
+        }),
+        )
+
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
@@ -268,7 +284,169 @@ class Anio_ConstruccionInline(admin.StackedInline):
 
 #endregion
 
+#region  8.Condicion del terreno (Modelo Condicion_Terreno)
 
+
+class Condicion_TerrenoAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class Condicion_TerrenoInline(admin.StackedInline):
+    model = Condicion_Terreno
+    can_delete = False
+    verbose_name_plural = 'Condición del terreno'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+#endregion
+
+#region  9.Tipo Estructural (Modelo Tipo_Estructural)
+
+
+class Tipo_EstructuralAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('pca','pcap'),
+                ('mca2d','mca1d'),
+                ('pa', 'papt'),
+                ('pad','pac'),
+                ('pre','mmc'),
+                ('mmnc','vb'),
+                ('vcp'),
+#                ('n_pisos_nc','n_pisos_bc'),
+#                ('esq_planta','esq_elevac'),
+                )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+class Tipo_EstructuralInline(admin.StackedInline):
+    model = Tipo_Estructural
+    can_delete = False
+    verbose_name_plural = 'Tipo estructural'
+    max_num = 1
+
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('pca','pac'),
+                ('pcap','pre'),
+                ('mca2d', 'mmc'),
+                ('mca1d','mmnc'),
+                ('pa','pmbc'),
+                ('papt','vb'),
+                ('pad','vcp'),
+                #('n_pisos_nc','n_pisos_bc'),
+                #                ('esq_planta','esq_elevac'),
+                )
+        }),
+        )
+
+
+
+
+class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+#endregion
+
+#region  10.Esquema Planta (Modelo Esquema_Planta)
+
+
+
+class Esquema_PlantaAdmin(admin.ModelAdmin):
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+
+
+class Esquema_PlantaInline(admin.StackedInline):
+    model = Esquema_Planta
+    can_delete = False
+    verbose_name_plural = 'Esquema de planta'
+    max_num = 1
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
+
+#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
+
+
+
+class Esquema_ElevacionAdmin(admin.ModelAdmin):
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+
+
+class Esquema_ElevacionInline(admin.StackedInline):
+    model = Esquema_Elevacion
+    can_delete = False
+    verbose_name_plural = 'Esquema de Elevación'
+    max_num = 1
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+#endregion
 
 #region  14.Observaciones (Modelo Observacion)
 
@@ -298,45 +476,7 @@ class ObservacionInline(admin.StackedInline):
 
 #endregion
 
-class Condicion_TerrenoAdmin(admin.ModelAdmin):
 
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
-
-class Tipo_EstructuralAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('pca','pcap'),
-                ('mca2d','mca1d'),
-                ('pa', 'papt'),
-                ('pad','pac'),
-                ('pre','mmc'),
-                ('mmnc','vb'),
-                ('vcp','n_pisos_cf'),
-                ('n_pisos_nc','n_pisos_bc'),
-                ('esq_planta','esq_elevac'),
-            )
-        }),
-    )
-
-    class Media:
-        css = {
-                'all':("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 
 
@@ -400,45 +540,6 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
 
 
-class Condicion_TerrenoInline(admin.StackedInline):
-    model = Condicion_Terreno
-    can_delete = False
-    verbose_name_plural = 'Condición del terreno'
-    max_num = 1
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
-
-class Tipo_EstructuralInline(admin.StackedInline):
-    model = Tipo_Estructural
-    can_delete = False
-    verbose_name_plural = 'Tipo estructural'
-    max_num = 1
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('pca','pcap'),
-                ('mca2d','mca1d'),
-                ('pa', 'papt'),
-                ('pad','pac'),
-                ('pre','mmc'),
-                ('mmnc','vb'),
-                ('vcp','n_pisos_cf'),
-                ('n_pisos_nc','n_pisos_bc'),
-                ('esq_planta','esq_elevac'),
-                )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-
 
 
 class IrregularidadInline(admin.StackedInline):
@@ -493,7 +594,7 @@ class Grado_DeterioroInline(admin.StackedInline):
 
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline, IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
@@ -503,6 +604,8 @@ class InspeccionAdmin(admin.ModelAdmin):
 #region  Registro de modelos  en el admin
 
 admin.site.register(Participante,ParticipanteAdmin)
+admin.site.register(Esquema_Planta,Esquema_PlantaAdmin)
+admin.site.register(Esquema_Elevacion,Esquema_ElevacionAdmin)
 admin.site.register(Entrevistado,EntrevistadoAdmin)
 admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
