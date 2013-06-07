@@ -495,6 +495,62 @@ class IrregularidadInline(admin.StackedInline):
 
 #endregion
 
+#region  13.Grados de deterioro (Modelo  Grado_Deterioro)
+
+
+
+class Grado_DeterioroAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('ec_agri_es','ea_corr_ac'),
+                ('agrietamie','e_mantenim'),
+
+
+                )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+class Grado_DeterioroInline(admin.StackedInline):
+    model = Grado_Deterioro
+    can_delete = False
+    verbose_name_plural = 'Grado de deterioro'
+    max_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('ec_agri_es','agrietamie'),
+                ('ea_corr_ac','e_mantenim'),
+
+
+                )
+        }),
+        )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+
+#endregion
+
 #region  14.Observaciones (Modelo Observacion)
 
 
@@ -524,63 +580,6 @@ class ObservacionInline(admin.StackedInline):
 #endregion
 
 
-
-
-
-class Grado_DeterioroAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('ec_agri_es','ea_corr_ac'),
-                ('agrietamie','e_mantenim'),
-
-
-            )
-        }),
-    )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
-
-
-
-
-
-
-
-
-
-
-class Grado_DeterioroInline(admin.StackedInline):
-    model = Grado_Deterioro
-    can_delete = False
-    verbose_name_plural = 'Grado de deterioro'
-    max_num = 1
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('ec_agri_es','ea_corr_ac'),
-                ('agrietamie','e_mantenim'),
-
-
-                )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 
 
 

@@ -577,7 +577,55 @@ class Irregularidad(models.Model):
 
 #endregion
 
+#region  13.Grados de deterioro (Modelo  Grado_Deterioro)
 
+
+class Grado_Deterioro(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling damage
+         to include in the inspection model
+
+    Features:
+        1) sep_edif field is mandatory.
+    """
+
+    # Defining possible choices
+    # for the ec_agri_es,ea_corr_ac,agrietamie fields in the model.
+    GRADO_DETERIORO_CHOICES = (
+        ('1', 'Ninguno'),
+        ('2', 'Moderado'),
+        ('3', 'Severo')
+        )
+
+    # Defining possible choices
+    # for the e_mantenim field in the model.
+    GRADO_DETERIORO_MANTENIMIENTO_CHOICES = (
+        ('1', 'Bueno'),
+        ('2', 'Regular'),
+        ('3', 'Bajo')
+        )
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de concreto como: columnas, vigas, muros o losas, en términos de agrietamiento en éstos, presencia de corrosión del acero de refuezo, pérdida del recubrimiento entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de acero como: sistema de piso, columnas, vigas o arriostramientos de perfiles de sección abierta o cerrada, en términos de pandeo, fractura en conexiones, corrosión entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="Describe la presencia de grietas en las paredes de bloques de concreto o arcilla, si estas presentan una abertura mayor a los 2mm.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
+    e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento", help_text="Describe el estado de mantenimiento en general de la estructura en terminos de humedad o filtración, deterioro y abandono.", max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
+
+
+    class  Meta:
+
+        verbose_name ='Grado de Deterioro'
+        verbose_name_plural ='Grados de Deterioro'
+
+    def __unicode__(self):
+
+        return u' Grados de Deterioro, consultar para mas detalles. '
+
+
+
+
+#endregion
 
 #region  14.Observaciones (Modelo Observacion)
 
@@ -614,49 +662,5 @@ class Observacion(models.Model):
 
 
 
-
-
-
-class Grado_Deterioro(models.Model):
-
-    """
-    Purpose:
-        Defines a  model for handling damage
-         to include in the inspection model
-
-    Features:
-        1) sep_edif field is mandatory.
-    """
-
-    # Defining possible choices
-    # for the ec_agri_es,ea_corr_ac,agrietamie fields in the model.
-    GRADO_DETERIORO_CHOICES = (
-        ('1', 'Ninguno'),
-        ('2', 'Moderado'),
-        ('3', 'Severo')
-    )
-
-    # Defining possible choices
-    # for the e_mantenim field in the model.
-    GRADO_DETERIORO_MANTENIMIENTO_CHOICES = (
-        ('1', 'Bueno'),
-        ('2', 'Regular'),
-        ('3', 'Bajo')
-    )
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de concreto como: columnas, vigas, muros o losas, en términos de agrietamiento en éstos, presencia de corrosión del acero de refuezo, pérdida del recubrimiento entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos" , help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de acero como: sistema de piso, columnas, vigas o arriostramientos de perfiles de sección abierta o cerrada, en términos de pandeo, fractura en conexiones, corrosión entre otros.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",help_text="Describe la presencia de grietas en las paredes de bloques de concreto o arcilla, si estas presentan una abertura mayor a los 2mm.",max_length=1,choices=GRADO_DETERIORO_CHOICES)
-    e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento", help_text="Describe el estado de mantenimiento en general de la estructura en terminos de humedad o filtración, deterioro y abandono.", max_length=1,choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
-
-
-    class  Meta:
-
-        verbose_name ='Grado de Deterioro'
-        verbose_name_plural ='Grados de Deterioro'
-
-    def __unicode__(self):
-
-        return u' Grados de Deterioro, consultar para mas detalles. '
 
 
