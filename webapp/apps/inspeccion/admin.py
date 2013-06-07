@@ -231,14 +231,14 @@ class Capacidad_OcupacionInline(admin.StackedInline):
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
     class  Media:
-        js = ("js/periodo_s.js",)
+        js = ("js/periodo_construccion.js",)
 
     fieldsets = (
         (None, {
             'fields': (
                 ('periodo','anio_inici', 'anio_fin'),
 
-                ('fecha_infer')
+
 
                 )
         }),
@@ -261,6 +261,20 @@ class Anio_ConstruccionInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Año de construcción'
     max_num = 1
+    exclude = ('fecha_inf',)
+
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('anio','periodo'),
+
+
+
+                )
+        }),
+        )
+
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
@@ -268,7 +282,31 @@ class Anio_ConstruccionInline(admin.StackedInline):
 
 #endregion
 
+#region  8.Condicion del terreno (Modelo Condicion_Terreno)
 
+
+class Condicion_TerrenoAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+class Condicion_TerrenoInline(admin.StackedInline):
+    model = Condicion_Terreno
+    can_delete = False
+    verbose_name_plural = 'Condición del terreno'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+#endregion
 
 #region  14.Observaciones (Modelo Observacion)
 
@@ -298,16 +336,6 @@ class ObservacionInline(admin.StackedInline):
 
 #endregion
 
-class Condicion_TerrenoAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 class Tipo_EstructuralAdmin(admin.ModelAdmin):
 
@@ -398,16 +426,6 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
 
 
-
-
-class Condicion_TerrenoInline(admin.StackedInline):
-    model = Condicion_Terreno
-    can_delete = False
-    verbose_name_plural = 'Condición del terreno'
-    max_num = 1
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
 
 
 

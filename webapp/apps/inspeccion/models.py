@@ -1,9 +1,10 @@
 # -*- coding: utf8 -*-
+import django
 from django.contrib.auth.models import User
-from django.db import models
 
 
 
+from django.contrib.gis.db import models
 #region  1.Datos Generales (Modelo Inspeccion)
 
 class  Inspeccion(models.Model):
@@ -22,6 +23,11 @@ class  Inspeccion(models.Model):
     hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
     #c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
 
+    # acá viene la magia de geodjango
+    poligono = models.MultiPolygonField(null=True, blank=True)
+    objects = models.GeoManager()
+
+
     class  Meta:
 
         verbose_name ='Inspección'
@@ -29,13 +35,17 @@ class  Inspeccion(models.Model):
 
     def __unicode__(self):
 
-        return u'Inspección, consultar para mas detalles. '
+        return u'Inspección %s' % self.id
 
 
-    def save(self, force_insert=False, force_update=False, using=None):
-        return 0
+
+
+
+
 
 #endregion
+
+
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -249,7 +259,7 @@ class Periodo_Construccion(models.Model):
     periodo = models.CharField(verbose_name="Período" , help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
     anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el período",max_length=5, null= True, blank=True)
     anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el período",max_length=5, null= True, blank=True)
-    fecha_infer = models.BooleanField(default=False)
+
 
 
     class  Meta:
@@ -270,7 +280,7 @@ class Periodo_Construccion(models.Model):
 
         if (self.periodo == '3'):
 
-            return u' Período de Construcción: Despues de  %s ' % self.anio_fin
+            return u'  Despues de  %s ' % self.anio_fin
 
         return u'  consultar para mas detalles. '
 
@@ -291,7 +301,7 @@ class Anio_Construccion(models.Model):
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
     periodo = models.ForeignKey(Periodo_Construccion,verbose_name="Periodo de Construccion",help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.")
-    anio = models.CharField(verbose_name="Año" , help_text="",max_length=1,null= True, blank=True)
+    anio = models.CharField(verbose_name="Año" , help_text="",max_length=1)
     fecha_inf = models.BooleanField(verbose_name="Fecha Inferida",help_text="",default= False)
 
     class  Meta:
@@ -308,7 +318,77 @@ class Anio_Construccion(models.Model):
 
 #endregion
 
+#region  8.Condicion del terreno (Modelo Condicion_Terreno)
 
+
+class Condicion_Terreno(models.Model):
+
+    """
+    Purpose:
+        Defines a  model for handling terrain conditions
+         to include in the inspection model
+
+    Features:
+        1) Drenaje and  forma_terr fields are mandatory.
+    """
+
+    # Defining possible choices
+    # for the forma_terr field in the model.
+    FORMA_TERRENO_CHOICES = (
+        ('1', 'Planice'),
+        ('2', 'Ladera'),
+        ('3', 'Base'),
+        ('4', 'Cima')
+        )
+
+    # Defining possible choices
+    # for the pend_terr field in the model.
+    PENDIENTE_TERRENO_CHOICES = (
+        ('1', '20º-45º'),
+        ('2', 'Mayor a 45º')
+        )
+
+    # Defining possible choices
+    # for the pend_talud field in the model.
+    PENDIENTE_TALUD_CHOICES = (
+        ('1', '20º-45º'),
+        ('2',  'Mayor a 45º')
+        )
+
+    # Defining possible choices
+    # for the sep_talud field in the model.
+    SEPARACION_TALUD_CHOICES = (
+        ('1', 'Menor a H del talud'),
+        ('2',  'Mayor a H del talud')
+        )
+
+    # Defining possible choices
+    # for the sep_talud field in the model.
+    DRENAJE_TALUD_CHOICES = (
+        ('1', 'Si'),
+        ('2',  'No')
+        )
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
+    forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="Forma del terreno donde está emplazada la edificación",choices=FORMA_TERRENO_CHOICES)
+    pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="Grado de Inclinación del terreno cada 100 metros",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
+    l_m_ladera = models.CharField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="Ubicación de la edificacion en una ladera con respecto a la altura total del terreno. Responde la pregunta ¿La edificación esta construida en la mitad superior de la ladera?",choices=DRENAJE_TALUD_CHOICES,max_length=1,blank=True, null=True)
+    pend_talud = models.CharField(verbose_name="Pendiente del talud",help_text="Grado de inclinación del terreno en el talud",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
+    sep_talud = models.CharField(verbose_name="Separación del talud",help_text="separación que existe entre la edificación y el talud en metros",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
+    drenaje = models.CharField(verbose_name="Drenajes",help_text="Si la edificaicón esta ubicada sobre el curso de una quebrada, o un cauce intermitente",max_length=1,choices=DRENAJE_TALUD_CHOICES)
+
+
+    class  Meta:
+
+        verbose_name ='Condición del Terreno'
+        verbose_name_plural ='Condiciones de los Terrenos'
+
+    def __unicode__(self):
+
+        return u' Condición: Forma del Terreno %s ' % (self.forma_terr)
+
+
+
+#endregion
 
 
 
@@ -344,65 +424,6 @@ class Observacion(models.Model):
 
 #endregion
 
-
-
-class Condicion_Terreno(models.Model):
-
-    """
-    Purpose:
-        Defines a  model for handling terrain conditions
-         to include in the inspection model
-
-    Features:
-        1) Drenaje and  forma_terr fields are mandatory.
-    """
-
-    # Defining possible choices
-    # for the forma_terr field in the model.
-    FORMA_TERRENO_CHOICES = (
-        ('1', 'Planice'),
-        ('2', 'Ladera'),
-        ('3', 'Base'),
-        ('4', 'Cima')
-        )
-
-    # Defining possible choices
-    # for the pend_terr field in the model.
-    PENDIENTE_TERRENO_CHOICES = (
-        ('1', '20º-45º'),
-        ('2', 'Mayor a 45º')
-    )
-
-    # Defining possible choices
-    # for the pend_talud field in the model.
-    PENDIENTE_TALUD_CHOICES = (
-        ('1', '20º-45º'),
-        ('2',  'Mayor a 45º')
-        )
-
-    # Defining possible choices
-    # for the sep_talud field in the model.
-    SEPARACION_TALUD_CHOICES = (
-        ('1', 'Menor a H del talud'),
-        ('2',  'Mayor a H del talud')
-        )
-    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    forma_terr = models.CharField(verbose_name="Forma del terreno",max_length=1,help_text="Forma del terreno donde está emplazada la edificación",choices=FORMA_TERRENO_CHOICES)
-    pend_terr =  models.CharField(verbose_name="Pendiente del terreno",max_length=1, help_text="Grado de Inclinación del terreno cada 100 metros",choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
-    l_m_ladera = models.BooleanField(verbose_name="Localizada sobre la mitad superior de la ladera",help_text="Ubicación de la edificacion en una ladera con respecto a la altura total del terreno. Responde la pregunta ¿La edificación esta construida en la mitad superior de la ladera?",default= False, blank=True)
-    pend_talud = models.CharField(verbose_name="Pendiente del talud",help_text="Grado de inclinación del terreno en el talud",max_length=1,choices=PENDIENTE_TALUD_CHOICES, blank=True, null=True)
-    sep_talud = models.CharField(verbose_name="Separación del talud",help_text="separación que existe entre la edificación y el talud en metros",max_length=1,choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
-    drenaje = models.BooleanField(verbose_name="Drenajes",help_text="Si la edificaicón esta ubicada sobre el curso de una quebrada, o un cauce intermitente",default= False, blank=False)
-
-
-    class  Meta:
-
-        verbose_name ='Condición del Terreno'
-        verbose_name_plural ='Condiciones de los Terrenos'
-
-    def __unicode__(self):
-
-        return u' Condición: Forma del Terreno %s ' % (self.forma_terr)
 
 
 

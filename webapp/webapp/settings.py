@@ -193,12 +193,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django.contrib.gis',
 
     # Third Party Apps
     'south',
-    'compressor',
-    'imperavi',
+
 
     # Project Apps.
     'apps.usuario',
