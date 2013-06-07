@@ -19,14 +19,11 @@ class  Inspeccion(models.Model):
     """
 
     #codigo_sc = models.CharField(verbose_name="Código SismoCaracas",help_text="Codificación paralela, asignada internamente para el manejo de los datos",max_length=100)
-    fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False)
+    fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False,null= True, blank=True)
     hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
     hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
     #c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
 
-    # acá viene la magia de geodjango
-    poligono = models.MultiPolygonField(null=True, blank=True)
-    objects = models.GeoManager()
 
 
     class  Meta:
@@ -41,6 +38,21 @@ class  Inspeccion(models.Model):
 
 
 
+class Poligono(models.Model):
+
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección", blank=True, null=True)
+    # acá viene la magia de geodjango
+    poligono = models.MultiPolygonField(null=True, blank=True)
+    objects = models.GeoManager()
+
+    class  Meta:
+
+        verbose_name ='Poligono'
+        verbose_name_plural ='Poligonos'
+
+    def __unicode__(self):
+
+        return u'Poligono %s' % self.id
 
 
 
@@ -302,7 +314,7 @@ class Anio_Construccion(models.Model):
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
     periodo = models.ForeignKey(Periodo_Construccion,verbose_name="Periodo de Construccion",help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.")
-    anio = models.CharField(verbose_name="Año" , help_text="",max_length=1)
+    anio = models.CharField(verbose_name="Año" , help_text="",max_length=5)
     fecha_inf = models.BooleanField(verbose_name="Fecha Inferida",help_text="",default= False)
 
     class  Meta:
@@ -659,8 +671,6 @@ class Observacion(models.Model):
 
 
 #endregion
-
-
 
 #region  15.Anexos (Modelo Anexo)
 

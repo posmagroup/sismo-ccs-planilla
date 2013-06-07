@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
-from django.contrib import admin
+
+from django.contrib.gis import admin
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -17,6 +18,38 @@ from models import Observacion
 from models import Esquema_Planta
 from models import Esquema_Elevacion
 from models import Anexo
+from models import Poligono
+
+#region  1.Poligono (Modelo Poligono)
+
+
+class PoligonoAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+#    def get_model_perms(self, request):
+#        """
+#        Return empty perms dict thus hiding the model from admin index.
+#        """
+#        return {}
+
+class PoligonoInline(admin.StackedInline):
+    model = Poligono
+    can_delete = False
+    can_add = False
+    verbose_name_plural = 'Poligono'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+
+#endregion
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -580,8 +613,6 @@ class ObservacionInline(admin.StackedInline):
 
 #endregion
 
-
-
 #region  15.Anexos (Modelo Anexo)
 
 class AnexoAdmin(admin.ModelAdmin):
@@ -610,20 +641,17 @@ class AnexoInline(admin.StackedInline):
 
 #endregion
 
-
-
-#region  Admin de  Inspeccion
+#region  Admin (inlines )de  Inspeccion
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
+    inlines = ( PoligonoInline,ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
 #endregion
 
-
 #region  Registro de modelos  en el admin
-
+admin.site.register(Poligono,admin.OSMGeoAdmin)
 admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Esquema_Planta,Esquema_PlantaAdmin)
 admin.site.register(Esquema_Elevacion,Esquema_ElevacionAdmin)

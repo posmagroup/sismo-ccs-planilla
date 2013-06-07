@@ -15,6 +15,15 @@ DATABASES = {
 }
 
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'sismocaracas2',
+        'USER':'postgres',
+        'PASSWORD':'postgres',
+        }
+}
+
 if DEBUG:
     # Show emails in the console during developement.
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
