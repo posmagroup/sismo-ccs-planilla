@@ -16,6 +16,7 @@ from models import Capacidad_Ocupacion
 from models import Observacion
 from models import Esquema_Planta
 from models import Esquema_Elevacion
+from models import Anexo
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -581,15 +582,44 @@ class ObservacionInline(admin.StackedInline):
 
 
 
+#region  15.Anexos (Modelo Anexo)
+
+class AnexoAdmin(admin.ModelAdmin):
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+class AnexoInline(admin.StackedInline):
+    model = Anexo
+    can_delete = False
+    verbose_name_plural = 'Anexos'
+    max_num = 1
+
+    class  Media:
+        js = ("js/sismo_caracas_validaciones.js",)
 
 
+
+
+
+#endregion
+
+
+
+#region  Admin de  Inspeccion
 
 class InspeccionAdmin(admin.ModelAdmin):
-    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline )
+    inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
-
+#endregion
 
 
 #region  Registro de modelos  en el admin

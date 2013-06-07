@@ -1,7 +1,8 @@
 # -*- coding: utf8 -*-
-import django
-from django.contrib.auth.models import User
+import os
 
+from django.contrib.auth.models import User
+from django.conf import settings
 
 
 from django.contrib.gis.db import models
@@ -653,6 +654,51 @@ class Observacion(models.Model):
     def __unicode__(self):
 
         return u'Observaciones, consultar para mas detalles. '
+
+
+
+
+#endregion
+
+
+
+#region  15.Anexos (Modelo Anexo)
+
+class Anexo(models.Model):
+
+    """
+    Purpose:
+
+
+    Features:
+
+    """
+
+    def upload_to_path(self, filename):
+
+        """
+        Purpose:
+
+        Features:
+
+        """
+        return  os.path.join(settings.MEDIA_ROOT, filename)
+
+
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    foto_facha = models.FileField(verbose_name='Foto de fachada',upload_to=upload_to_path, blank=True, default='', null=True)
+    pla_esca = models.FileField(verbose_name='Planilla Escaneada',upload_to=upload_to_path, blank=True, default='', null=True)
+
+    class  Meta:
+
+        verbose_name ='Anexo'
+        verbose_name_plural ='Anexos'
+
+
+
+    def __unicode__(self):
+
+        return u'Anexos, consultar para mas detalles. '
 
 
 
