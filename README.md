@@ -45,13 +45,13 @@ GeoDjango es una extensión que nos permitirá usar tipos de datos geográficos 
 
 El backend de Geodjango viene incluido en la instalación de django, sin embargo se requiere la instalación de varias dependencias:
 
-	* GEOS
-	* PROJ.4
-	* GDAL
+* GEOS
+* PROJ.4
+* GDAL
 	
 Para más información, revisar la siguiente referencia: 
 
-	https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/geolibs/#geospatial-libs
+https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/geolibs/#geospatial-libs
 
 Una vez que estén todas las dependencias instaladas, debe configurarse en el archivo ``settings.py`` para que use postgis como base de datos:
 
