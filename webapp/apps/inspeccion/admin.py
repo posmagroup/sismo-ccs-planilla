@@ -448,6 +448,53 @@ class Esquema_ElevacionInline(admin.StackedInline):
         }
 #endregion
 
+#region  12.Irregularidades (Modelo Irregularidad)
+
+class IrregularidadAdmin(admin.ModelAdmin):
+
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
+
+
+
+class IrregularidadInline(admin.StackedInline):
+    model = Irregularidad
+    can_delete = False
+    verbose_name_plural = 'Irregularidades'
+    max_num = 1
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('a_viga_alt','f_asim_mas'),
+                ('p_entrep_b','aus_mur_1d'),
+                ('p_column_c', 'ados_los_l'),
+                ('disc_eje_c','ados_los_c'),
+                ('abert_losa','sep_edif'),
+
+                )
+        }),
+    )
+
+    class Media:
+        css = {
+            'all':("stylesheets/tipo_estructural.css",)
+        }
+
+
+
+#endregion
+
 #region  14.Observaciones (Modelo Observacion)
 
 
@@ -478,35 +525,6 @@ class ObservacionInline(admin.StackedInline):
 
 
 
-
-
-
-class IrregularidadAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('a_viga_alt','p_entrep_b'),
-                ('p_column_c','disc_eje_c'),
-                ('abert_losa', 'f_asim_mas'),
-                ('aus_mur_1d','ados_los_l'),
-                ('ados_los_c'),
-                ('sep_edif'),
-
-            )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
 
 
 class Grado_DeterioroAdmin(admin.ModelAdmin):
@@ -540,32 +558,6 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
 
 
 
-
-
-class IrregularidadInline(admin.StackedInline):
-    model = Irregularidad
-    can_delete = False
-    verbose_name_plural = 'Irregularidades'
-    max_num = 1
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('a_viga_alt','p_entrep_b'),
-                ('p_column_c','disc_eje_c'),
-                ('abert_losa', 'f_asim_mas'),
-                ('aus_mur_1d','ados_los_l'),
-                ('ados_los_c'),
-                ('sep_edif'),
-
-                )
-        }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 
 
 class Grado_DeterioroInline(admin.StackedInline):
