@@ -39,7 +39,7 @@ Esto habrá habilitado nuestra base de datos para albergar data geográfica.
 Luego debemos crear un usuario con los permisos necesarios para poder accesar la bD de postgresql, en una consola colocamos:
 	
 	$ sudo su postgres -c psql template1
-	postgres#= CREATE USER funvisis WITH PASSWORD 'funvisis' CREATEDB;  // sustituir funvisis por el nombre deseado, igual para la clave.
+	postgres#= CREATE USER funvisis WITH PASSWORD 'funvisis' CREATEDB;  # sustituir funvisis por el nombre deseado, igual para la clave.
 	postgres#=\q
 
 
@@ -71,7 +71,7 @@ Una vez que estén todas las dependencias instaladas, debe configurarse en el ar
         'PASSWORD':'funvisis',
         'HOST':'localhost',
         }
-	} // Sustituir los valores por los establecidos en los pasos anteriores.
+	} # Sustituir los valores por los establecidos en los pasos anteriores.
 
 Y debe agregarse geodjango como aplicación instalada:
 
@@ -92,7 +92,7 @@ Y debe agregarse geodjango como aplicación instalada:
 Si todo ha salido bien hasta ahora, podemos usar las clases y tipos definidos por geodjango. 
 Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección):
 
-	// AÚN EN ETAPA DE REVISIÓN Y DEFINICIÓN
+	# AÚN EN ETAPA DE REVISIÓN Y DEFINICIÓN
 	
 	from django.contrib.gis.db import models
 
