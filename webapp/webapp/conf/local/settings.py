@@ -5,21 +5,11 @@ import os
 
 DEBUG = True
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'sismocaracas',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
-
-    }
-}
-
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'sismocaracas2',
         'USER':'funvisis',
         'PASSWORD':'funvisis',
         'HOST':'localhost',

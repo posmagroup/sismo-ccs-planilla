@@ -15,7 +15,7 @@ class Poligono(models.Model):
 
 
     # acá viene la magia de geodjango
-    poligono = models.MultiPolygonField(null=True, blank=True)
+    poligono = models.PolygonField()
     objects = models.GeoManager()
 
     class  Meta:
@@ -39,12 +39,12 @@ class  Inspeccion(models.Model):
         1) Some fields are mandatory.
     """
 
-    #codigo_sc = models.CharField(verbose_name="Código SismoCaracas",help_text="Codificación paralela, asignada internamente para el manejo de los datos",max_length=100)
+
     fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False,null= True, blank=True)
     hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
     hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
-    #c_funvisis = models.CharField(verbose_name="Código Planilla FUNVISIS",help_text="Codificación que se colocó en la planilla de inspección de FUNVISIS",max_length=100)
-    poligono = models.ForeignKey(Poligono,verbose_name="Polìgono", blank=True, null=True)
+    poligono = models.MultiPolygonField()
+    objects = models.GeoManager()
 
 
     class  Meta:

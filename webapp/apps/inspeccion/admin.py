@@ -647,10 +647,12 @@ class AnexoInline(admin.StackedInline):
 
 #region  Admin (inlines )de  Inspeccion
 
-class InspeccionAdmin(admin.ModelAdmin):
+class InspeccionAdmin(admin.OSMGeoAdmin):
     inlines = ( ParticipanteInline,EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
+
+
 
 #endregion
 
