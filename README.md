@@ -92,57 +92,20 @@ Y debe agregarse geodjango como aplicación instalada:
 Si todo ha salido bien hasta ahora, podemos usar las clases y tipos definidos por geodjango. 
 Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección):
 
-	# AÚN EN ETAPA DE REVISIÓN Y DEFINICIÓN
-	
 	from django.contrib.gis.db import models
 
-	
-
 	class Poligono(models.Model):
-
 
 		# acá viene la magia de geodjango
 		poligono = models.MultiPolygonField(null=True, blank=True)
 		objects = models.GeoManager()
-
-		class  Meta:
-
-			verbose_name ='Poligono'
-			verbose_name_plural ='Poligonos'
-
-		def __unicode__(self):
-
-			return u'Poligono %s ' % (self.id)
-
-
-
 		
 	class  Inspeccion(models.Model):
 
-		"""
-		Purpose:
-			Defines a  model for handling Inspections
-
-		Features:
-			1) Some fields are mandatory.
-		"""
-
-		
 		fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False,null= True, blank=True)
 		hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
 		hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
-		
 		poligono = models.ForeignKey(Poligono,verbose_name="Polìgono", blank=True, null=True) # <--
-
-
-		class  Meta:
-
-			verbose_name ='Inspección'
-			verbose_name_plural ='Inspecciones'
-
-		def __unicode__(self):
-
-			return u'Inspección %s' % self.id
 	
 Nótese que ``Poligono`` está heredando de la clase Models, pero esta vez la clase Models viene de ``django.contrib.gis.db`` y no de ``django.db`` como es lo usual.
 Esto transforma nuestra clase en una clase geográfica, pudiendo acceder a la data de postgis como si fuesen tipos de campo normales de django.
