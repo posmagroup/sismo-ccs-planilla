@@ -35,7 +35,15 @@ Para crear la base de datos con acceso a tipos de datos geográficos, debe ejecu
 	
 Esto habrá habilitado nuestra base de datos para albergar data geográfica.
 
-Para más información, revisar la documentación oficial: https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/postgis/
+
+Luego debemos crear un usuario con los permisos necesarios para poder accesar la bD de postgresql, en una consola colocamos:
+	
+	$ sudo su postgres -c psql template1
+	postgres#= CREATE USER funvisis WITH PASSWORD 'funvisis' CREATEDB;  // sustituir funvisis por el nombre deseado, igual para la clave.
+	postgres#=\q
+
+
+Para más información, revisar la documentación oficial: https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/postgis/   y  http://www.postgresql.org/docs/8.0/static/sql-createuser.html
 
 
 GeoDjango:
@@ -56,12 +64,14 @@ https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/geolibs/#geospatia
 Una vez que estén todas las dependencias instaladas, debe configurarse en el archivo ``settings.py`` para que use postgis como base de datos:
 
 	DATABASES = {
-		'default': {
-			'ENGINE': 'django.contrib.gis.db.backends.postgis',
-			'NAME': 'geodjango',
-			'USER': 'geo',
-		}
-	}
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'sismocaracas',
+        'USER':'funvisis',
+        'PASSWORD':'funvisis',
+        'HOST':'localhost',
+        }
+	} // Sustituir los valores por los establecidos en los pasos anteriores.
 
 Y debe agregarse geodjango como aplicación instalada:
 
@@ -82,19 +92,59 @@ Y debe agregarse geodjango como aplicación instalada:
 Si todo ha salido bien hasta ahora, podemos usar las clases y tipos definidos por geodjango. 
 Definimos entonces un modelo geográfico (modificar el mismo modelo de inspección):
 
+	// AÚN EN ETAPA DE REVISIÓN Y DEFINICIÓN
+	
 	from django.contrib.gis.db import models
 
+	
+
+	class Poligono(models.Model):
+
+
+		# acá viene la magia de geodjango
+		poligono = models.MultiPolygonField(null=True, blank=True)
+		objects = models.GeoManager()
+
+		class  Meta:
+
+			verbose_name ='Poligono'
+			verbose_name_plural ='Poligonos'
+
+		def __unicode__(self):
+
+			return u'Poligono %s ' % (self.id)
+
+
+
+		
 	class  Inspeccion(models.Model):
 
-		fecha = models.DateField()
-		hor_inicio = models.CharField(max_length=100)
-		hora_fin = models.CharField(max_length=100)
+		"""
+		Purpose:
+			Defines a  model for handling Inspections
+
+		Features:
+			1) Some fields are mandatory.
+		"""
+
 		
-		# acá viene la magia de geodjango
-		estructura = models.PolygonField()
-		objects = models.GeoManager()
+		fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False,null= True, blank=True)
+		hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
+		hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
+		
+		poligono = models.ForeignKey(Poligono,verbose_name="Polìgono", blank=True, null=True) # <--
+
+
+		class  Meta:
+
+			verbose_name ='Inspección'
+			verbose_name_plural ='Inspecciones'
+
+		def __unicode__(self):
+
+			return u'Inspección %s' % self.id
 	
-Nótese que ``Inspeccion`` está heredando de la clase Models, pero esta vez la clase Models viene de ``django.contrib.gis.db`` y no de ``django.db`` como es lo usual.
+Nótese que ``Poligono`` está heredando de la clase Models, pero esta vez la clase Models viene de ``django.contrib.gis.db`` y no de ``django.db`` como es lo usual.
 Esto transforma nuestra clase en una clase geográfica, pudiendo acceder a la data de postgis como si fuesen tipos de campo normales de django.
 
 Una vez hecho esto, debe correrse ``syncdb`` y ``migrate`` para que sean actualizadas las tablas en BD
@@ -107,16 +157,16 @@ Para hablitar el campo de tipo ``Polygon``, debemos importar la data de los shap
 para esto usaremos la herramienta ``LayerMapping`` de django. Hagamos un script con las siguientes instrucciones:
 
 	from django.contrib.gis.utils import LayerMapping
-	from apps.inspeccion.models import Inspeccion
+	from apps.inspeccion.models import Poligono # <--  Esta la clase que tiene el tipo de dato geoespacial.
 	
 	mapping = {
-			'estructura' : 'POLYGON',
+			'poligono' : 'POLYGON', # <--  Esta este es el atributo de la clase que es de tipo models.MultiPolygonField
 	}
 
-	lm = LayerMapping(Inspeccion, 'edif_candelaria.shp', mapping)
+	lm = LayerMapping(Poligono, 'edif_candelaria.shp', mapping) # <--  Poligono es la clase que importamos, luego viene la ruta al shapefile ('edif_candelaria.shp') y mapping queda igual.
 	lm.save(verbose=True)
 
-Esto mapea el campo de tipo ``POLYGON`` al campo ``estructura`` en nuestro modelo.
+Esto mapea el campo de tipo ``POLYGON`` al campo ``poligono`` en nuestro modelo.
 
 Para más información, revisar la documentación de django: https://docs.djangoproject.com/en/dev/ref/contrib/gis/layermapping/#django.contrib.gis.utils.LayerMapping
 
