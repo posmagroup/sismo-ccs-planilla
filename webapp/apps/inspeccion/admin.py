@@ -156,7 +156,7 @@ class EstructuraInline(admin.StackedInline):
 
 #endregion
 
-#region  5.uso de la Edificación (Modelo Uso)
+#region  5.Uso de la Edificación (Modelo Uso)
 
 class UsoAdmin(admin.ModelAdmin):
 

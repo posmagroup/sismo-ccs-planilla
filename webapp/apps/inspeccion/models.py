@@ -191,7 +191,7 @@ class  Uso(models.Model):
     u_oficina = models.BooleanField(verbose_name="Oficina",help_text=" ",default= False)
     u_religios = models.BooleanField(verbose_name="Religioso",help_text=" ",default= False)
     u_otros = models.BooleanField(verbose_name="Otros",help_text=" ",default= False)
-    otro_uso = models.CharField(verbose_name="Especifique Uso" , help_text="",max_length=1,null= True, blank=True)
+    otro_uso = models.CharField(verbose_name="(Especifique)" , help_text="",max_length=50,null= True, blank=True)
 
 
     class  Meta:
@@ -643,7 +643,7 @@ class Observacion(models.Model):
         user choice.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    observacion = models.TextField()
+    observacion = models.TextField(max_length=200)
 
     class  Meta:
 

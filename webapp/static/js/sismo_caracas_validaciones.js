@@ -1,9 +1,9 @@
 
 (function($) {
 
+    var uso = 0;
 
 
-    //$("div:contains('Información personal')").hide();
 
     function desactivar_opciones (opciones){
 
@@ -58,9 +58,6 @@
 
     }
 
-
-
-
     function validar_al_menos_uno_seleccionado(referencia_div, excluir){
 
         counter = 0;
@@ -98,6 +95,24 @@
 
     }
 
+    function validar_uso_especifico(){
+
+
+        if (uso==1){
+
+            val = $('#id_uso_set-0-otro_uso').val();
+
+            if (val.length==0){
+
+                alert('Debe especificar el uso, en la seccion: Uso de la edificación;');
+                return false;
+            }
+            else{
+
+                return true;
+            }
+        }
+    }
 
 
     $(document).ready(function($) {
@@ -139,24 +154,58 @@
 
         });// Asterisco rojo para los cambios requeridos.
 
-        // Validacion de " Al menos uno" para los campos booleanos multiopcion.
+
+        opciones=["field-otro_uso"];
+        desaparecer_opciones(opciones);
+        $('#id_uso_set-0-u_otros').change(function() {
+
+            val = (this.checked ? "1" : "0");
+
+            uso =val;
+            if (val==0){
+
+                opciones=["field-otro_uso"];
+                desaparecer_opciones(opciones);
+
+            }
+            if(val==1){
+
+                opciones=["field-otro_uso"];
+                aparecer_opciones(opciones);
+
+            }
+
+
+        }); // Si se selecciona opción otro uso, aparece el campo para especificar el uso.
+
+
         $('#inspeccion_form').submit(function()
         {
 
+            // Validacion de " Al menos uno" para los campos booleanos multiopcion.
            if (!validar_al_menos_uno_seleccionado('#uso_set-group .inline-related','__prefix__')){
 
                alert('Debe seleccionar al menos una opción en la sección: Usos de la edificación');
                return false;
            }
 
-            if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
+           if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
 
                 alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
                 return false;
             }
 
+            if (!validar_uso_especifico()){
+
+                return false;
+            }
+
+
+
+
 
         });
+
 
 
 
