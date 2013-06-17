@@ -30,8 +30,6 @@
 
     }
 
-
-
     function desaparecer_opciones (opciones){
 
 
@@ -63,6 +61,45 @@
 
 
 
+    function validar_al_menos_uno_seleccionado(referencia_div, excluir){
+
+        counter = 0;
+        zero_counter = 0;
+        $(referencia_div).find('input[type=checkbox]').each(function () {
+
+
+            name = this.name;
+            if (name.search(excluir) ==-1){
+
+                val = (this.checked ? "1" : "0");
+                counter = counter +1;
+                if (val==0){
+
+                    zero_counter=zero_counter+1;
+
+                }
+
+
+
+            }
+
+
+        });
+        if (zero_counter==counter){
+
+           return false;
+        }
+        else{
+
+            return true;
+
+        }
+
+
+    }
+
+
+
     $(document).ready(function($) {
         // you can now use jquery / javascript here...
 
@@ -82,6 +119,43 @@
 
 
 
+        });// Manejo de la capitalizacion para los titulos en el admin
+
+        $("fieldset:contains('Información personal')").hide(); // Esconder los campos de info personal en el admin de usuarios.
+
+        $('.required').each(function () {
+
+
+            val = $(this).html();
+
+            val2  = val + ' <span style="color:red;">*</span> ' ;
+
+            $(this).html(val2);
+
+
+
+
+
+
+        });// Asterisco rojo para los cambios requeridos.
+
+        // Validacion de " Al menos uno" para los campos booleanos multiopcion.
+        $('#inspeccion_form').submit(function()
+        {
+
+           if (!validar_al_menos_uno_seleccionado('#uso_set-group .inline-related','__prefix__')){
+
+               alert('Debe seleccionar al menos una opción en la sección: Usos de la edificación');
+               return false;
+           }
+
+            if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
+
+                alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
+                return false;
+            }
+
+
         });
 
 
@@ -90,17 +164,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-        $("fieldset:contains('Información personal')").hide();
 
 
 

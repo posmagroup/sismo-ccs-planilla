@@ -1,4 +1,4 @@
-.field-box, .field-u_med_asis, .field-ados_los_c, .field-sep_edif  {
+.field-box, .field-u_med_asis {
 
     position: relative;
     float: left;
@@ -21,11 +21,6 @@ form .aligned p.help {
 
 
 
- #irregularidad_form p.help {
-    padding-left: 13px;
-}
-
-
 #uso_form p.help {
     padding-left: 99px;
 }
@@ -34,11 +29,7 @@ form .aligned p.help {
 #tipo_estructural_form p.help {
     padding-left: 0px;
 }
-.field-sep_edif .required{
 
-
-    width: 18em;
-}
 
 #id_grado_deterioro_set-0-ec_agri_es{
 
@@ -62,3 +53,4 @@ form .aligned p.help {
     display: none;
 
 }
+

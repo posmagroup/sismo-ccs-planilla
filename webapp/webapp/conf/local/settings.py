@@ -5,15 +5,16 @@ import os
 
 DEBUG = True
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'sismocaracas',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
-    }
+        'USER':'funvisis',
+        'PASSWORD':'funvisis',
+        'HOST':'localhost',
+        }
 }
-
 
 if DEBUG:
     # Show emails in the console during developement.
