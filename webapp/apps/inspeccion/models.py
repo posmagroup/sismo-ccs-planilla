@@ -643,7 +643,7 @@ class Observacion(models.Model):
         user choice.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    observacion = models.TextField(max_length=200)
+    observacion = models.TextField(max_length=140)
 
     class  Meta:
 
