@@ -193,6 +193,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'floppyforms',
+    'braces',
     # Third Party Apps
     'south',
 

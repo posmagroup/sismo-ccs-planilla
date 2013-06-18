@@ -4,6 +4,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from apps.inspeccion.views import Periodo_Construccion_By_YearView
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'sismo_caracas.views.home', name='home'),
@@ -14,4 +16,5 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
      url(r'^admin/', include(admin.site.urls)),
+     url(r'^periodo_given_year/(?P<year>[-\d]+)',Periodo_Construccion_By_YearView.as_view(),name="periodo_construccion_given_year"),
 )

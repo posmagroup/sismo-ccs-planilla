@@ -41,6 +41,8 @@
         desaparecer_opciones(opciones);
         opciones=["field-periodo"];
         aparecer_opciones(opciones);
+
+        // Para el manejo de los distintos periodos
         $('#id_periodo').change(function() {
             periodo = $('#id_periodo').val();
             opciones=["field-anio_inici", "field-anio_fin"];
@@ -77,6 +79,18 @@
             }
         });
 
+
+        $('#id_anio_construccion_set-0-anio').change(function() {
+
+
+            $.get('/periodo_given_year/1990', function(data) {
+
+                alert(data['name']);
+            });
+
+
+
+        });
 
 
 

@@ -667,6 +667,9 @@ class InspeccionAdmin(admin.ModelAdmin):
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
 
+    class  Media:
+        js = ("js/periodo_construccion.js",)
+
 
 
 #endregion
