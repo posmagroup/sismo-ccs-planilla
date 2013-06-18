@@ -2,8 +2,8 @@
 (function($) {
 
     var uso = 0;
-
-
+    var adosamiento = 0;
+    var adosamiento2 = 0;
 
     function desactivar_opciones (opciones){
 
@@ -102,6 +102,7 @@
 
             val = $('#id_uso_set-0-otro_uso').val();
 
+
             if (val.length==0){
 
                 alert('Debe especificar el uso, en la seccion: Uso de la edificación;');
@@ -111,6 +112,33 @@
 
                 return true;
             }
+        }
+        else{
+
+            return true;
+        }
+    }
+
+    function validar_separacion_edificio(){
+
+
+        if ((adosamiento==1) || (adosamiento2==1)){
+
+            val = $('#id_irregularidad_set-0-sep_edif').val();
+
+            if (val==5000){
+
+                alert('Debe especificar la separacion entre los edificios en la sección: Irregularidades');
+                return false;
+            }
+            else{
+
+                return true;
+            }
+        }
+        else{
+
+            return true;
         }
     }
 
@@ -154,7 +182,6 @@
 
         });// Asterisco rojo para los cambios requeridos.
 
-
         opciones=["field-otro_uso"];
         desaparecer_opciones(opciones);
         $('#id_uso_set-0-u_otros').change(function() {
@@ -179,8 +206,30 @@
         }); // Si se selecciona opción otro uso, aparece el campo para especificar el uso.
 
 
+        $('#id_irregularidad_set-0-ados_los_l').change(function() {
+
+            val = (this.checked ? "1" : "0");
+
+            adosamiento =val;
+
+
+
+        }); // Si se selecciona adosamiento
+
+        $('#id_irregularidad_set-0-ados_los_c').change(function() {
+
+            val = (this.checked ? "1" : "0");
+
+            adosamiento2 =val;
+
+
+
+        }); // Si se selecciona adosamiento
+
+
         $('#inspeccion_form').submit(function()
         {
+
 
             // Validacion de " Al menos uno" para los campos booleanos multiopcion.
            if (!validar_al_menos_uno_seleccionado('#uso_set-group .inline-related','__prefix__')){
@@ -189,17 +238,23 @@
                return false;
            }
 
+
            if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
 
                 alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
                 return false;
             }
 
+
             if (!validar_uso_especifico()){
 
                 return false;
             }
 
+            if (!validar_separacion_edificio()){
+
+                return false;
+            }
 
 
 

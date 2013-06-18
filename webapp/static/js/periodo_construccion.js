@@ -111,7 +111,7 @@
             $.get('/year_given_periodo/'+value, function(data) {
 
                 year= data['year'];
-               
+
                 $('#id_anio_construccion_set-0-anio').val(year);
 
 
