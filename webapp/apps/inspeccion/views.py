@@ -14,21 +14,34 @@ class Periodo_Construccion_By_YearView(JSONResponseMixin, AjaxResponseMixin, Det
 
     def get_object(self,request, *args, **kwargs):
 
-        periodos = Periodo_Construccion.objects.all().order_by('anio_inici')[:1]
+        periodos = Periodo_Construccion.objects.all().order_by('anio_inici')
         choices = []
+        year = int(kwargs['year'])
 
+        for periodo in periodos:
 
+            init_year = periodo.anio_inici
+            finish_year =  periodo.anio_fin
 
+            #para periodos con fecha inicio y fecha fin definidos ( del tipo entre)
+            if (year >= init_year) and (year <=finish_year) and (init_year!=None) and (finish_year!= None):
+                choices.append(periodo.id)
 
+            #para periodos con fecha inicio  ( del tipo antes de)
+            if (year <= init_year)  and (init_year!=None) and (finish_year== None):
+                choices.append(periodo.id)
 
-        return periodos[0]
+                #para periodos con fecha fin  ( del tipo despues de)
+            if (year >= finish_year)  and (init_year==None) and (finish_year!= None):
+                choices.append(periodo.id)
+        return choices
 
     def get_ajax(self, request, *args, **kwargs):
-        print kwargs
+
         obj = self.get_object(request, *args, **kwargs)
         json_dict = {
-            'name': obj.id,
-            'location': "New York, NY"
+            'id': obj[0]
+
         }
 
         return self.render_json_response(json_dict)

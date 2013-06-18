@@ -83,9 +83,21 @@
         $('#id_anio_construccion_set-0-anio').change(function() {
 
 
-            $.get('/periodo_given_year/1990', function(data) {
+            $.get('/periodo_given_year/'+this.value, function(data) {
 
-                alert(data['name']);
+                id_periodo = data['id'];
+
+                 $('#id_anio_construccion_set-0-periodo').children('option').each(function () {
+
+                    if ($(this).val() == id_periodo){
+
+                        $(this).attr('selected','selected');
+
+                    }
+
+                });
+
+
             });
 
 
