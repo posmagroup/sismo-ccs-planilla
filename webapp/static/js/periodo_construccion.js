@@ -104,7 +104,20 @@
 
         });
 
+        $('#id_anio_construccion_set-0-periodo').change(function() {
 
+            value = $(this).children('option').filter(":selected").val();
+
+            $.get('/year_given_periodo/'+value, function(data) {
+
+                year= data['year'];
+               
+                $('#id_anio_construccion_set-0-anio').val(year);
+
+
+            });
+
+        });
 
 
 
