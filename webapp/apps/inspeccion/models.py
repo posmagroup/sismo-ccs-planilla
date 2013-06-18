@@ -261,8 +261,8 @@ class Periodo_Construccion(models.Model):
         ('3', 'Despues de')
         )
     periodo = models.CharField(verbose_name="Período" , help_text="Describe el período de construcción, en caso de que no se conozca la fecha exacta.",max_length=1,choices=PERIODO_CHOICES,null= True, blank=True)
-    anio_inici = models.CharField(verbose_name="Año Inicio" , help_text="Año en el que empieza el período",max_length=5, null= True, blank=True)
-    anio_fin = models.CharField(verbose_name="Año Fin" , help_text="Año en el que finaliza el período",max_length=5, null= True, blank=True)
+    anio_inici = models.CharField(verbose_name="" , help_text="Año en el que empieza el período",max_length=5, null= True, blank=True)
+    anio_fin = models.CharField(verbose_name="" , help_text="Año en el que finaliza el período",max_length=5, null= True, blank=True)
 
 
 
