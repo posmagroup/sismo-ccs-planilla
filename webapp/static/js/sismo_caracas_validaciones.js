@@ -4,6 +4,8 @@
     var uso = 0;
     var adosamiento = 0;
     var adosamiento2 = 0;
+    var ladera =0;
+    var base =0;
 
     function desactivar_opciones (opciones){
 
@@ -142,6 +144,74 @@
         }
     }
 
+    function validar_ladera(){
+
+
+        if ((ladera==1)){
+
+
+
+            val = $('#id_condicion_terreno_set-0-pend_terr').children('option').filter(":selected").text();
+
+
+            if (val=='---------'){
+
+                alert('Debe especificar la pendiente del terreno en la sección: Condición Terreno');
+                return false;
+            }
+
+            val = $('#id_condicion_terreno_set-0-l_m_ladera').children('option').filter(":selected").text();
+
+            if (val=='---------'){
+
+                alert('Debe especificar la localización del terreno en la sección: Condición Terreno');
+                return false;
+            }
+            else{
+
+                return true;
+            }
+        }
+        else{
+
+            return true;
+        }
+    }
+
+    function validar_base(){
+
+
+        if ((base==1)){
+
+
+
+            val = $('#id_condicion_terreno_set-0-pend_talud').children('option').filter(":selected").text();
+
+
+            if (val=='---------'){
+
+                alert('Debe especificar la pendiente del talud en la sección: Condición Terreno');
+                return false;
+            }
+
+            val = $('#id_condicion_terreno_set-0-sep_talud').children('option').filter(":selected").text();
+
+            if (val=='---------'){
+
+                alert('Debe especificar la separación del talud en la sección: Condición Terreno');
+                return false;
+            }
+            else{
+
+                return true;
+            }
+        }
+        else{
+
+            return true;
+        }
+    }
+
 
     $(document).ready(function($) {
         // you can now use jquery / javascript here...
@@ -227,6 +297,31 @@
         }); // Si se selecciona adosamiento
 
 
+        $('#id_condicion_terreno_set-0-forma_terr').change(function() {
+
+            value = $(this).children('option').filter(":selected").text();
+
+            ladera =0;
+            base = 0;
+            if (value =='Ladera'){
+
+                ladera =1;
+            }
+
+            if (value =='Base'){
+
+                base =1;
+            }
+
+            if (value =='Cima'){
+
+                base =1;
+            }
+
+        });
+
+
+
         $('#inspeccion_form').submit(function()
         {
 
@@ -252,6 +347,16 @@
             }
 
             if (!validar_separacion_edificio()){
+
+                return false;
+            }
+
+            if (!validar_ladera()){
+
+                return false;
+            }
+
+            if (!validar_base()){
 
                 return false;
             }
