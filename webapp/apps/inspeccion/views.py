@@ -7,8 +7,6 @@ from django.views.generic.detail import DetailView
 
 from models import Periodo_Construccion
 
-
-
 class Periodo_Construccion_By_YearView(JSONResponseMixin, AjaxResponseMixin, DetailView):
     model = Periodo_Construccion
     template_name = '404.html'
@@ -46,10 +44,6 @@ class Periodo_Construccion_By_YearView(JSONResponseMixin, AjaxResponseMixin, Det
         }
 
         return self.render_json_response(json_dict)
-
-
-
-
 
 class Year_By_Periodo_ConstruccionView(JSONResponseMixin, AjaxResponseMixin, DetailView):
     model = Periodo_Construccion

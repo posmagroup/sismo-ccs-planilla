@@ -34,12 +34,20 @@ class  Inspeccion(models.Model):
         1) Some fields are mandatory.
     """
 
+    def fx(self):
+
+        return self.id
 
     fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False)
     hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
     hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
+    cod_pla = models.CharField(verbose_name="Código de la planilla",help_text="identificardor personalizado de la planilla",max_length=100,default='Se generará automaticamente al guardar la planilla',null= True, blank=True)
 
+    def save(self):
 
+        super(Inspeccion, self).save()
+        self.cod_pla = self.fx()
+        super(Inspeccion, self).save()
 
     class  Meta:
 
@@ -48,7 +56,7 @@ class  Inspeccion(models.Model):
 
     def __unicode__(self):
 
-        return u'Inspección %s' % self.id
+        return u'Inspección  #%s' % self.cod_pla
 
 
 

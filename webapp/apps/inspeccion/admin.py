@@ -676,6 +676,7 @@ class InspeccionAdmin(admin.GeoModelAdmin):
 
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
+    exclude = ('cod_pla',)
 
     class  Media:
         js = ("js/periodo_construccion.js",)
