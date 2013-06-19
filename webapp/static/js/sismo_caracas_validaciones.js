@@ -252,8 +252,12 @@
 
         });// Asterisco rojo para los cambios requeridos.
 
+
+
         opciones=["field-otro_uso"];
         desaparecer_opciones(opciones);
+
+
         $('#id_uso_set-0-u_otros').change(function() {
 
             val = (this.checked ? "1" : "0");

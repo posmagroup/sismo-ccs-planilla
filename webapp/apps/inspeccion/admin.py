@@ -1,8 +1,9 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
-
-
 from forms import RequiredInlineFormSet
+from django.forms.models import ModelForm
+
+
 from models import Entrevistado
 from models import Condicion_Terreno
 from models import Tipo_Estructural
@@ -133,12 +134,21 @@ class EstructuraAdmin(admin.OSMGeoAdmin):
         """
         return {}
 
+class EstructuraInlineForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EstructuraInlineForm, self).__init__(*args, **kwargs)
+        estructura_admin = admin.site._registry[Estructura]
+        model_field = self._meta.model._meta.get_field('poligono')
+        self.fields['poligono'].widget =estructura_admin.get_map_widget(model_field)()
+
 class EstructuraInline(admin.StackedInline):
     model = Estructura
+    form = EstructuraInlineForm
     can_delete = False
     verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
-    formset = RequiredInlineFormSet
+
     fieldsets = (
         (None, {
             'fields': (
@@ -661,7 +671,7 @@ class AnexoInline(admin.StackedInline):
 
 #region  Admin (inlines )de  Inspeccion
 
-class InspeccionAdmin(admin.ModelAdmin):
+class InspeccionAdmin(admin.GeoModelAdmin):
     inlines = ( EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
 
     verbose_name = 'Datos Generales'
