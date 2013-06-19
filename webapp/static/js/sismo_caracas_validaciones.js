@@ -341,6 +341,13 @@
             }
 
 
+            if (!validar_al_menos_uno_seleccionado('#capacidad_ocupacion_set-group .inline-related','__prefix__')){
+
+                alert('Debe seleccionar al menos una opción en la sección: Capacidad de ocupacion');
+                return false;
+            }
+
+
             if (!validar_uso_especifico()){
 
                 return false;

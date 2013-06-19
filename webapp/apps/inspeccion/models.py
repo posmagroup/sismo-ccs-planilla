@@ -220,9 +220,9 @@ class Capacidad_Ocupacion(models.Model):
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     habitantes = models.IntegerField(verbose_name="Número de personas que ocupan el inmueble")
-    t_o_manana = models.BooleanField(default=False,verbose_name="Ocupación durante la mañana")
-    t_o_tarde = models.BooleanField(default=False,verbose_name="Ocupación  durante la tarde")
-    t_o_noche = models.BooleanField(default=False,verbose_name="Ocupación durante la noche")
+    t_o_manana = models.BooleanField(default=False,verbose_name="Mañana", help_text="Turno de ocupación matutino")
+    t_o_tarde = models.BooleanField(default=False,verbose_name="Tarde", help_text="Turno de ocupación vespertino")
+    t_o_noche = models.BooleanField(default=False,verbose_name="Noche", help_text="Turno de ocupación nocturno")
 
 
     class  Meta:
