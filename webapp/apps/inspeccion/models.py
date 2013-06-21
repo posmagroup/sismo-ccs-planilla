@@ -160,8 +160,6 @@ class Estructura(models.Model):
     urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",max_length=100,null= True, blank=True)
     sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
     calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
-    manzana = models.CharField(verbose_name="Manzana Nº",help_text="Nº Manzana donde se realizó la inspección",max_length=100,null= True, blank=True)
-    parcela = models.CharField(verbose_name="Nº Parcela",help_text="Nº Parcela donde se realizó la inspección",max_length=100,null= True, blank=True)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
     poligono = models.MultiPolygonField(verbose_name="Edificación",srid=4326)
     objects = models.GeoManager()
@@ -182,7 +180,7 @@ class Estructura(models.Model):
 
 #endregion
 
-#region  5.uso de la Edificación (Modelo Uso)
+#region  5.Uso de la Edificación (Modelo Uso)
 
 class  Uso(models.Model):
 
@@ -200,7 +198,7 @@ class  Uso(models.Model):
     u_pr_civil = models.BooleanField(verbose_name="Protección Civil",help_text=" ",default= False)
     u_policial = models.BooleanField(verbose_name="Policial",help_text=" ",default= False)
     u_militar = models.BooleanField(verbose_name="Militar",help_text=" ",default= False)
-    u_med_asis = models.BooleanField(verbose_name="Médico Asistencial",help_text=" ",default= False)
+    u_med_asis = models.BooleanField(verbose_name="Médico-Asistencial",help_text=" ",default= False)
     u_educativ = models.BooleanField(verbose_name="Educativo",help_text=" ",default= False)
     u_viv_pop = models.BooleanField(verbose_name="Vivienda Popular",help_text=" ",default= False)
     u_viv_unif = models.BooleanField(verbose_name="Vivienda Unifamiliar",help_text=" ",default= False)
@@ -664,7 +662,7 @@ class Observacion(models.Model):
         user choice.
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    observacion = models.TextField(max_length=140)
+    observacion = models.TextField(max_length=140,null=True,blank=True)
 
     class  Meta:
 

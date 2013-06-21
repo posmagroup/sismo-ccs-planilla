@@ -159,9 +159,6 @@ class EstructuraInlineForm(ModelForm):
         self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
         self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
 
-
-
-
 class EstructuraInline(admin.StackedInline):
     model = Estructura
     form = EstructuraInlineForm
@@ -176,7 +173,6 @@ class EstructuraInline(admin.StackedInline):
                 ('n_semi_sot','n_sotanos'),
                 ('ciudad','urb_barrio'),
                 ('sector','calle'),
-                ('manzana','parcela'),
                 ('pto_referencia','poligono'),
 
 
@@ -223,7 +219,7 @@ class UsoAdmin(admin.ModelAdmin):
 class UsoInline(admin.StackedInline):
     model = Uso
     can_delete = False
-    verbose_name_plural = 'Uso de la edificación'
+    verbose_name_plural = 'Uso de la edificación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
     fieldsets = (
@@ -285,7 +281,7 @@ class Capacidad_OcupacionAdmin(admin.ModelAdmin):
 class Capacidad_OcupacionInline(admin.StackedInline):
     model = Capacidad_Ocupacion
     can_delete = False
-    verbose_name_plural = 'Capacidad de Ubicación'
+    verbose_name_plural = 'Capacidad de Ubicación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
     fieldsets = (
@@ -430,7 +426,7 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
 class Tipo_EstructuralInline(admin.StackedInline):
     model = Tipo_Estructural
     can_delete = False
-    verbose_name_plural = 'Tipo estructural'
+    verbose_name_plural = 'Tipo estructural. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
 

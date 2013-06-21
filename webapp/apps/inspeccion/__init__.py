@@ -26,23 +26,23 @@ from django.db import connection
 #lm = LayerMapping(Poligono, ds, mapping)
 
 #lm.save(verbose=True)
-##
+#
 #p = [x for x in Poligono.objects.all()[:10]]
 ###
 #union = p[8].geom
 #
-###
+#
 #for poligono in Poligono.objects.all()[:1000]:
-###
+#
 #   try:
 #       union.append(poligono.geom.cascaded_union)
 #
 #
 #   except :
 #
-#       print 'erro en el poligono %d'% poligono.id
+#       print 'error en el poligono %d'% poligono.id
 #
-###
+#
 #poli =  Poligono.objects.get(pk =3)
 #poli.geom = union
 #poli.save()
