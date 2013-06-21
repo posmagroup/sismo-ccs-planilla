@@ -10,6 +10,7 @@ class RequiredInlineFormSet(BaseInlineFormSet):
         """
         Override the method to change the form attribute empty_permitted
         """
+
         form = super(RequiredInlineFormSet, self)._construct_form(i, **kwargs)
         form.empty_permitted = False
         return form

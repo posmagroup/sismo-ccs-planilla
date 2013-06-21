@@ -213,9 +213,8 @@
     }
 
 
-    $(document).ready(function($) {
-        // you can now use jquery / javascript here...
 
+    $(document).ready(function($) {
 
 
         $('.inline-group h2').each(function () {
@@ -226,10 +225,6 @@
             val2  = val[0].toUpperCase() + val.slice(1);
 
             $(this).html(val2);
-
-
-
-
 
 
         });// Manejo de la capitalizacion para los titulos en el admin

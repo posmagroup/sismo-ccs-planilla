@@ -2,7 +2,8 @@
 from django.contrib.gis import admin
 from forms import RequiredInlineFormSet
 from django.forms.models import ModelForm
-
+from django.contrib.gis.geos import MultiPolygon, Polygon
+from django.contrib.gis.db import models
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -140,7 +141,26 @@ class EstructuraInlineForm(ModelForm):
         super(EstructuraInlineForm, self).__init__(*args, **kwargs)
         estructura_admin = admin.site._registry[Estructura]
         model_field = self._meta.model._meta.get_field('poligono')
-        self.fields['poligono'].widget =estructura_admin.get_map_widget(model_field)()
+
+
+#        p = [x for x in Poligono.objects.all()[:1]]
+#
+#        union = p[0].geom
+#
+#        for multi_poligono in Poligono.objects.all()[:3]:
+#
+#            union.append(multi_poligono.geom.cascaded_union)
+
+        #print union
+
+
+
+
+        self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
+        self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
+
+
+
 
 class EstructuraInline(admin.StackedInline):
     model = Estructura
@@ -162,7 +182,8 @@ class EstructuraInline(admin.StackedInline):
 
                 )
         }),
-        )
+    )
+
 
 #endregion
 
@@ -679,7 +700,7 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/periodo_construccion.js",)
+        js = ("js/periodo_construccion.js","js/sismo_caracas_validaciones.js",)
 
 
 

@@ -3,15 +3,23 @@ import os
 
 from django.contrib.auth.models import User
 from django.conf import settings
-
+from django.contrib.gis.geos import MultiPolygon, Polygon
 
 from django.contrib.gis.db import models
 #region  1.Datos Generales (Modelo Inspeccion, Poligono)
 class Poligono(models.Model):
 
-    # acá viene la magia de geodjango
-    poligono = models.PolygonField()
+    fid_edific = models.IntegerField()
+    layer = models.CharField(max_length=12)
+    gm_type = models.CharField(max_length=17)
+    elevation = models.FloatField()
+    xdata0 = models.IntegerField()
+    shape_leng = models.FloatField()
+    shape_area = models.FloatField()
+    otro_conta = models.CharField(max_length=250)
+    geom = models.MultiPolygonField(srid=4326)
     objects = models.GeoManager()
+
 
     class  Meta:
 
@@ -139,7 +147,10 @@ class Estructura(models.Model):
 
     Features:
         1) Some fields are not mandatory.
+
     """
+
+
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
     nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",max_length=100)
     n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
@@ -152,19 +163,21 @@ class Estructura(models.Model):
     manzana = models.CharField(verbose_name="Manzana Nº",help_text="Nº Manzana donde se realizó la inspección",max_length=100,null= True, blank=True)
     parcela = models.CharField(verbose_name="Nº Parcela",help_text="Nº Parcela donde se realizó la inspección",max_length=100,null= True, blank=True)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
-    poligono = models.MultiPolygonField(verbose_name="Edificación")
+    poligono = models.MultiPolygonField(verbose_name="Edificación",srid=4326)
     objects = models.GeoManager()
+
 
     class  Meta:
 
         verbose_name =' Estructura'
         verbose_name_plural =' Estructuras'
 
-
-
     def __unicode__(self):
 
         return u'  Estructura, consultar para mas detalles. '
+
+
+
 
 
 #endregion
