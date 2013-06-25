@@ -212,8 +212,6 @@
         }
     }
 
-
-
     $(document).ready(function($) {
 
 
@@ -247,11 +245,8 @@
 
         });// Asterisco rojo para los cambios requeridos.
 
-
-
         opciones=["field-otro_uso"];
         desaparecer_opciones(opciones);
-
 
         $('#id_uso_set-0-u_otros').change(function() {
 
@@ -274,7 +269,6 @@
 
         }); // Si se selecciona opción otro uso, aparece el campo para especificar el uso.
 
-
         $('#id_irregularidad_set-0-ados_los_l').change(function() {
 
             val = (this.checked ? "1" : "0");
@@ -294,7 +288,6 @@
 
 
         }); // Si se selecciona adosamiento
-
 
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
 
@@ -318,8 +311,6 @@
             }
 
         });
-
-
 
         $('#inspeccion_form').submit(function()
         {
@@ -372,17 +363,6 @@
 
         });
 
-
-
-
-
-
-
-
-
-
-
-
         //validacion en el admin para la condicion del terreno.
         $('#id_forma_terr').change(function() {
             forma_terreno = $('#id_forma_terr').val();
@@ -405,8 +385,6 @@
                 }
             }
         });
-
-
 
         //validacion en el admin para el periodo de construccion.
         opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
@@ -448,7 +426,6 @@
             }
         });
 
-
         //validacion en el admin para el periodo de construccion.
         opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
         desaparecer_opciones(opciones);
@@ -488,9 +465,6 @@
             }
         });
 
-
-
-
         //validacion en el admin para la condicion del terreno.
 
         opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
@@ -519,8 +493,6 @@
             }
         });
     });
-
-
 
 
 })(django.jQuery);

@@ -70,8 +70,6 @@ class  Inspeccion(models.Model):
 
 #endregion
 
-
-
 #region  2.Datos de los participantes (Modelo Participante)
 
 class Participante(models.Model):
@@ -445,12 +443,6 @@ class Tipo_Estructural(models.Model):
     vcp = models.BooleanField(verbose_name="Viviendas de construcción precaria (tiera, madera, zinc, etc.) (VCP)",help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales reciclados o livianos, como zinc, madera, tierra.",default= False)
     pmbc = models.BooleanField(verbose_name="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción (PMBC)",help_text="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción",default= False)
 
-    #en el excel pero no en la planilla
-#    n_pisos_cf = models.BooleanField(verbose_name="N° de pisos confinados",help_text="Números de pisos confinados que posee la estrutura. Se cumple la condición de confinado cuando las paredes presentan machones y viga de corona en su perímetro.",default= False)
-#    n_pisos_nc = models.BooleanField(verbose_name="N° de pisos NO confinados",help_text="Números de pisos no confinados que posee la estrutura. Se cumple la condición de no confinado cuando las paredes no presentan machones o vigas de corona en su perímetro.",default= False)
-#    n_pisos_bc = models.BooleanField(verbose_name="N° pisos sistema mixto de baja calidad",help_text="Números de pisos de sistemas conformados por pórticos de concreto o acero sin diseño según la normas vigente para la época construcción.",default= False)
-    #en el excel pero no en la planilla
-
 
     class  Meta:
 
@@ -583,7 +575,7 @@ class Irregularidad(models.Model):
     aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",help_text="Irregularidad que describe la ausencia de muros en una dirección, esta condicion se cumple en los sistemas estructurales con muros en una dirección.",default= False)
     ados_los_l = models.BooleanField(verbose_name="Adosamiento: Losa contra losa",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso se encuentran a la misma cota o elevación.",default= False)
     ados_los_c = models.BooleanField(verbose_name="Adosamiento:Losa contra columna",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso no se encuentran a la misma cota o elevación.",default= False)
-    sep_edif = models.IntegerField(verbose_name="Separación entre edifcio (cm)",help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento de lo contrario no.",default=5000)
+    sep_edif = models.IntegerField(verbose_name="Separación entre edifcio (cm)",help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento de lo contrario no.",null=True,blank=True)
 
 
     class  Meta:
@@ -701,6 +693,8 @@ class Anexo(models.Model):
 
         """
         return  os.path.join(settings.MEDIA_ROOT, filename)
+
+
 
 
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")

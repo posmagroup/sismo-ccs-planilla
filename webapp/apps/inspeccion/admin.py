@@ -671,6 +671,7 @@ class AnexoAdmin(admin.ModelAdmin):
         """
         return {}
 
+
 class AnexoInline(admin.StackedInline):
     model = Anexo
     can_delete = False
@@ -679,6 +680,9 @@ class AnexoInline(admin.StackedInline):
     formset = RequiredInlineFormSet
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
+
+
+
 
 
 
