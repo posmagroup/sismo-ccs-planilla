@@ -647,7 +647,7 @@ class ObservacionAdmin(admin.ModelAdmin):
 class ObservacionInline(admin.StackedInline):
     model = Observacion
     can_delete = False
-    verbose_name_plural = 'Observaciones'
+    verbose_name_plural = 'Observaciones (máximo 140 caracteres)'
     max_num = 1
     formset = RequiredInlineFormSet
     class  Media:
