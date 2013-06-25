@@ -326,7 +326,7 @@ class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
 class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
-    exclude = ('fecha_inf',)
+    #exclude = ('fecha_inf',)
 
     def get_model_perms(self, request):
         """
@@ -340,7 +340,7 @@ class Anio_ConstruccionInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Año de construcción'
     max_num = 1
-    exclude = ('fecha_inf',)
+    #exclude = ('fecha_inf',)
     formset = RequiredInlineFormSet
 
 
@@ -348,6 +348,7 @@ class Anio_ConstruccionInline(admin.StackedInline):
         (None, {
             'fields': (
                 ('anio','periodo'),
+                ('fecha_inf',),
 
 
 

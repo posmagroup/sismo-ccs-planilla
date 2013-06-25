@@ -4,8 +4,8 @@ import os
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.gis.geos import MultiPolygon, Polygon
-
 from django.contrib.gis.db import models
+
 #region  1.Datos Generales (Modelo Inspeccion, Poligono)
 class Poligono(models.Model):
 
@@ -305,11 +305,6 @@ class Periodo_Construccion(models.Model):
 
         return u'  consultar para mas detalles. '
 
-
-
-
-
-
 class Anio_Construccion(models.Model):
 
     """
@@ -335,7 +330,6 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
 
         return u'Año de Construcción, consultar para mas detalles. '
-
 
 #endregion
 
