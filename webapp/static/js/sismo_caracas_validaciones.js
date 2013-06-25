@@ -481,6 +481,10 @@
                     opciones=["field-pend_talud", "field-sep_talud"];
                     desaparecer_opciones(opciones);
                     opciones=["field-pend_terr","field-l_m_ladera"];
+                    $('label[for="id_condicion_terreno_set-0-pend_terr"]').text('Pendiente del terreno: *');
+                    $('label[for="id_condicion_terreno_set-0-pend_terr"]').attr('class', 'required');
+                    $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').text('Localizada sobre la mitad superior de la ladera: *');
+                    $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').attr('class', 'required');
                     aparecer_opciones(opciones);
                 }
                 else{
@@ -488,6 +492,10 @@
                     opciones=["field-pend_terr","field-l_m_ladera"];
                     desaparecer_opciones(opciones);
                     opciones=["field-pend_talud", "field-sep_talud"];
+                    $('label[for="id_condicion_terreno_set-0-pend_talud"]').text('Pendiente del talud: *');
+                    $('label[for="id_condicion_terreno_set-0-pend_talud"]').attr('class', 'required');
+                    $('label[for="id_condicion_terreno_set-0-sep_talud"]').text('Separación del talud: *');
+                    $('label[for="id_condicion_terreno_set-0-sep_talud"]').attr('class', 'required');
                     aparecer_opciones(opciones);
                 }
             }
