@@ -281,7 +281,7 @@ class Capacidad_OcupacionAdmin(admin.ModelAdmin):
 class Capacidad_OcupacionInline(admin.StackedInline):
     model = Capacidad_Ocupacion
     can_delete = False
-    verbose_name_plural = 'Capacidad de Ubicación. (Debe seleccionar al menos uno).'
+    verbose_name_plural = 'Capacidad de Ocupación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
     fieldsets = (
