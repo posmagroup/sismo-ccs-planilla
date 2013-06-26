@@ -156,7 +156,7 @@ class EstructuraInlineForm(ModelForm):
 
 
 
-        self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
+        #self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
         self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
 
 class EstructuraInline(admin.StackedInline):
@@ -441,8 +441,8 @@ class Tipo_EstructuralInline(admin.StackedInline):
                 ('pa','pmbc'),
                 ('papt','vb'),
                 ('pad','vcp'),
-                #('n_pisos_nc','n_pisos_bc'),
-                #                ('esq_planta','esq_elevac'),
+                ('tipo_predomi'),
+
                 )
         }),
         )
@@ -557,10 +557,11 @@ class IrregularidadInline(admin.StackedInline):
         (None, {
             'fields': (
                 ('a_viga_alt','f_asim_mas'),
-                ('p_entrep_b','aus_mur_1d'),
-                ('p_column_c', 'ados_los_l'),
-                ('disc_eje_c','ados_los_c'),
-                ('abert_losa','sep_edif'),
+                ('aus_mur_1d','ados_los_l'),
+                ('p_entrep_b', 'ados_los_c'),
+                ('p_column_c','sep_edif'),
+                ('disc_eje_c','estr_frag'),
+                ('abert_losa'),
 
                 )
         }),

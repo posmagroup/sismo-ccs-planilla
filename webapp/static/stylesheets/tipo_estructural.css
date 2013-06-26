@@ -64,3 +64,11 @@ form .aligned p.help {
 }
 .warning{color:#600;}
 .exceeded{color:#e00;}
+
+.field-abert_losa{
+
+    margin-left: 5%;
+    float: left;
+    width: 500px;
+
+}
