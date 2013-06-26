@@ -434,7 +434,7 @@ class Tipo_Estructural(models.Model):
         ('11', '11. MMNC'),
         ('12', 'P9. PMBC'),
         ('13', '10. VB'),
-        ('14', '11. CVP'),
+        ('14', '11. VCP'),
         )
 
 
