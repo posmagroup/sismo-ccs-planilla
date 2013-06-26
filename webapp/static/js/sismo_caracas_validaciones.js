@@ -311,6 +311,9 @@
             }
 
         });
+        // validacion de twitter
+
+
 
         $('#inspeccion_form').submit(function()
         {
@@ -509,7 +512,9 @@
 
 
 
-
+$(document).ready(function(){
+    $("#id_observacion_set-0-observacion").charCount();
+});
 
 
 

@@ -289,8 +289,8 @@ class Capacidad_OcupacionInline(admin.StackedInline):
             'fields': (
 
 
-                ('habitantes','t_o_manana'),
-                ('t_o_tarde','t_o_noche'),
+                ('habitantes'),
+                ('t_o_manana','t_o_tarde','t_o_noche'),
 
 
                 ),
@@ -701,7 +701,7 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/periodo_construccion.js","js/sismo_caracas_validaciones.js",)
+        js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js")
 
 
 
