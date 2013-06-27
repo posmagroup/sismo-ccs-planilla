@@ -223,6 +223,16 @@
                 //alert(name);
                 $(this).closest("div").css( "width", "80px" );
 
+                if (name.search('field-t_o_manana')!=-1)
+                {
+                    $('<label for="id_capacidad_ocupacion_set-__prefix__-t_o_manana" class="required" style="left:-120px; width: 140px;">Turno Ocupación: </label>').insertBefore($(this).closest("div"));
+
+
+
+                }
+
+
+
 
             }
 
@@ -499,7 +509,7 @@
         desaparecer_opciones(opciones);
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
             forma_terreno = $('#id_condicion_terreno_set-0-forma_terr').val();
-            
+
             if (forma_terreno == 1){
                 opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
                 desaparecer_opciones(opciones);
