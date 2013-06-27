@@ -706,6 +706,7 @@ class InspeccionAdmin(admin.GeoModelAdmin):
 
 
 
+
 #endregion
 
 #region  Registro de modelos  en el admin

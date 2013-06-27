@@ -248,6 +248,11 @@
     $(document).ready(function($) {
 
 
+
+
+
+
+        $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
         alinear_opciones('#capacidad_ocupacion_set-group .inline-related','__prefix__');
 
         $('.inline-group h2').each(function () {
@@ -309,6 +314,10 @@
             val = (this.checked ? "1" : "0");
 
             adosamiento =val;
+            if(val==1)
+                $('#id_irregularidad_set-0-sep_edif').closest("div").show();
+            if((adosamiento2==0) && (adosamiento==0))
+                $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
 
 
 
@@ -319,6 +328,11 @@
             val = (this.checked ? "1" : "0");
 
             adosamiento2 =val;
+
+            if(val==1)
+                $('#id_irregularidad_set-0-sep_edif').closest("div").show();
+            if((adosamiento2==0) && (adosamiento==0))
+                $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
 
 
 
@@ -347,8 +361,6 @@
 
         });
         // validacion de twitter
-
-
 
         $('#inspeccion_form').submit(function()
         {
@@ -504,7 +516,6 @@
         });
 
         //validacion en el admin para la condicion del terreno.
-
         opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
         desaparecer_opciones(opciones);
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
@@ -544,9 +555,6 @@
 
 
 })(django.jQuery);
-
-
-
 
 
 $(document).ready(function(){
