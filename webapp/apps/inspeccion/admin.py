@@ -664,6 +664,7 @@ class ObservacionInline(admin.StackedInline):
 
 class AnexoAdmin(admin.ModelAdmin):
 
+    list_display = ('foto_facha', 'pla_esca', 'show_image')
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
@@ -680,8 +681,12 @@ class AnexoInline(admin.StackedInline):
     verbose_name_plural = 'Anexos'
     max_num = 1
     formset = RequiredInlineFormSet
+    list_display = ('foto_facha', 'pla_esca', 'show_image')
+
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
+
+
 
 
 
@@ -719,6 +724,7 @@ admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Capacidad_Ocupacion,Capacidad_OcupacionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
+admin.site.register(Anexo,AnexoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)

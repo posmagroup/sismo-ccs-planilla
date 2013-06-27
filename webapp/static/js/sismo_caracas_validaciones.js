@@ -248,8 +248,10 @@
     $(document).ready(function($) {
 
 
+        file_path = $(".field-foto_facha").find("a").attr("href").split('/');
+        len =   $(".field-foto_facha").find("a").attr("href").split('/').length -1;
 
-
+        $('<img src="/media/'+file_path[len]+'"/> <br/>').insertBefore($(".field-foto_facha").find("a"));
 
 
         $('#id_irregularidad_set-0-sep_edif').closest("div").hide();

@@ -708,10 +708,16 @@ class Anexo(models.Model):
 
 
 
-
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    foto_facha = models.FileField(verbose_name='Foto de fachada',upload_to=upload_to_path, blank=True, default='', null=True)
+    foto_facha = models.ImageField(verbose_name='Foto de fachada',upload_to=upload_to_path, blank=True, default='', null=True)
     pla_esca = models.FileField(verbose_name='Planilla Escaneada',upload_to=upload_to_path, blank=True, default='', null=True)
+
+    def show_image(self):
+        print self.foto_facha.name.split('/')[1:]
+        return '<img src="/media/%s"/>' % self.foto_facha.name.split('/')[-1]
+
+
+    show_image.allow_tags = True
 
     class  Meta:
 
