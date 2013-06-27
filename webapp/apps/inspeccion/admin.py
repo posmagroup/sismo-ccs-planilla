@@ -289,8 +289,8 @@ class Capacidad_OcupacionInline(admin.StackedInline):
             'fields': (
 
 
-                ('habitantes'),
-                ('t_o_manana','t_o_tarde','t_o_noche'),
+
+                ('habitantes','t_o_manana','t_o_tarde','t_o_noche'),
 
 
                 ),

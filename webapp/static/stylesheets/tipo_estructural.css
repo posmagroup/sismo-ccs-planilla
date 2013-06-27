@@ -72,3 +72,23 @@ form .aligned p.help {
     width: 500px;
 
 }
+
+
+.field-abert_losa, .field-tipo_predomi{
+
+    margin-left: 5%;
+    float: left;
+    width: 500px;
+
+}
+
+/*
+.field-t_o_manana, .field-t_o_tarde,.field-t_o_noche{
+
+    margin-left: 5%;
+    float: left;
+    width: 55%;
+    display: inline;
+
+
+} */

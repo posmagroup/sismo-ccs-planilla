@@ -212,8 +212,33 @@
         }
     }
 
+    function alinear_opciones(referencia_div, excluir){
+
+        $(referencia_div).find('input[type=checkbox]').each(function () {
+
+
+            name = $(this).closest("div").attr("class");
+
+            if (name.search(excluir) ==-1){
+                //alert(name);
+                $(this).closest("div").css( "width", "80px" );
+
+
+            }
+
+
+        });
+
+
+
+
+    }
+
+
     $(document).ready(function($) {
 
+
+        alinear_opciones('#capacidad_ocupacion_set-group .inline-related','__prefix__');
 
         $('.inline-group h2').each(function () {
 
@@ -474,34 +499,36 @@
         desaparecer_opciones(opciones);
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
             forma_terreno = $('#id_condicion_terreno_set-0-forma_terr').val();
+            
             if (forma_terreno == 1){
                 opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
                 desaparecer_opciones(opciones);
             }
-            else{
-                if (forma_terreno == 2){
 
-                    opciones=["field-pend_talud", "field-sep_talud"];
-                    desaparecer_opciones(opciones);
-                    opciones=["field-pend_terr","field-l_m_ladera"];
-                    $('label[for="id_condicion_terreno_set-0-pend_terr"]').text('Pendiente del terreno: *');
-                    $('label[for="id_condicion_terreno_set-0-pend_terr"]').attr('class', 'required');
-                    $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').text('Localizada sobre la mitad superior de la ladera: *');
-                    $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').attr('class', 'required');
-                    aparecer_opciones(opciones);
-                }
-                else{
+            if (forma_terreno == 2){
 
-                    opciones=["field-pend_terr","field-l_m_ladera"];
-                    desaparecer_opciones(opciones);
-                    opciones=["field-pend_talud", "field-sep_talud"];
-                    $('label[for="id_condicion_terreno_set-0-pend_talud"]').text('Pendiente del talud: *');
-                    $('label[for="id_condicion_terreno_set-0-pend_talud"]').attr('class', 'required');
-                    $('label[for="id_condicion_terreno_set-0-sep_talud"]').text('Separación del talud: *');
-                    $('label[for="id_condicion_terreno_set-0-sep_talud"]').attr('class', 'required');
-                    aparecer_opciones(opciones);
-                }
+                opciones=["field-pend_talud", "field-sep_talud"];
+                desaparecer_opciones(opciones);
+                opciones=["field-pend_terr","field-l_m_ladera"];
+                $('label[for="id_condicion_terreno_set-0-pend_terr"]').html('Pendiente del terreno: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-pend_terr"]').attr('class', 'required');
+                $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').html('Localizada sobre la mitad superior de la ladera: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').attr('class', 'required');
+                aparecer_opciones(opciones);
             }
+            if ((forma_terreno == 3) || (forma_terreno == 4) ){
+
+                opciones=["field-pend_terr","field-l_m_ladera"];
+                desaparecer_opciones(opciones);
+                opciones=["field-pend_talud", "field-sep_talud"];
+                $('label[for="id_condicion_terreno_set-0-pend_talud"]').html('Pendiente del talud: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-pend_talud"]').attr('class', 'required');
+                $('label[for="id_condicion_terreno_set-0-sep_talud"]').html('Separación del talud: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-sep_talud"]').attr('class', 'required');
+                aparecer_opciones(opciones);
+            }
+
+
         });
     });
 
