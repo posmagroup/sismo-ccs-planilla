@@ -251,7 +251,18 @@
         file_path = $(".field-foto_facha").find("a").attr("href").split('/');
         len =   $(".field-foto_facha").find("a").attr("href").split('/').length -1;
 
+
         $('<img src="/media/'+file_path[len]+'"/> <br/>').insertBefore($(".field-foto_facha").find("a"));
+
+
+        file_path = $(".field-pla_esca").find("a").attr("href").split('/');
+        len =   $(".field-pla_esca").find("a").attr("href").split('/').length -1;
+        $('<br> <p class="required file-upload">Descargar el archivo: <a href="/media/'+file_path[len]+'">'+file_path[len]+' </a> </p> <br/>').insertAfter($("#id_anexo_set-0-pla_esca"));
+
+
+
+
+
 
 
         $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
