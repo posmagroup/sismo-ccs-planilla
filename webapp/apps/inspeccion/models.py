@@ -4,8 +4,8 @@ import os
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.gis.geos import MultiPolygon, Polygon
-
 from django.contrib.gis.db import models
+
 #region  1.Datos Generales (Modelo Inspeccion, Poligono)
 class Poligono(models.Model):
 
@@ -69,8 +69,6 @@ class  Inspeccion(models.Model):
 
 
 #endregion
-
-
 
 #region  2.Datos de los participantes (Modelo Participante)
 
@@ -161,7 +159,7 @@ class Estructura(models.Model):
     sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
     calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
-    poligono = models.MultiPolygonField(verbose_name="Edificación",srid=4326)
+    poligono = models.PolygonField(verbose_name="Edificación",srid=4326)
     objects = models.GeoManager()
 
 
@@ -239,9 +237,9 @@ class Capacidad_Ocupacion(models.Model):
     """
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
     habitantes = models.IntegerField(verbose_name="Número de personas que ocupan el inmueble")
-    t_o_manana = models.BooleanField(default=False,verbose_name="Mañana", help_text="Turno de ocupación matutino")
-    t_o_tarde = models.BooleanField(default=False,verbose_name="Tarde", help_text="Turno de ocupación vespertino")
-    t_o_noche = models.BooleanField(default=False,verbose_name="Noche", help_text="Turno de ocupación nocturno")
+    t_o_manana = models.BooleanField(default=False,verbose_name="Mañana", help_text="")
+    t_o_tarde = models.BooleanField(default=False,verbose_name="Tarde", help_text="")
+    t_o_noche = models.BooleanField(default=False,verbose_name="Noche", help_text="")
 
 
     class  Meta:
@@ -307,11 +305,6 @@ class Periodo_Construccion(models.Model):
 
         return u'  consultar para mas detalles. '
 
-
-
-
-
-
 class Anio_Construccion(models.Model):
 
     """
@@ -337,7 +330,6 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
 
         return u'Año de Construcción, consultar para mas detalles. '
-
 
 #endregion
 
@@ -426,31 +418,42 @@ class Tipo_Estructural(models.Model):
         1) All fields are not mandatory.
     """
 
-
+    # Defining possible choices
+    # for the forma_terr field in the model.
+    TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES = (
+        ('1', '1. PCA'),
+        ('2', '2. PCAP'),
+        ('3', '3. MCA2D'),
+        ('4', '4. MCA1D'),
+        ('5', '5. PA'),
+        ('6', '6. PAPT'),
+        ('7', '7. PAD'),
+        ('8', '8. PAC'),
+        ('9', 'P9. RE'),
+        ('10', '10. MMC'),
+        ('11', '11. MMNC'),
+        ('12', 'P9. PMBC'),
+        ('13', '10. VB'),
+        ('14', '11. VCP'),
+        )
 
 
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspeccion")
-    pca = models.BooleanField(verbose_name="Pórticos de concreto armado (PCA)",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",default= False)
-    pcap = models.BooleanField(verbose_name="Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto (PCAP)",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",default= False)
-    mca2d = models.BooleanField(verbose_name="Muros de concreto armado en dos direcciones horizontales (MCA2D)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en dos direcciones ortogonales, en proporciones de área transversal similar o mayor al 25%.",default= False)
-    mca1d = models.BooleanField(verbose_name="Sistemas con muros de concreto armado en una sola dirección, como algunos sistemas del tipo túnel (MCAMD)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en una dirección o poca área transversal de muro en la dirección ortogonal (menor al 25%).",default= False)
-    pa = models.BooleanField(verbose_name="Pórticos de acero (PA)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta tanto en columnas como vigas.",default= False)
-    papt = models.BooleanField(verbose_name="Pórticos de acero con perfiles tubulares (PAPT)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección cerrada tanto en columnas como vigas.",default= False)
-    pad = models.BooleanField(verbose_name="Pórticos de acero diagonalizados (PAD)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta o cerrada tanto en columnas como vigas, con arriostramientos concentricos o excentricos.",default= False)
-    pac = models.BooleanField(verbose_name="Pórticos de acero con cerchas (PAC)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta tanto en columnas como vigas y sistema de losa de entrepiso o techo compuesto por cerchas metálicas.",default= False)
-    pre = models.BooleanField(verbose_name="Sistemas pre-fabricados a base de grandes paneles o de pórticos (PRE)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por paneles o pórticos de concreto armado prefabricados en taller.",default= False)
-    mmc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería confinada (MMC)",help_text="Sistema resistente a cargas verticales y horizontales donde  los estructurales son los muros de mamposteria confinados por machones y viga en la totalidad de su perímetro.",default= False)
-    mmnc = models.BooleanField(verbose_name="Sistemas cuyos elementos portantes sean muros de mampostería no confinada (MMNC)",help_text="Sistema resistente a cargas verticales y horizontales donde los estructurales son los muros de mamposteria no confinados por machones o viga en la totalidad de su perímetro.",default= False)
-    vb = models.BooleanField(verbose_name="Viviendas de bahareque de un piso (VB)",help_text="Sistema estructural rural de un piso formado por troncos de caña o similar y barro como material aglomerante, con techo liviano.",default= False)
-    vcp = models.BooleanField(verbose_name="Viviendas de construcción precaria (tiera, madera, zinc, etc.) (VCP)",help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales reciclados o livianos, como zinc, madera, tierra.",default= False)
-    pmbc = models.BooleanField(verbose_name="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción (PMBC)",help_text="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción",default= False)
-
-    #en el excel pero no en la planilla
-#    n_pisos_cf = models.BooleanField(verbose_name="N° de pisos confinados",help_text="Números de pisos confinados que posee la estrutura. Se cumple la condición de confinado cuando las paredes presentan machones y viga de corona en su perímetro.",default= False)
-#    n_pisos_nc = models.BooleanField(verbose_name="N° de pisos NO confinados",help_text="Números de pisos no confinados que posee la estrutura. Se cumple la condición de no confinado cuando las paredes no presentan machones o vigas de corona en su perímetro.",default= False)
-#    n_pisos_bc = models.BooleanField(verbose_name="N° pisos sistema mixto de baja calidad",help_text="Números de pisos de sistemas conformados por pórticos de concreto o acero sin diseño según la normas vigente para la época construcción.",default= False)
-    #en el excel pero no en la planilla
-
+    pca = models.BooleanField(verbose_name="1. Pórticos de concreto armado (PCA)",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",default= False)
+    pcap = models.BooleanField(verbose_name="2. Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto (PCAP)",help_text="Sistema estructural formado por columnas y vigas de concreto armado. En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",default= False)
+    mca2d = models.BooleanField(verbose_name="3. Muros de concreto armado en dos direcciones horizontales (MCA2D)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en dos direcciones ortogonales, en proporciones de área transversal similar o mayor al 25%.",default= False)
+    mca1d = models.BooleanField(verbose_name="4. Sistemas con muros de concreto armado de poco espesor,dispuestos en una sola dirección (algunos sistemas tipo túnel) (MCAMD)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, dispuestos en una dirección o poca área transversal de muro en la dirección ortogonal (menor al 25%).",default= False)
+    pa = models.BooleanField(verbose_name="5. Pórticos de acero (PA)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta tanto en columnas como vigas.",default= False)
+    papt = models.BooleanField(verbose_name="6. Pórticos de acero con perfiles tubulares (PAPT)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección cerrada tanto en columnas como vigas.",default= False)
+    pad = models.BooleanField(verbose_name="7. Pórticos de acero diagonalizados (PAD)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta o cerrada tanto en columnas como vigas, con arriostramientos concentricos o excentricos.",default= False)
+    pac = models.BooleanField(verbose_name="8. Pórticos de acero con cerchas (PAC)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección abierta tanto en columnas como vigas y sistema de losa de entrepiso o techo compuesto por cerchas metálicas.",default= False)
+    pre = models.BooleanField(verbose_name="9. Sistemas pre-fabricados a base de grandes paneles o de pórticos (PRE)",help_text="Sistema estructural resistente a cargas verticales y horizontales formado por paneles o pórticos de concreto armado prefabricados en taller.",default= False)
+    mmc = models.BooleanField(verbose_name="10. Sistemas cuyos elementos portantes sean muros de mampostería confinada (MMC)",help_text="Sistema resistente a cargas verticales y horizontales donde  los estructurales son los muros de mamposteria confinados por machones y viga en la totalidad de su perímetro.",default= False)
+    mmnc = models.BooleanField(verbose_name="11. Sistemas cuyos elementos portantes sean muros de mampostería no confinada (MMNC)",help_text="Sistema resistente a cargas verticales y horizontales donde los estructurales son los muros de mamposteria no confinados por machones o viga en la totalidad de su perímetro.",default= False)
+    vb = models.BooleanField(verbose_name="13. Viviendas de bahareque de un piso (VB)",help_text="Sistema estructural rural de un piso formado por troncos de caña o similar y barro como material aglomerante, con techo liviano.",default= False)
+    vcp = models.BooleanField(verbose_name="14. Viviendas de construcción precaria (tiera, madera, zinc, etc.) (VCP)",help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales reciclados o livianos, como zinc, madera, tierra.",default= False)
+    pmbc = models.BooleanField(verbose_name="12. Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción (PMBC)",help_text="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción",default= False)
+    tipo_predomi = models.CharField(verbose_name="indique el Nº del tipo estructural predominante",help_text="",max_length=3,choices=TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES)
 
     class  Meta:
 
@@ -577,13 +580,14 @@ class Irregularidad(models.Model):
     a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",help_text="Irregularidad que describe la ausencia de vigas altas en una o dos direcciones ortogonales de la estructura. Una viga alta es considerada cuando su altura es mayor que el espesor o altura de la losa.",default= False)
     p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso débil ó blando",help_text="Irregularidad que describe la presencia de una planta baja o entrepiso libre o blando. Esta condición se cumple cuando:i) la diferencia de la sección transversal de paredes de un piso con respecto a las siguientes es más del 50%, ii) más del 50% de los pórticos de un piso no presentan paredes o iii) cuando existe una discontinuidad en vertical de elementos resistentes como la presencia de muros y luego cambia a columnas.",default= False)
     p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",help_text="Irregularidad caracterizada cuando una o varias columnas de concreto armado presenta una porción de su altura sin restricciones laterales como paredes. Esta condición no se cumple cuando la totalidad de la altura presenta o carece de restricciones laterales.",default= False)
-    disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas",help_text="Irregularidad que describe la interrupción o variación en planta de los ejes de elementos verticales, muro o columna en dos pisos consecutivos. La variación debe ser mayor a 1/3 de la dimensión horizontal del miembro inferior en la dirección del deslizamiento.",default= False)
+    disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas o paredes portantes",help_text="Irregularidad que describe la interrupción o variación en planta de los ejes de elementos verticales, muro o columna en dos pisos consecutivos. La variación debe ser mayor a 1/3 de la dimensión horizontal del miembro inferior en la dirección del deslizamiento.",default= False)
     abert_losa = models.BooleanField(verbose_name="Aberturas significativas en losas",help_text="Irregularidad que describe cuando el área total de aberturas de un piso sea mayor a un 20% del area total de la planta.",default= False)
     f_asim_mas = models.BooleanField(verbose_name="Fuerte asimetría de masas o rigideces en planta",help_text="Irregularidad que describe la presencia  de muros estructurales, paredes, núcleo de ascensores, núcleo de escaleras u otro, excéntricas en la estructura, que generen asimetría de masas y/o rigideces.",default= False)
     aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",help_text="Irregularidad que describe la ausencia de muros en una dirección, esta condicion se cumple en los sistemas estructurales con muros en una dirección.",default= False)
     ados_los_l = models.BooleanField(verbose_name="Adosamiento: Losa contra losa",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso se encuentran a la misma cota o elevación.",default= False)
     ados_los_c = models.BooleanField(verbose_name="Adosamiento:Losa contra columna",help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos para evitar el choque y a la vez las alturas de losas de entre piso no se encuentran a la misma cota o elevación.",default= False)
-    sep_edif = models.IntegerField(verbose_name="Separación entre edifcio (cm)",help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento de lo contrario no.",default=5000)
+    estr_frag = models.BooleanField(verbose_name="Estructura frágil",help_text="Descripcion estructura fragil",default= False)
+    sep_edif = models.IntegerField(verbose_name="Separación entre edifcio (cm)",help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento de lo contrario no.",null=True,blank=True)
 
 
     class  Meta:
@@ -703,9 +707,17 @@ class Anexo(models.Model):
         return  os.path.join(settings.MEDIA_ROOT, filename)
 
 
+
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    foto_facha = models.FileField(verbose_name='Foto de fachada',upload_to=upload_to_path, blank=True, default='', null=True)
+    foto_facha = models.ImageField(verbose_name='Foto de fachada',upload_to=upload_to_path, blank=True, default='', null=True)
     pla_esca = models.FileField(verbose_name='Planilla Escaneada',upload_to=upload_to_path, blank=True, default='', null=True)
+
+    def show_image(self):
+        print self.foto_facha.name.split('/')[1:]
+        return '<img src="/media/%s"/>' % self.foto_facha.name.split('/')[-1]
+
+
+    show_image.allow_tags = True
 
     class  Meta:
 

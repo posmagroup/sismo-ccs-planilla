@@ -212,10 +212,61 @@
         }
     }
 
+    function alinear_opciones(referencia_div, excluir){
+
+        $(referencia_div).find('input[type=checkbox]').each(function () {
+
+
+            name = $(this).closest("div").attr("class");
+
+            if (name.search(excluir) ==-1){
+                //alert(name);
+                $(this).closest("div").css( "width", "80px" );
+
+                if (name.search('field-t_o_manana')!=-1)
+                {
+                    $('<label for="id_capacidad_ocupacion_set-__prefix__-t_o_manana" class="required" style="left:-120px; width: 140px;">Turno Ocupación: </label>').insertBefore($(this).closest("div"));
+
+
+
+                }
+
+
+
+
+            }
+
+
+        });
+
+
+
+
+    }
 
 
     $(document).ready(function($) {
 
+
+        file_path = $(".field-foto_facha").find("a").attr("href").split('/');
+        len =   $(".field-foto_facha").find("a").attr("href").split('/').length -1;
+
+
+        $('<img src="/media/'+file_path[len]+'"/> <br/>').insertBefore($(".field-foto_facha").find("a"));
+
+
+        file_path = $(".field-pla_esca").find("a").attr("href").split('/');
+        len =   $(".field-pla_esca").find("a").attr("href").split('/').length -1;
+        $('<br> <p class="required file-upload">Descargar el archivo: <a href="/media/'+file_path[len]+'">'+file_path[len]+' </a> </p> <br/>').insertAfter($("#id_anexo_set-0-pla_esca"));
+
+
+
+
+
+
+
+        $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
+        alinear_opciones('#capacidad_ocupacion_set-group .inline-related','__prefix__');
 
         $('.inline-group h2').each(function () {
 
@@ -247,11 +298,8 @@
 
         });// Asterisco rojo para los cambios requeridos.
 
-
-
         opciones=["field-otro_uso"];
         desaparecer_opciones(opciones);
-
 
         $('#id_uso_set-0-u_otros').change(function() {
 
@@ -274,12 +322,15 @@
 
         }); // Si se selecciona opción otro uso, aparece el campo para especificar el uso.
 
-
         $('#id_irregularidad_set-0-ados_los_l').change(function() {
 
             val = (this.checked ? "1" : "0");
 
             adosamiento =val;
+            if(val==1)
+                $('#id_irregularidad_set-0-sep_edif').closest("div").show();
+            if((adosamiento2==0) && (adosamiento==0))
+                $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
 
 
 
@@ -291,10 +342,14 @@
 
             adosamiento2 =val;
 
+            if(val==1)
+                $('#id_irregularidad_set-0-sep_edif').closest("div").show();
+            if((adosamiento2==0) && (adosamiento==0))
+                $('#id_irregularidad_set-0-sep_edif').closest("div").hide();
+
 
 
         }); // Si se selecciona adosamiento
-
 
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
 
@@ -318,8 +373,7 @@
             }
 
         });
-
-
+        // validacion de twitter
 
         $('#inspeccion_form').submit(function()
         {
@@ -372,17 +426,6 @@
 
         });
 
-
-
-
-
-
-
-
-
-
-
-
         //validacion en el admin para la condicion del terreno.
         $('#id_forma_terr').change(function() {
             forma_terreno = $('#id_forma_terr').val();
@@ -405,8 +448,6 @@
                 }
             }
         });
-
-
 
         //validacion en el admin para el periodo de construccion.
         opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
@@ -448,7 +489,6 @@
             }
         });
 
-
         //validacion en el admin para el periodo de construccion.
         opciones=["field-anio_inici", "field-anio_fin", "field-fecha_infer"];
         desaparecer_opciones(opciones);
@@ -488,48 +528,51 @@
             }
         });
 
-
-
-
         //validacion en el admin para la condicion del terreno.
-
         opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
         desaparecer_opciones(opciones);
         $('#id_condicion_terreno_set-0-forma_terr').change(function() {
             forma_terreno = $('#id_condicion_terreno_set-0-forma_terr').val();
+
             if (forma_terreno == 1){
                 opciones=["field-pend_terr","field-l_m_ladera","field-pend_talud", "field-sep_talud"];
                 desaparecer_opciones(opciones);
             }
-            else{
-                if (forma_terreno == 2){
 
-                    opciones=["field-pend_talud", "field-sep_talud"];
-                    desaparecer_opciones(opciones);
-                    opciones=["field-pend_terr","field-l_m_ladera"];
-                    aparecer_opciones(opciones);
-                }
-                else{
+            if (forma_terreno == 2){
 
-                    opciones=["field-pend_terr","field-l_m_ladera"];
-                    desaparecer_opciones(opciones);
-                    opciones=["field-pend_talud", "field-sep_talud"];
-                    aparecer_opciones(opciones);
-                }
+                opciones=["field-pend_talud", "field-sep_talud"];
+                desaparecer_opciones(opciones);
+                opciones=["field-pend_terr","field-l_m_ladera"];
+                $('label[for="id_condicion_terreno_set-0-pend_terr"]').html('Pendiente del terreno: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-pend_terr"]').attr('class', 'required');
+                $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').html('Localizada sobre la mitad superior de la ladera: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-l_m_ladera"]').attr('class', 'required');
+                aparecer_opciones(opciones);
             }
+            if ((forma_terreno == 3) || (forma_terreno == 4) ){
+
+                opciones=["field-pend_terr","field-l_m_ladera"];
+                desaparecer_opciones(opciones);
+                opciones=["field-pend_talud", "field-sep_talud"];
+                $('label[for="id_condicion_terreno_set-0-pend_talud"]').html('Pendiente del talud: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-pend_talud"]').attr('class', 'required');
+                $('label[for="id_condicion_terreno_set-0-sep_talud"]').html('Separación del talud: <span style="color:red;">*</span>');
+                $('label[for="id_condicion_terreno_set-0-sep_talud"]').attr('class', 'required');
+                aparecer_opciones(opciones);
+            }
+
+
         });
     });
-
-
 
 
 })(django.jQuery);
 
 
-
-
-
-
+$(document).ready(function(){
+    $("#id_observacion_set-0-observacion").charCount();
+});
 
 
 

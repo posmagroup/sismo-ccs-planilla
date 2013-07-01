@@ -1,9 +1,6 @@
 
 (function($) {
 
-
-
-
     function desaparecer_opciones (opciones){
 
 
@@ -33,15 +30,13 @@
     }
 
 
-
-
     $(document).ready(function($) {
 
-        opciones=["field-anio_inici", "field-anio_fin"];
+        opciones=["field-anio_inici", "field-anio_fin","field-fecha_inf"];
         desaparecer_opciones(opciones);
         opciones=["field-periodo"];
         aparecer_opciones(opciones);
-
+        inferido = 'Año: * ';
         // Para el manejo de los distintos periodos
         $('#id_periodo').change(function() {
             periodo = $('#id_periodo').val();
@@ -92,6 +87,11 @@
                     if ($(this).val() == id_periodo){
 
                         $(this).attr('selected','selected');
+                        $('input[name=anio_construccion_set-0-fecha_inf]').attr('checked', false);
+                        opciones=["field-fecha_inf"];
+                        desaparecer_opciones(opciones);
+                        $('label[for="id_anio_construccion_set-0-anio"]').text( inferido);
+
 
                     }
 
@@ -113,6 +113,12 @@
                 year= data['year'];
 
                 $('#id_anio_construccion_set-0-anio').val(year);
+                $('input[name=anio_construccion_set-0-fecha_inf]').attr('checked', true);
+                $('input[name=anio_construccion_set-0-fecha_inf]').attr('disable', 'disable');
+                opciones=["field-fecha_inf"];
+                aparecer_opciones(opciones);
+
+                $('label[for="id_anio_construccion_set-0-anio"]').text( inferido+'(I)');
 
 
             });
