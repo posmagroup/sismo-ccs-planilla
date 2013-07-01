@@ -1,8 +1,10 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
-
-
 from forms import RequiredInlineFormSet
+from django.forms.models import ModelForm
+from django.contrib.gis.geos import MultiPolygon, Polygon
+from django.contrib.gis.db import models
+
 from models import Entrevistado
 from models import Condicion_Terreno
 from models import Tipo_Estructural
@@ -133,12 +135,37 @@ class EstructuraAdmin(admin.OSMGeoAdmin):
         """
         return {}
 
+class EstructuraInlineForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EstructuraInlineForm, self).__init__(*args, **kwargs)
+        estructura_admin = admin.site._registry[Estructura]
+        model_field = self._meta.model._meta.get_field('poligono')
+
+
+#        p = [x for x in Poligono.objects.all()[:1]]
+#
+#        union = p[0].geom
+#
+#        for multi_poligono in Poligono.objects.all()[:3]:
+#
+#            union.append(multi_poligono.geom.cascaded_union)
+
+        #print union
+
+
+
+
+        #self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
+        self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
+
 class EstructuraInline(admin.StackedInline):
     model = Estructura
+    form = EstructuraInlineForm
     can_delete = False
     verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
-    formset = RequiredInlineFormSet
+
     fieldsets = (
         (None, {
             'fields': (
@@ -146,17 +173,17 @@ class EstructuraInline(admin.StackedInline):
                 ('n_semi_sot','n_sotanos'),
                 ('ciudad','urb_barrio'),
                 ('sector','calle'),
-                ('manzana','parcela'),
                 ('pto_referencia','poligono'),
 
 
                 )
         }),
-        )
+    )
+
 
 #endregion
 
-#region  5.uso de la Edificación (Modelo Uso)
+#region  5.Uso de la Edificación (Modelo Uso)
 
 class UsoAdmin(admin.ModelAdmin):
 
@@ -192,7 +219,7 @@ class UsoAdmin(admin.ModelAdmin):
 class UsoInline(admin.StackedInline):
     model = Uso
     can_delete = False
-    verbose_name_plural = 'Uso de la edificación'
+    verbose_name_plural = 'Uso de la edificación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
     fieldsets = (
@@ -254,7 +281,7 @@ class Capacidad_OcupacionAdmin(admin.ModelAdmin):
 class Capacidad_OcupacionInline(admin.StackedInline):
     model = Capacidad_Ocupacion
     can_delete = False
-    verbose_name_plural = 'Capacidad de Ubicación'
+    verbose_name_plural = 'Capacidad de Ocupación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
     fieldsets = (
@@ -262,8 +289,8 @@ class Capacidad_OcupacionInline(admin.StackedInline):
             'fields': (
 
 
-                ('habitantes','t_o_manana'),
-                ('t_o_tarde','t_o_noche'),
+
+                ('habitantes','t_o_manana','t_o_tarde','t_o_noche'),
 
 
                 ),
@@ -299,7 +326,7 @@ class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
 class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
-    exclude = ('fecha_inf',)
+    #exclude = ('fecha_inf',)
 
     def get_model_perms(self, request):
         """
@@ -313,7 +340,7 @@ class Anio_ConstruccionInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Año de construcción'
     max_num = 1
-    exclude = ('fecha_inf',)
+    #exclude = ('fecha_inf',)
     formset = RequiredInlineFormSet
 
 
@@ -321,6 +348,7 @@ class Anio_ConstruccionInline(admin.StackedInline):
         (None, {
             'fields': (
                 ('anio','periodo'),
+                ('fecha_inf',),
 
 
 
@@ -399,7 +427,7 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
 class Tipo_EstructuralInline(admin.StackedInline):
     model = Tipo_Estructural
     can_delete = False
-    verbose_name_plural = 'Tipo estructural'
+    verbose_name_plural = 'Tipo estructural. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
 
@@ -413,8 +441,8 @@ class Tipo_EstructuralInline(admin.StackedInline):
                 ('pa','pmbc'),
                 ('papt','vb'),
                 ('pad','vcp'),
-                #('n_pisos_nc','n_pisos_bc'),
-                #                ('esq_planta','esq_elevac'),
+                ('tipo_predomi'),
+
                 )
         }),
         )
@@ -529,10 +557,11 @@ class IrregularidadInline(admin.StackedInline):
         (None, {
             'fields': (
                 ('a_viga_alt','f_asim_mas'),
-                ('p_entrep_b','aus_mur_1d'),
-                ('p_column_c', 'ados_los_l'),
-                ('disc_eje_c','ados_los_c'),
-                ('abert_losa','sep_edif'),
+                ('aus_mur_1d','ados_los_l'),
+                ('p_entrep_b', 'ados_los_c'),
+                ('p_column_c','sep_edif'),
+                ('disc_eje_c','estr_frag'),
+                ('abert_losa'),
 
                 )
         }),
@@ -620,7 +649,7 @@ class ObservacionAdmin(admin.ModelAdmin):
 class ObservacionInline(admin.StackedInline):
     model = Observacion
     can_delete = False
-    verbose_name_plural = 'Observaciones'
+    verbose_name_plural = 'Observaciones (máximo 140 caracteres)'
     max_num = 1
     formset = RequiredInlineFormSet
     class  Media:
@@ -635,6 +664,7 @@ class ObservacionInline(admin.StackedInline):
 
 class AnexoAdmin(admin.ModelAdmin):
 
+    list_display = ('foto_facha', 'pla_esca', 'show_image')
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
 
@@ -644,14 +674,22 @@ class AnexoAdmin(admin.ModelAdmin):
         """
         return {}
 
+
 class AnexoInline(admin.StackedInline):
     model = Anexo
     can_delete = False
     verbose_name_plural = 'Anexos'
     max_num = 1
     formset = RequiredInlineFormSet
+    list_display = ('foto_facha', 'pla_esca', 'show_image')
+
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
+
+
+
+
+
 
 
 
@@ -661,11 +699,16 @@ class AnexoInline(admin.StackedInline):
 
 #region  Admin (inlines )de  Inspeccion
 
-class InspeccionAdmin(admin.ModelAdmin):
+class InspeccionAdmin(admin.GeoModelAdmin):
     inlines = ( EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
 
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
+    exclude = ('cod_pla',)
+
+    class  Media:
+        js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js")
+
 
 
 
@@ -681,6 +724,7 @@ admin.site.register(Estructura, EstructuraAdmin)
 admin.site.register(Capacidad_Ocupacion,Capacidad_OcupacionAdmin)
 admin.site.register(Grado_Deterioro,Grado_DeterioroAdmin)
 admin.site.register(Uso,UsoAdmin)
+admin.site.register(Anexo,AnexoAdmin)
 admin.site.register(Irregularidad,IrregularidadAdmin)
 admin.site.register(Tipo_Estructural,Tipo_EstructuralAdmin)
 admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
