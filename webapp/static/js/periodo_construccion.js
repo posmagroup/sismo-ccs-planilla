@@ -41,6 +41,8 @@
         desaparecer_opciones(opciones);
         opciones=["field-periodo"];
         aparecer_opciones(opciones);
+
+        // Para el manejo de los distintos periodos
         $('#id_periodo').change(function() {
             periodo = $('#id_periodo').val();
             opciones=["field-anio_inici", "field-anio_fin"];
@@ -78,7 +80,44 @@
         });
 
 
+        $('#id_anio_construccion_set-0-anio').change(function() {
 
+
+            $.get('/periodo_given_year/'+this.value, function(data) {
+
+                id_periodo = data['id'];
+
+                 $('#id_anio_construccion_set-0-periodo').children('option').each(function () {
+
+                    if ($(this).val() == id_periodo){
+
+                        $(this).attr('selected','selected');
+
+                    }
+
+                });
+
+
+            });
+
+
+
+        });
+
+        $('#id_anio_construccion_set-0-periodo').change(function() {
+
+            value = $(this).children('option').filter(":selected").val();
+
+            $.get('/year_given_periodo/'+value, function(data) {
+
+                year= data['year'];
+
+                $('#id_anio_construccion_set-0-anio').val(year);
+
+
+            });
+
+        });
 
 
 

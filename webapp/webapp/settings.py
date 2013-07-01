@@ -83,8 +83,6 @@ STATICFILES_DIRS = (
     )
 
 
-print STATIC_ROOT
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -195,6 +193,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'floppyforms',
+    'braces',
     # Third Party Apps
     'south',
 
