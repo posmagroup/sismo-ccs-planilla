@@ -1,3 +1,9 @@
+# Virtualenv
+env
+
+# local config.
+local/*.py
+local/*.pyc
 
 *.pyc
 
