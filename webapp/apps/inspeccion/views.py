@@ -1,11 +1,13 @@
 from datetime import date
+import json
 from django.http.response import HttpResponse
 
 from braces.views import AjaxResponseMixin, JSONResponseMixin
+from django.utils import simplejson
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 
-from models import Periodo_Construccion
+from models import Periodo_Construccion, Poligono
 
 class Periodo_Construccion_By_YearView(JSONResponseMixin, AjaxResponseMixin, DetailView):
     model = Periodo_Construccion
@@ -83,3 +85,23 @@ class Year_By_Periodo_ConstruccionView(JSONResponseMixin, AjaxResponseMixin, Det
         }
 
         return self.render_json_response(json_dict)
+
+
+
+
+class DatabasePolygonView(JSONResponseMixin, AjaxResponseMixin, DetailView):
+    model = Poligono
+    template_name = '404.html'
+
+    def get_object(self,request, *args, **kwargs):
+
+
+        p = [x.geom.geojson for x in Poligono.objects.all()[:1000]]
+
+        return p
+
+    def get_ajax(self, request, *args, **kwargs):
+
+        obj = self.get_object(request, *args, **kwargs)
+        #print obj
+        return HttpResponse(obj, mimetype="text/json")

@@ -1,5 +1,5 @@
-from django.forms.models import BaseInlineFormSet
-
+from django.forms.models import BaseInlineFormSet, BaseModelForm
+from models import Poligono
 
 class RequiredInlineFormSet(BaseInlineFormSet):
     """

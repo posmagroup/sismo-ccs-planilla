@@ -70,6 +70,10 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 IMPERAVI_UPLOAD_PATH = MEDIA_ROOT
 
 
+
+OLWIDGET_STATIC_URL = os.path.join(STATIC_URL,  'olwidget')
+
+
 if not os.path.exists(VAR_ROOT):
     os.mkdir(VAR_ROOT)
 
@@ -196,6 +200,7 @@ INSTALLED_APPS = (
     'braces',
     # Third Party Apps
     'south',
+    'olwidget',
 
 
     # Project Apps.

@@ -8,6 +8,9 @@ from django.db import connection
 
 
 #
+#p = [x.geom.geojson for x in Poligono.objects.all()[:10]]
+#print p
+#
 #mapping = {
 #    'fid_edific' : 'FID_Edific',
 #    'layer' : 'LAYER',
@@ -17,16 +20,19 @@ from django.db import connection
 #    'shape_leng' : 'Shape_Leng',
 #    'shape_area' : 'Shape_Area',
 #    'otro_conta' : 'otro_conta',
-#    'geom' : 'MULTIPOLYGON',
+#    'geom' : 'POLYGON',
 #
 #    }
 #
 #ds = DataSource(VAR_ROOT + '/Edif_Candelaria.shp')
 #
 #lm = LayerMapping(Poligono, ds, mapping)
-
-#lm.save(verbose=True)
 #
+#
+#print lm.mapping
+#
+#lm.save(verbose=True)
+##
 #p = [x for x in Poligono.objects.all()[:10]]
 ###
 #union = p[8].geom

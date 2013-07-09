@@ -17,8 +17,10 @@ class Poligono(models.Model):
     shape_leng = models.FloatField()
     shape_area = models.FloatField()
     otro_conta = models.CharField(max_length=250)
-    geom = models.MultiPolygonField(srid=4326)
+    geom = models.PolygonField(srid=4326)
     objects = models.GeoManager()
+
+
 
 
     class  Meta:
