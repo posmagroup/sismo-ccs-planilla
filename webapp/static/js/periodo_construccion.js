@@ -32,6 +32,10 @@
 
     $(document).ready(function($) {
 
+        $('<label id="fecha_inferida" class="required" style="margin-left: 55%"> Fecha Inferida </label>').insertAfter($("#id_anio_construccion_set-0-anio"));
+
+        opciones=["fecha_inferida"];
+        desaparecer_opciones(opciones);
         opciones=["field-anio_inici", "field-anio_fin","field-fecha_inf"];
         desaparecer_opciones(opciones);
         opciones=["field-periodo"];
@@ -88,9 +92,9 @@
 
                         $(this).attr('selected','selected');
                         $('input[name=anio_construccion_set-0-fecha_inf]').attr('checked', false);
-                        opciones=["field-fecha_inf"];
+                        opciones=["field-fecha_inf","fecha_inferida"];
                         desaparecer_opciones(opciones);
-                        $('label[for="id_anio_construccion_set-0-anio"]').text( inferido);
+                       // $('label[for="id_anio_construccion_set-0-anio"]').text( inferido);
 
 
                     }
@@ -115,11 +119,13 @@
                 $('#id_anio_construccion_set-0-anio').val(year);
                 $('input[name=anio_construccion_set-0-fecha_inf]').attr('checked', true);
                 $('input[name=anio_construccion_set-0-fecha_inf]').attr('disable', 'disable');
-                opciones=["field-fecha_inf"];
+//                opciones=["field-fecha_inf"];
+//                aparecer_opciones(opciones);
+
+               // $('label[for="id_anio_construccion_set-0-anio"]').text( inferido+'(I)');
+
+                opciones=["fecha_inferida"];
                 aparecer_opciones(opciones);
-
-                $('label[for="id_anio_construccion_set-0-anio"]').text( inferido+'(I)');
-
 
             });
 

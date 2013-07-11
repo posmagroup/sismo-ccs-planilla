@@ -161,7 +161,7 @@ class Estructura(models.Model):
     sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
     calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
-    poligono = models.PolygonField(verbose_name="Edificación",srid=4326)
+    poligono = models.PolygonField(verbose_name="Edificación",srid=4326, null=True,blank=True)
     objects = models.GeoManager()
 
 
