@@ -152,7 +152,7 @@ class EstructuraInlineForm(ModelForm):
         super(EstructuraInlineForm, self).__init__(*args, **kwargs)
         estructura_admin = admin.site._registry[Estructura]
         model_field = self._meta.model._meta.get_field('poligono')
-        #self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
+       # self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
 
 
 
@@ -707,12 +707,9 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/poligonos.js","js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/OpenLayers.js","js/sismo_caracas_validaciones.js","js/widget_poligono.js")
+        js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js","js/widget_poligono.js")
 
-        css = {
-            'all':("stylesheets/style_open_layer.css",)
-        }
-
+       
 
 
 #endregion

@@ -1,5 +1,34 @@
 (function($) {
 
+
+
+
+    $(document).ready(function(){
+
+
+
+        $.get('/mapa/',function(data){
+
+
+
+            $(data).insertAfter($("#calendarbox0"));
+
+
+        });
+
+
+
+
+
+
+    });
+
+
+
+})(django.jQuery);
+/*
+(function($) {
+
     var lon = 5;
     var lat = 40;
     var zoom = 5;
@@ -73,15 +102,19 @@
 
 
 $(document).ready(function(){
+OpenLayers.Style(OpenLayers.Util.applyDefaults({
+                    externalGraphic: "/static/img/marker-green.png",
+                    graphicOpacity: 1,
+                    rotation: -45,
+                    pointRadius:
+
+                        $.get('/database_polygon');
 
 
-    //$.get('/database_polygon');
+        $('<div id="map" class="smallmap"> </div>  <div id="status"></div>').insertAfter($("#anexo_set-group"));
 
 
-    $('<div id="map" class="smallmap"> </div>  <div id="status"></div>').insertAfter($("#anexo_set-group"));
-
-
-    //init(poligonos_bd);
+        //init(poligonos_bd);
 
 
 
@@ -90,28 +123,24 @@ $(document).ready(function(){
 //another_try
 
 
-    var map, selectControl;
-    OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
-    function init2(poligonos_bd){
-        map = new OpenLayers.Map('map');
-        var wmsLayer = new OpenLayers.Layer.WMS(
-            "OpenLayers WMS",
-            "http://vmap0.tiles.osgeo.org/wms/vmap0",
-            {layers: 'basic'}
-        );
+        var map, selectControl;
+        OpenLayers.Feature.Vector.style['default']['strokeWidth'] = '2';
+        function init2(poligonos_bd){
+            map = new OpenLayers.Map('map');
+            var wmsLayer = new OpenLayers.Layer.WMS(
+                "OpenLayers WMS",
+                "http://vmap0.tiles.osgeo.org/wms/vmap0",
+                {layers: 'basic'}
+            );
 
-        // allow testing of specific renderers via "?renderer=Canvas", etc
-        var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
-        renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
+            // allow testing of specific renderers via "?renderer=Canvas", etc
+            var renderer = OpenLayers.Util.getParameters(window.location.href).renderer;
+            renderer = (renderer) ? [renderer] : OpenLayers.Layer.Vector.prototype.renderers;
 
-        var vectors1 = new OpenLayers.Layer.Vector("Vector Layer 1", {
-            renderers: renderer,
-            styleMap: new OpenLayers.StyleMap({
-                "default": new OpenLayers.Style(OpenLayers.Util.applyDefaults({
-                    externalGraphic: "/static/img/marker-green.png",
-                    graphicOpacity: 1,
-                    rotation: -45,
-                    pointRadius: 10
+            var vectors1 = new OpenLayers.Layer.Vector("Vector Layer 1", {
+                    renderers: renderer,
+                    styleMap: new OpenLayers.StyleMap({
+                        "default": new  10
                 }, OpenLayers.Feature.Vector.style["default"])),
                 "select": new OpenLayers.Style({
                     externalGraphic: "/static/img/marker-blue.png"
@@ -141,7 +170,23 @@ $(document).ready(function(){
 
         //vector_layer.addFeatures(geojson_format.read(poligonos_bd));
        // map.addLayer(vector_layer);
-        map.addLayers([wmsLayer, vectors1, vectors2]);
+
+        var vectors3 = new OpenLayers.Layer.Vector("KML", {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: "/static/poligonos.kml",
+                format: new OpenLayers.Format.KML({
+                    extractStyles: true,
+                    extractAttributes: true,
+                    maxDepth: 2
+                })
+            })
+        })
+
+
+
+
+        map.addLayers([wmsLayer, vectors1, vectors2,vectors3]);
         map.addControl(new OpenLayers.Control.LayerSwitcher());
 
         selectControl = new OpenLayers.Control.SelectFeature(
@@ -234,3 +279,4 @@ $(document).ready(function(){
 
 
 })(django.jQuery,poligonos_bd);
+*/

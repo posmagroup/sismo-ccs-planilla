@@ -165,6 +165,7 @@ class Estructura(models.Model):
     objects = models.GeoManager()
 
 
+
     class  Meta:
 
         verbose_name =' Estructura'
