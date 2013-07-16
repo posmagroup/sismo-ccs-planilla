@@ -709,7 +709,7 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     class  Media:
         js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js","js/widget_poligono.js")
 
-       
+
 
 
 #endregion

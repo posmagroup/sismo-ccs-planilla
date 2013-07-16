@@ -2,7 +2,11 @@
 <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8080/geoserver/openlayers/theme/default/style.css"/>
 <!-- Basic CSS definitions -->
 <style type="text/css">
-
+        /* General settings */
+    body {
+        font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+        font-size: small;
+    }
         /* Toolbar styles */
     #toolbar {
         position: relative;
@@ -109,7 +113,7 @@ OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 function init(){
     // if this is just a coverage or a group of them, disable a few items,
     // and default to jpeg format
-    format = 'image/png';
+    format = 'image/gif';
     if(pureCoverage) {
         document.getElementById('filterType').disabled = true;
         document.getElementById('filter').disabled = true;
@@ -133,7 +137,7 @@ function init(){
     };
     map = new OpenLayers.Map('map', options);
 
-    // setup tiled layer
+   /* // setup tiled layer
     tiled = new OpenLayers.Layer.WMS(
             "funvisis:inspeccion_poligono - Tiled", "http://127.0.0.1:8080/geoserver/funvisis/wms",
             {
@@ -165,9 +169,29 @@ function init(){
                 isBaseLayer: true,
                 yx : {'EPSG:4326' : true}
             }
+    );*/
+
+    // setup single tiled layer
+    untiled2 = new OpenLayers.Layer.WMS(
+            "funvisis:inspeccion_poligono - Wfs", "http://127.0.0.1:8080/geoserver/funvisis/wfs",
+            {
+                LAYERS: 'funvisis:inspeccion_poligono',
+                STYLES: '',
+                format: format
+            },
+            {
+                singleTile: true,
+                ratio: 1,
+                isBaseLayer: true,
+                yx : {'EPSG:4326' : true}
+            }
     );
 
-    map.addLayers([untiled, tiled]);
+
+
+
+
+    map.addLayers([untiled2]);
 
     // build up all controls
     map.addControl(new OpenLayers.Control.PanZoomBar({
@@ -426,14 +450,7 @@ function mergeNewParams(params){
     tiled.mergeNewParams(params);
     untiled.mergeNewParams(params);
 }
-
-$(document).ready(function(){
-
-    init();
-
-
-});
-
+init();
 </script>
 
 <div id="toolbar" style="display: none;">
@@ -480,7 +497,6 @@ $(document).ready(function(){
             <a>Styles:</a>
             <select id="imageFormatSelector" onchange="setStyle(value)">
                 <option value="">Default</option>
-                <option value="polygon">polygon</option>
             </select>
         </li>
         <!-- Commented out for the moment, some code needs to be extended in
