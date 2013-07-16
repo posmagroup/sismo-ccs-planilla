@@ -101,9 +101,7 @@
 <script src="http://127.0.0.1:8080/geoserver/openlayers/OpenLayers.js" type="text/javascript">
 </script>
 <script defer="defer" type="text/javascript">
-var map;
-var untiled;
-var tiled;
+var map, layer, select, hover, control;
 var pureCoverage = false;
 // pink tile avoidance
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
@@ -111,8 +109,9 @@ OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
 OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
 function init(){
-    // if this is just a coverage or a group of them, disable a few items,
-    // and default to jpeg format
+
+//*****************settings*****************//
+    OpenLayers.ProxyHost= "proxy.cgi?url=";
     format = 'image/gif';
     if(pureCoverage) {
         document.getElementById('filterType').disabled = true;
@@ -129,82 +128,70 @@ function init(){
             -66.8906349949867, 10.5153133026893
     );
     var options = {
-        controls: [],
+        controls: [
+
+        ],
         maxExtent: bounds,
         maxResolution: 0.0000764044173383,
         projection: "EPSG:4326",
         units: 'degrees'
     };
+
     map = new OpenLayers.Map('map', options);
+    var options = document.getElementById("options");
+    options.onclick = toggleControlPanel;
+//*****************settings*****************//
 
-   /* // setup tiled layer
-    tiled = new OpenLayers.Layer.WMS(
-            "funvisis:inspeccion_poligono - Tiled", "http://127.0.0.1:8080/geoserver/funvisis/wms",
-            {
-                LAYERS: 'funvisis:inspeccion_poligono',
-                STYLES: '',
-                format: format,
-                tiled: true,
-                tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom
-            },
-            {
-                buffer: 0,
-                displayOutsideMaxExtent: true,
-                isBaseLayer: true,
-                yx : {'EPSG:4326' : true}
-            }
-    );
-
+//*****************layers*****************//
     // setup single tiled layer
-    untiled = new OpenLayers.Layer.WMS(
-            "funvisis:inspeccion_poligono - Untiled", "http://127.0.0.1:8080/geoserver/funvisis/wms",
+    var poligonos_funvisis = new OpenLayers.Layer.WMS(
+            "Poligonos Funvisis", "http://127.0.0.1:8080/geoserver/funvisis/wfs",
             {
                 LAYERS: 'funvisis:inspeccion_poligono',
                 STYLES: '',
                 format: format
             },
             {
-                singleTile: true,
-                ratio: 1,
-                isBaseLayer: true,
-                yx : {'EPSG:4326' : true}
-            }
-    );*/
-
-    // setup single tiled layer
-    untiled2 = new OpenLayers.Layer.WMS(
-            "funvisis:inspeccion_poligono - Wfs", "http://127.0.0.1:8080/geoserver/funvisis/wfs",
-            {
-                LAYERS: 'funvisis:inspeccion_poligono',
-                STYLES: '',
-                format: format
-            },
-            {
-                singleTile: true,
+                singleTile: false,
                 ratio: 1,
                 isBaseLayer: true,
                 yx : {'EPSG:4326' : true}
             }
     );
 
+    var capa_seleccionado = new OpenLayers.Layer.Vector("Selection", {styleMap:
+            new OpenLayers.Style(OpenLayers.Feature.Vector.style["select"])
+    });
 
+    map.addLayers([poligonos_funvisis,poligonos_funvisis,capa_seleccionado]);
+//*****************layers*****************//
 
-
-
-    map.addLayers([untiled2]);
-
-    // build up all controls
+//*****************controls*****************//
+    map.addControl(new OpenLayers.Control.LayerSwitcher());
     map.addControl(new OpenLayers.Control.PanZoomBar({
         position: new OpenLayers.Pixel(2, 15)
     }));
     map.addControl(new OpenLayers.Control.Navigation());
     map.addControl(new OpenLayers.Control.Scale($('scale')));
     map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
-    map.zoomToExtent(bounds);
 
-    // wire up the option button
-    var options = document.getElementById("options");
-    options.onclick = toggleControlPanel;
+    /*var wfs_protocol=OpenLayers.Protocol.WFS.fromWMSLayer(poligonos_funvisis);
+
+   control = new OpenLayers.Control.GetFeature({
+        protocol: wfs_protocol,
+        click: true,
+        single:true
+    });*/
+//*****************controls*****************//
+
+//*****************events*****************//
+
+   /* control.events.register("featureselected", this, function(e) {
+        select.addFeatures([e.feature]);
+    });
+    control.events.register("featureunselected", this, function(e) {
+        select.removeFeatures([e.feature]);
+    });*/
 
     // support GetFeatureInfo
     map.events.register('click', map, function (e) {
@@ -235,6 +222,8 @@ function init(){
             params.y = parseInt(e.xy.y);
         }
 
+
+
         // merge filters
         if(map.layers[0].params.CQL_FILTER != null) {
             params.cql_filter = map.layers[0].params.CQL_FILTER;
@@ -248,11 +237,24 @@ function init(){
         OpenLayers.loadURL("http://127.0.0.1:8080/geoserver/funvisis/wms", params, this, setHTML, setHTML);
         OpenLayers.Event.stop(e);
     });
+
+//*****************events*****************//
+
+   /* map.addControl(control);
+    control.activate();*/
+    map.zoomToExtent(bounds);
+
+
 }
 
 // sets the HTML provided into the nodelist element
 function setHTML(response){
     document.getElementById('nodelist').innerHTML = response.responseText;
+
+    url ='http://127.0.0.1:8080/geoserver/funvisis/wfs?service=wfs&version=2.0.0&request=GetFeature&typeName=funvisis:inspeccion_poligono&featureID=500';
+
+    OpenLayers.loadURL(url, this, function hola(response){ alert(response.responseText)},function hola(response){ alert(response.responseText)});
+    //capa_seleccionado.addFeatures([map.getExtent().toBBOX()]);
 };
 
 // shows/hide the control panel
@@ -306,17 +308,7 @@ function setImageFormat(mime){
     untiled.mergeNewParams({
         format: mime
     });
-    /*
-     var paletteSelector = document.getElementById('paletteSelector')
-     if (mime == 'image/jpeg') {
-     paletteSelector.selectedIndex = 0;
-     setPalette('');
-     paletteSelector.disabled = true;
-     }
-     else {
-     paletteSelector.disabled = false;
-     }
-     */
+
 }
 
 // sets the chosen style
