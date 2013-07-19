@@ -100,457 +100,239 @@
 <!-- Import OpenLayers, reduced, wms read only version -->
 <script src="http://127.0.0.1:8080/geoserver/openlayers/OpenLayers.js" type="text/javascript">
 </script>
-<script defer="defer" type="text/javascript">
-var map, layer, select, hover, control;
-var pureCoverage = false;
-// pink tile avoidance
-OpenLayers.IMAGE_RELOAD_ATTEMPTS = 5;
-// make OL compute scale according to WMS spec
-OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
-function init(){
+<script  type="text/javascript">
 
-//*****************settings*****************//
-    OpenLayers.ProxyHost= "proxy.cgi?url=";
-    format = 'image/gif';
-    if(pureCoverage) {
-        document.getElementById('filterType').disabled = true;
-        document.getElementById('filter').disabled = true;
-        document.getElementById('antialiasSelector').disabled = true;
-        document.getElementById('updateFilterButton').disabled = true;
-        document.getElementById('resetFilterButton').disabled = true;
-        document.getElementById('jpeg').selected = true;
-        format = "image/jpeg";
-    }
 
-    var bounds = new OpenLayers.Bounds(
-            -66.9101945258253, 10.4995727922997,
-            -66.8906349949867, 10.5153133026893
-    );
-    var options = {
-        controls: [
 
-        ],
-        maxExtent: bounds,
-        maxResolution: 0.0000764044173383,
-        projection: "EPSG:4326",
-        units: 'degrees'
-    };
+    $(document).ready(function(){
+        var map, layer, control;
+        var poligonos_funvisis;
+        var select ;
+        var open_street;
 
-    map = new OpenLayers.Map('map', options);
-    var options = document.getElementById("options");
-    options.onclick = toggleControlPanel;
-//*****************settings*****************//
+        //*****************settings*****************//
+        //OpenLayers.ProxyHost= "proxy.cgi?url=";
+        format = 'image/gif';
+        var bounds = new OpenLayers.Bounds(
+                -66.9101945258253, 10.4995727922997,
+                -66.8906349949867, 10.5153133026893
+        );
+        var options = {
+            controls: [
 
-//*****************layers*****************//
-    // setup single tiled layer
-    var poligonos_funvisis = new OpenLayers.Layer.WMS(
-            "Poligonos Funvisis", "http://127.0.0.1:8080/geoserver/funvisis/wfs",
-            {
-                LAYERS: 'funvisis:inspeccion_poligono',
-                STYLES: '',
-                format: format
-            },
-            {
-                singleTile: false,
-                ratio: 1,
-                isBaseLayer: true,
-                yx : {'EPSG:4326' : true}
+            ],
+            maxExtent: bounds,
+            maxResolution: 0.0000764044173383,
+            projection: "EPSG:4326",
+            units: 'degrees'
+        };
+
+
+        //*****************settings*****************//
+
+        //*****************map*****************//
+        map = new OpenLayers.Map('map', options);
+        //*****************map*****************//
+
+        //*****************Protocols*****************//
+
+
+/*
+
+        var protocol = new OpenLayers.Protocol.WFS({
+            version: "1.1.0",
+            url:  "http://127.0.0.1:8080/geoserver/wfs/",
+            featureType: "inspeccion_poligono",
+            featureNS: "htttp://127.0.0.1:8080/geoserver/funvisis/"
+            //srsName: "EPSG:4326"
+
+        });
+*/
+
+
+
+        //*****************Protocols*****************//
+
+        //*****************Layers*****************//
+        select = new OpenLayers.Layer.Vector("chupalo");
+
+
+
+        osm = new OpenLayers.Layer.OSM( "Simple OSM Map");
+        layer = new OpenLayers.Layer.WMS(
+                "funvisis:inspeccion_poligono", "http://127.0.0.1:8080/geoserver/funvisis/wms",
+                {
+                    LAYERS: 'funvisis:inspeccion_poligono',
+                    STYLES: '',
+                    format: format,
+                    tiled: true,
+                    tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom,
+                    transparent:true
+                },
+                {
+                    buffer: 0,
+                    displayOutsideMaxExtent: true,
+                    isBaseLayer: false,
+                    yx : {'EPSG:4326' : true}
+                }
+        );
+      /* var candelaria = new OpenLayers.Layer.Vector("Candelaria edificios", {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: protocol});
+
+*/
+        //*****************Layers*****************//
+
+        //*****************Adding Layers To Map*****************//
+        map.addLayers([osm,layer,select ]);
+//        map.addLayer(layer);
+//        map.addLayer(select);
+
+
+
+
+
+        //*****************Adding Layers To Map*****************//
+
+        url ="http://127.0.0.1:8080/geoserver/wfs?service=wfs&version=1.1.0&request=GetFeature&typeName=funvisis:inspeccion_poligono&featureID=200&outputFormat=json";
+
+        OpenLayers.loadURL(url,OpenLayers,setHTML,setHTML);
+
+
+
+
+        //*****************Controls*****************//
+       /* get_feature_control = new OpenLayers.Control.GetFeature({
+            protocol: protocol,
+            box: false,
+            click: true
+
+        });*/
+        layer_switcher_control = new OpenLayers.Control.LayerSwitcher();
+        zoom_control = new OpenLayers.Control.PanZoomBar({ position: new OpenLayers.Pixel(15, 15) });
+        navigation_control = new OpenLayers.Control.Navigation();
+        mouse_position_control = new OpenLayers.Control.MousePosition();
+        overview_control = new OpenLayers.Control.OverviewMap();
+        keyboard_control = new OpenLayers.Control.KeyboardDefaults();
+
+        //*****************Controls*****************//
+
+        //*****************Events*****************//
+        /*get_feature_control.events.register("featureselected", this, function(e) {
+            alert(e.feature);
+        });*/
+
+
+
+
+        function setHTML(response){
+
+            var response = response;
+            //z = response.responseText;
+            //document.getElementById('nodelist').innerHTML =z;
+
+            geojson_format = new OpenLayers.Format.GeoJSON();
+            myGeoJSON = { "type": "FeatureCollection",
+                "features":
+                        [
+
+                            { "type": "Feature", "properties": { "LENGTH": 756.304000}, "geometry": { "type": "LineString", "coordinates": [ [ 18.105018, 59.231027 ], [ 18.104176, 59.230737 ], [ 18.103928, 59.230415 ], [ 18.103650, 59.230336 ], [ 18.103028, 59.230463 ], [ 18.102491, 59.230418 ], [ 18.101976, 59.230237 ], [ 18.100893, 59.230110 ], [ 18.100117, 59.230016 ], [ 18.097715, 59.230262 ], [ 18.096907, 59.230376 ], [ 18.096637, 59.230405 ], [ 18.096578, 59.230428 ], [ 18.096429, 59.230450 ], [ 18.096336, 59.230479 ], [ 18.096108, 59.230534 ], [ 18.095971, 59.230600 ], [ 18.095925, 59.230633 ], [ 18.095891, 59.230665 ], [ 18.094000, 59.231676 ], [ 18.093864, 59.231720 ] ] } }
+                            ,
+                            { "type": "Feature", "properties": { "LENGTH": 1462.390000}, "geometry": { "type": "LineString", "coordinates": [ [ 17.877073, 59.461653 ], [ 17.877116, 59.461598 ], [ 17.876936, 59.461507 ], [ 17.876936, 59.461323 ], [ 17.876773, 59.461098 ], [ 17.876430, 59.460885 ], [ 17.876413, 59.460553 ], [ 17.876576, 59.460280 ], [ 17.876575, 59.460078 ], [ 17.876762, 59.460060 ], [ 17.877371, 59.460042 ], [ 17.877808, 59.460046 ], [ 17.878641, 59.460046 ], [ 17.879010, 59.460078 ], [ 17.879337, 59.460044 ], [ 17.879526, 59.459878 ], [ 17.879749, 59.459563 ], [ 17.880058, 59.459538 ], [ 17.880435, 59.459503 ], [ 17.887550, 59.453608 ], [ 17.887696, 59.453430 ], [ 17.887971, 59.453150 ], [ 17.888221, 59.452843 ], [ 17.888246, 59.452721 ], [ 17.888435, 59.452609 ], [ 17.888470, 59.452568 ], [ 17.888517, 59.452410 ] ] } }
+
+                        ]
+            };
+
+            feature = geojson_format.read(response);
+            alert(feature);
+
+        };
+
+
+       map.events.register('click', map, function (e) {
+            //document.getElementById('nodelist').innerHTML = "Loading... please wait...";
+            var params = {
+                REQUEST: "GetFeatureInfo",
+                EXCEPTIONS: "application/vnd.ogc.se_xml",
+                BBOX: map.getExtent().toBBOX(),
+                SERVICE: "WMS",
+                INFO_FORMAT: 'text/html',
+                QUERY_LAYERS: map.layers[1].params.LAYERS,
+                FEATURE_COUNT: 50,
+                Layers: 'funvisis:inspeccion_poligono',
+                WIDTH: map.size.w,
+                HEIGHT: map.size.h,
+                format: format,
+                styles: map.layers[0].params.STYLES,
+                srs: map.layers[1].params.SRS};
+
+            // handle the wms 1.3 vs wms 1.1 madness
+            if(map.layers[0].params.VERSION == "1.3.0") {
+                params.version = "1.3.0";
+                params.j = parseInt(e.xy.x);
+                params.i = parseInt(e.xy.y);
+            } else {
+                params.version = "1.1.1";
+                params.x = parseInt(e.xy.x);
+                params.y = parseInt(e.xy.y);
             }
-    );
 
-    var capa_seleccionado = new OpenLayers.Layer.Vector("Selection", {styleMap:
-            new OpenLayers.Style(OpenLayers.Feature.Vector.style["select"])
-    });
+            // merge filters
+            if(map.layers[0].params.CQL_FILTER != null) {
+                params.cql_filter = map.layers[0].params.CQL_FILTER;
+            }
+            if(map.layers[0].params.FILTER != null) {
+                params.filter = map.layers[0].params.FILTER;
+            }
+            if(map.layers[0].params.FEATUREID) {
+                params.featureid = map.layers[0].params.FEATUREID;
+            }
+         //OpenLayers.loadURL("http://127.0.0.1:8080/geoserver/funvisis/wms", params, this, setHTML,setHTML);
 
-    map.addLayers([poligonos_funvisis,poligonos_funvisis,capa_seleccionado]);
-//*****************layers*****************//
+           OpenLayers.Event.stop(e);
 
-//*****************controls*****************//
-    map.addControl(new OpenLayers.Control.LayerSwitcher());
-    map.addControl(new OpenLayers.Control.PanZoomBar({
-        position: new OpenLayers.Pixel(2, 15)
-    }));
-    map.addControl(new OpenLayers.Control.Navigation());
-    map.addControl(new OpenLayers.Control.Scale($('scale')));
-    map.addControl(new OpenLayers.Control.MousePosition({element: $('location')}));
-
-    /*var wfs_protocol=OpenLayers.Protocol.WFS.fromWMSLayer(poligonos_funvisis);
-
-   control = new OpenLayers.Control.GetFeature({
-        protocol: wfs_protocol,
-        click: true,
-        single:true
-    });*/
-//*****************controls*****************//
-
-//*****************events*****************//
-
-   /* control.events.register("featureselected", this, function(e) {
-        select.addFeatures([e.feature]);
-    });
-    control.events.register("featureunselected", this, function(e) {
-        select.removeFeatures([e.feature]);
-    });*/
-
-    // support GetFeatureInfo
-    map.events.register('click', map, function (e) {
-        document.getElementById('nodelist').innerHTML = "Loading... please wait...";
-        var params = {
-            REQUEST: "GetFeatureInfo",
-            EXCEPTIONS: "application/vnd.ogc.se_xml",
-            BBOX: map.getExtent().toBBOX(),
-            SERVICE: "WMS",
-            INFO_FORMAT: 'text/html',
-            QUERY_LAYERS: map.layers[0].params.LAYERS,
-            FEATURE_COUNT: 50,
-            Layers: 'funvisis:inspeccion_poligono',
-            WIDTH: map.size.w,
-            HEIGHT: map.size.h,
-            format: format,
-            styles: map.layers[0].params.STYLES,
-            srs: map.layers[0].params.SRS};
-
-        // handle the wms 1.3 vs wms 1.1 madness
-        if(map.layers[0].params.VERSION == "1.3.0") {
-            params.version = "1.3.0";
-            params.j = parseInt(e.xy.x);
-            params.i = parseInt(e.xy.y);
-        } else {
-            params.version = "1.1.1";
-            params.x = parseInt(e.xy.x);
-            params.y = parseInt(e.xy.y);
-        }
-
-
-
-        // merge filters
-        if(map.layers[0].params.CQL_FILTER != null) {
-            params.cql_filter = map.layers[0].params.CQL_FILTER;
-        }
-        if(map.layers[0].params.FILTER != null) {
-            params.filter = map.layers[0].params.FILTER;
-        }
-        if(map.layers[0].params.FEATUREID) {
-            params.featureid = map.layers[0].params.FEATUREID;
-        }
-        OpenLayers.loadURL("http://127.0.0.1:8080/geoserver/funvisis/wms", params, this, setHTML, setHTML);
-        OpenLayers.Event.stop(e);
-    });
-
-//*****************events*****************//
-
-   /* map.addControl(control);
-    control.activate();*/
-    map.zoomToExtent(bounds);
-
-
-}
-
-// sets the HTML provided into the nodelist element
-function setHTML(response){
-    document.getElementById('nodelist').innerHTML = response.responseText;
-
-    url ='http://127.0.0.1:8080/geoserver/funvisis/wfs?service=wfs&version=2.0.0&request=GetFeature&typeName=funvisis:inspeccion_poligono&featureID=500';
-
-    OpenLayers.loadURL(url, this, function hola(response){ alert(response.responseText)},function hola(response){ alert(response.responseText)});
-    //capa_seleccionado.addFeatures([map.getExtent().toBBOX()]);
-};
-
-// shows/hide the control panel
-function toggleControlPanel(event){
-    var toolbar = document.getElementById("toolbar");
-    if (toolbar.style.display == "none") {
-        toolbar.style.display = "block";
-    }
-    else {
-        toolbar.style.display = "none";
-    }
-    event.stopPropagation();
-    map.updateSize()
-}
-
-// Tiling mode, can be 'tiled' or 'untiled'
-function setTileMode(tilingMode){
-    if (tilingMode == 'tiled') {
-        untiled.setVisibility(false);
-        tiled.setVisibility(true);
-        map.setBaseLayer(tiled);
-    }
-    else {
-        untiled.setVisibility(true);
-        tiled.setVisibility(false);
-        map.setBaseLayer(untiled);
-    }
-}
-
-// Transition effect, can be null or 'resize'
-function setTransitionMode(transitionEffect){
-    if (transitionEffect === 'resize') {
-        tiled.transitionEffect = transitionEffect;
-        untiled.transitionEffect = transitionEffect;
-    }
-    else {
-        tiled.transitionEffect = null;
-        untiled.transitionEffect = null;
-    }
-}
-
-// changes the current tile format
-function setImageFormat(mime){
-    // we may be switching format on setup
-    if(tiled == null)
-        return;
-
-    tiled.mergeNewParams({
-        format: mime
-    });
-    untiled.mergeNewParams({
-        format: mime
-    });
-
-}
-
-// sets the chosen style
-function setStyle(style){
-    // we may be switching style on setup
-    if(tiled == null)
-        return;
-
-    tiled.mergeNewParams({
-        styles: style
-    });
-    untiled.mergeNewParams({
-        styles: style
-    });
-}
-
-// sets the chosen WMS version
-function setWMSVersion(wmsVersion){
-    // we may be switching style on setup
-    if(wmsVersion == null)
-        return;
-
-    if(wmsVersion == "1.3.0") {
-        origin = map.maxExtent.bottom + ',' + map.maxExtent.left;
-    } else {
-        origin = map.maxExtent.left + ',' + map.maxExtent.bottom;
-    }
-
-    tiled.mergeNewParams({
-        version: wmsVersion,
-        tilesOrigin : origin
-    });
-    untiled.mergeNewParams({
-        version: wmsVersion
-    });
-}
-
-function setAntialiasMode(mode){
-    tiled.mergeNewParams({
-        format_options: 'antialias:' + mode
-    });
-    untiled.mergeNewParams({
-        format_options: 'antialias:' + mode
-    });
-}
-
-function setPalette(mode){
-    if (mode == '') {
-        tiled.mergeNewParams({
-            palette: null
         });
-        untiled.mergeNewParams({
-            palette: null
-        });
-    }
-    else {
-        tiled.mergeNewParams({
-            palette: mode
-        });
-        untiled.mergeNewParams({
-            palette: mode
-        });
-    }
-}
+        // sets the HTML provided into the nodelist element
 
-function setWidth(size){
-    var mapDiv = document.getElementById('map');
-    var wrapper = document.getElementById('wrapper');
 
-    if (size == "auto") {
-        // reset back to the default value
-        mapDiv.style.width = null;
-        wrapper.style.width = null;
-    }
-    else {
-        mapDiv.style.width = size + "px";
-        wrapper.style.width = size + "px";
-    }
-    // notify OL that we changed the size of the map div
-    map.updateSize();
-}
 
-function setHeight(size){
-    var mapDiv = document.getElementById('map');
 
-    if (size == "auto") {
-        // reset back to the default value
-        mapDiv.style.height = null;
-    }
-    else {
-        mapDiv.style.height = size + "px";
-    }
-    // notify OL that we changed the size of the map div
-    map.updateSize();
-}
+            //*****************Events*****************//
 
-function updateFilter(){
-    if(pureCoverage)
-        return;
+        //*****************Adding Contrls To Map*****************//
+        map.addControl(layer_switcher_control);
+        map.addControl(zoom_control);
+        map.addControl(navigation_control);
+        map.addControl(mouse_position_control);
+        map.addControl(overview_control);
+        map.addControl(keyboard_control);
+        //*****************Adding Contrls To Map*****************//
+        //get_feature_control.activate();
+        map.setCenter(
+                new OpenLayers.LonLat(-66.9101945258253, 10.4995727922997).transform(
+                        new OpenLayers.Projection("EPSG:4326"),
+                        map.getProjectionObject()
+                ), 16
+        );
 
-    var filterType = document.getElementById('filterType').value;
-    var filter = document.getElementById('filter').value;
 
-    // by default, reset all filters
-    var filterParams = {
-        filter: null,
-        cql_filter: null,
-        featureId: null
-    };
-    if (OpenLayers.String.trim(filter) != "") {
-        if (filterType == "cql")
-            filterParams["cql_filter"] = filter;
-        if (filterType == "ogc")
-            filterParams["filter"] = filter;
-        if (filterType == "fid")
-            filterParams["featureId"] = filter;
-    }
-    // merge the new filter definitions
-    mergeNewParams(filterParams);
-}
+    });
 
-function resetFilter() {
-    if(pureCoverage)
-        return;
 
-    document.getElementById('filter').value = "";
-    updateFilter();
-}
 
-function mergeNewParams(params){
-    tiled.mergeNewParams(params);
-    untiled.mergeNewParams(params);
-}
-init();
+
+
 </script>
+        <div align="center">
 
-<div id="toolbar" style="display: none;">
-    <ul>
-        <li>
-            <a>WMS version:</a>
-            <select id="wmsVersionSelector" onchange="setWMSVersion(value)">
-                <option value="1.1.1">1.1.1</option>
-                <option value="1.3.0">1.3.0</option>
-            </select>
-        </li>
-        <li>
-            <a>Tiling:</a>
-            <select id="tilingModeSelector" onchange="setTileMode(value)">
-                <option value="untiled">Single tile</option>
-                <option value="tiled">Tiled</option>
-            </select>
-        </li>
-        <li>
-            <a>Transition effect:</a>
-            <select id="transitionEffectSelector" onchange="setTransitionMode(value)">
-                <option value="">None</option>
-                <option value="resize">Resize</option>
-            </select>
-        </li>
-        <li>
-            <a>Antialias:</a>
-            <select id="antialiasSelector" onchange="setAntialiasMode(value)">
-                <option value="full">Full</option>
-                <option value="text">Text only</option>
-                <option value="none">Disabled</option>
-            </select>
-        </li>
-        <li>
-            <a>Format:</a>
-            <select id="imageFormatSelector" onchange="setImageFormat(value)">
-                <option value="image/png">PNG 24bit</option>
-                <option value="image/png8">PNG 8bit</option>
-                <option value="image/gif">GIF</option>
-                <option id="jpeg" value="image/jpeg">JPEG</option>
-            </select>
-        </li>
-        <li>
-            <a>Styles:</a>
-            <select id="imageFormatSelector" onchange="setStyle(value)">
-                <option value="">Default</option>
-            </select>
-        </li>
-        <!-- Commented out for the moment, some code needs to be extended in
-             order to list the available palettes
-        <li>
-            <a>Palette:</a>
-            <select id="paletteSelector" onchange="setPalette(value)">
-                <option value="">None</option>
-                <option value="safe">Web safe</option>
-            </select>
-        </li>
-        -->
-        <li>
-            <a>Width/Height:</a>
-            <select id="widthSelector" onchange="setWidth(value)">
-                <!--
-                These values come from a statistics of the viewable area given a certain screen area
-                (but have been adapted a litte, simplified numbers, added some resolutions for wide screen)
-                You can find them here: http://www.evolt.org/article/Real_World_Browser_Size_Stats_Part_II/20/2297/
-                --><option value="auto">Auto</option>
-                <option value="600">600</option>
-                <option value="750">750</option>
-                <option value="950">950</option>
-                <option value="1000">1000</option>
-                <option value="1200">1200</option>
-                <option value="1400">1400</option>
-                <option value="1600">1600</option>
-                <option value="1900">1900</option>
-            </select>
-            <select id="heigthSelector" onchange="setHeight(value)">
-                <option value="auto">Auto</option>
-                <option value="300">300</option>
-                <option value="400">400</option>
-                <option value="500">500</option>
-                <option value="600">600</option>
-                <option value="700">700</option>
-                <option value="800">800</option>
-                <option value="900">900</option>
-                <option value="1000">1000</option>
-            </select>
-        </li>
-        <li>
-            <a>Filter:</a>
-            <select id="filterType">
-                <option value="cql">CQL</option>
-                <option value="ogc">OGC</option>
-                <option value="fid">FeatureID</option>
-            </select>
-            <input type="text" size="80" id="filter"/>
-            <img id="updateFilterButton" src="http://127.0.0.1:8080/geoserver/openlayers/img/east-mini.png" onClick="updateFilter()" title="Apply filter"/>
-            <img id="resetFilterButton" src="http://127.0.0.1:8080/geoserver/openlayers/img/cancel.png" onClick="resetFilter()" title="Reset filter"/>
-        </li>
-    </ul>
-</div>
+
+            <div id="nodelist">
+                <em>Click on the map to get feature info</em>
+            </div>
+
+        </div>
+        <br/>
 <div id="map">
-    <img id="options" title="Toggle options toolbar" src="http://127.0.0.1:8080/geoserver/options.png"/>
-</div>
-<div id="wrapper">
-    <div id="location">location</div>
-    <div id="scale">
-    </div>
-</div>
-<div id="nodelist">
-    <em>Click on the map to get feature info</em>
+
 </div>
