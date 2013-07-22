@@ -98,7 +98,9 @@
     }
 </style>
 <!-- Import OpenLayers, reduced, wms read only version -->
-<script src="http://127.0.0.1:8080/geoserver/openlayers/OpenLayers.js" type="text/javascript">
+<script src="{{STATIC_URL}}js/jquery-1.8.2.min.js" type="text/javascript">
+<script src="{{STATIC_URL}}js/openlayer.js" type="text/javascript">
+
 </script>
 
 <script  type="text/javascript">
@@ -155,7 +157,7 @@
         //*****************Protocols*****************//
 
         //*****************Layers*****************//
-        select = new OpenLayers.Layer.Vector("chupalo");
+        select = new OpenLayers.Layer.Vector("Poligonos Wfs");
 
 
 
@@ -185,9 +187,9 @@
         //*****************Layers*****************//
 
         //*****************Adding Layers To Map*****************//
-        map.addLayers([osm,layer,select ]);
+        map.addLayers([osm,layer]);
 //        map.addLayer(layer);
-//        map.addLayer(select);
+        map.addLayer(select);
 
 
 
@@ -195,11 +197,11 @@
 
         //*****************Adding Layers To Map*****************//
 
-        url ="http://127.0.0.1:8080/geoserver/wfs?service=wfs&version=1.1.0&request=GetFeature&typeName=funvisis:inspeccion_poligono&featureID=200&outputFormat=json";
-
-        OpenLayers.loadURL(url,OpenLayers,setHTML,setHTML);
+        var features;
 
 
+
+        //select.addFeatures(features);
 
 
         //*****************Controls*****************//
@@ -226,38 +228,61 @@
 
 
 
+
         function setHTML(response){
 
-            var response = response;
-            //z = response.responseText;
-            //document.getElementById('nodelist').innerHTML =z;
 
+             parse = response.responseText;
+            console.log(parse);
             geojson_format = new OpenLayers.Format.GeoJSON();
-            myGeoJSON = { "type": "FeatureCollection",
-                "features":
-                        [
-
-                            { "type": "Feature", "properties": { "LENGTH": 756.304000}, "geometry": { "type": "LineString", "coordinates": [ [ 18.105018, 59.231027 ], [ 18.104176, 59.230737 ], [ 18.103928, 59.230415 ], [ 18.103650, 59.230336 ], [ 18.103028, 59.230463 ], [ 18.102491, 59.230418 ], [ 18.101976, 59.230237 ], [ 18.100893, 59.230110 ], [ 18.100117, 59.230016 ], [ 18.097715, 59.230262 ], [ 18.096907, 59.230376 ], [ 18.096637, 59.230405 ], [ 18.096578, 59.230428 ], [ 18.096429, 59.230450 ], [ 18.096336, 59.230479 ], [ 18.096108, 59.230534 ], [ 18.095971, 59.230600 ], [ 18.095925, 59.230633 ], [ 18.095891, 59.230665 ], [ 18.094000, 59.231676 ], [ 18.093864, 59.231720 ] ] } }
-                            ,
-                            { "type": "Feature", "properties": { "LENGTH": 1462.390000}, "geometry": { "type": "LineString", "coordinates": [ [ 17.877073, 59.461653 ], [ 17.877116, 59.461598 ], [ 17.876936, 59.461507 ], [ 17.876936, 59.461323 ], [ 17.876773, 59.461098 ], [ 17.876430, 59.460885 ], [ 17.876413, 59.460553 ], [ 17.876576, 59.460280 ], [ 17.876575, 59.460078 ], [ 17.876762, 59.460060 ], [ 17.877371, 59.460042 ], [ 17.877808, 59.460046 ], [ 17.878641, 59.460046 ], [ 17.879010, 59.460078 ], [ 17.879337, 59.460044 ], [ 17.879526, 59.459878 ], [ 17.879749, 59.459563 ], [ 17.880058, 59.459538 ], [ 17.880435, 59.459503 ], [ 17.887550, 59.453608 ], [ 17.887696, 59.453430 ], [ 17.887971, 59.453150 ], [ 17.888221, 59.452843 ], [ 17.888246, 59.452721 ], [ 17.888435, 59.452609 ], [ 17.888470, 59.452568 ], [ 17.888517, 59.452410 ] ] } }
-
-                        ]
-            };
-
-            feature = geojson_format.read(response);
-            alert(feature);
-
-        };
+            features = geojson_format.read(parse,null,null);
+            map.layers[2].removeAllFeatures();
+            map.layers[2].addFeatures(features);
+            map.layers[2].drawFeature(features);
+            map.layers[2].refresh();
 
 
-       map.events.register('click', map, function (e) {
+           /*  url ="http://127.0.0.1:8080/geoserver/wfs?service=wfs&version=1.1.0&request=GetFeature&typeName=funvisis:inspeccion_poligono&outputFormat=json&FeatureId=500";
+
+             $.get(url,function(data){
+
+
+                 console.log(data);
+
+                 geojson_format = new OpenLayers.Format.GeoJSON();
+
+
+                 features = geojson_format.read(data,null,null);
+
+                 console.log(features);
+
+
+                 map.layers[2].removeAllFeatures();
+                 map.layers[2].addFeatures(features);
+                 map.layers[2].drawFeature(features);
+                 map.layers[2].refresh();
+
+
+
+                 console.log(select);
+
+
+             });*/
+
+
+        }
+
+
+
+
+       map.events.register('click', map.layers[1], function (e) {
             //document.getElementById('nodelist').innerHTML = "Loading... please wait...";
             var params = {
                 REQUEST: "GetFeatureInfo",
                 EXCEPTIONS: "application/vnd.ogc.se_xml",
                 BBOX: map.getExtent().toBBOX(),
                 SERVICE: "WMS",
-                INFO_FORMAT: 'text/html',
+                INFO_FORMAT: 'application/json',
                 QUERY_LAYERS: map.layers[1].params.LAYERS,
                 FEATURE_COUNT: 50,
                 Layers: 'funvisis:inspeccion_poligono',
@@ -288,12 +313,15 @@
             if(map.layers[0].params.FEATUREID) {
                 params.featureid = map.layers[0].params.FEATUREID;
             }
-         //OpenLayers.loadURL("http://127.0.0.1:8080/geoserver/funvisis/wms", params, this, setHTML,setHTML);
+
+
+           OpenLayers.loadURL("http://127.0.0.1:8080/geoserver/funvisis/wms", params, this, setHTML,setHTML);
 
            OpenLayers.Event.stop(e);
 
         });
         // sets the HTML provided into the nodelist element
+
 
 
 
