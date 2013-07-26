@@ -25,6 +25,8 @@ from models import Esquema_Elevacion
 from models import Anexo
 from models import Poligono
 
+from widgets import Select_Polygon_Widget
+
 #region  1.Poligono (Modelo Poligono)
 
 #
@@ -42,6 +44,7 @@ from models import Poligono
 #        Return empty perms dict thus hiding the model from admin index.
 #        """
 #        return {}
+
 
 class PoligonoInline(admin.StackedInline):
     model = Poligono
@@ -134,7 +137,7 @@ class EntrevistadoInline(admin.StackedInline):
 
 #region  4.Identificación y ubicación de la edificación (Modelo Estructura)
 
-class EstructuraAdmin(admin.OSMGeoAdmin):
+class EstructuraAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
@@ -152,7 +155,7 @@ class EstructuraInlineForm(ModelForm):
         super(EstructuraInlineForm, self).__init__(*args, **kwargs)
         estructura_admin = admin.site._registry[Estructura]
         model_field = self._meta.model._meta.get_field('poligono')
-       # self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
+        self.fields['poligono'].widget = Select_Polygon_Widget()
 
 
 
@@ -687,19 +690,11 @@ class AnexoInline(admin.StackedInline):
         js = ("js/sismo_caracas_validaciones.js",)
 
 
-
-
-
-
-
-
-
-
 #endregion
 
 #region  Admin (inlines )de  Inspeccion
 
-class InspeccionAdmin(admin.GeoModelAdmin):
+class InspeccionAdmin(admin.ModelAdmin):
     inlines = ( EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
 
     verbose_name = 'Datos Generales'
@@ -707,9 +702,11 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js","js/widget_poligono.js")
+        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js","js/lib/OpenLayers.js","js/widget_poligono.js")
 
-
+        css = {
+            'all':("stylesheets/tipo_estructural.css","js/theme/default/style.css","stylesheets/style.css",)
+        }
 
 
 #endregion

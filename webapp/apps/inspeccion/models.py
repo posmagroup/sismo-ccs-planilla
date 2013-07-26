@@ -22,7 +22,6 @@ class Poligono(models.Model):
     geom = models.PolygonField(srid=4326)
     objects = models.GeoManager()
 
-
     class  Meta:
         verbose_name = 'Poligono'
         verbose_name_plural = 'Poligonos'

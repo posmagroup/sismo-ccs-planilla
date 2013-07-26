@@ -1,4 +1,6 @@
+from django.forms import forms
 from django.forms.models import BaseInlineFormSet, BaseModelForm
+
 from models import Poligono
 
 class RequiredInlineFormSet(BaseInlineFormSet):
@@ -14,3 +16,4 @@ class RequiredInlineFormSet(BaseInlineFormSet):
         form = super(RequiredInlineFormSet, self)._construct_form(i, **kwargs)
         form.empty_permitted = False
         return form
+
