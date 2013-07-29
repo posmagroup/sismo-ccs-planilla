@@ -197,13 +197,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'floppyforms',
     'django.contrib.flatpages',
     'braces',
     # Third Party Apps
     'south',
-    'olwidget',
-
 
     # Project Apps.
     'apps.usuario',

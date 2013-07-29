@@ -62,7 +62,7 @@ class  Inspeccion(models.Model):
         verbose_name_plural = 'Inspecciones'
 
     def __unicode__(self):
-        return u'Inspección  #%s' % self.cod_pla
+        return u'Inspección  #%s  (Coloque el siguiente número en la Planilla Física: %s) ' % (self.cod_pla,self.cod_pla)
 
     def fx(self):
         return self.id
@@ -170,8 +170,10 @@ class Estructura(models.Model):
     sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
     calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
     pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
-    poligono = models.PolygonField(verbose_name="Edificación",srid=4326, null=True,blank=True)
-    objects = models.GeoManager()
+    #poligono = models.PolygonField(verbose_name="Edificación",srid=4326, null=True,blank=True)
+    #objects = models.GeoManager()
+    poligono = models.ForeignKey(Poligono, null=True,blank=True,default=None)
+
 
 
     class  Meta:
@@ -429,12 +431,12 @@ class Tipo_Estructural(models.Model):
         ('6', '6. PAPT'),
         ('7', '7. PAD'),
         ('8', '8. PAC'),
-        ('9', 'P9. RE'),
+        ('9', '9. RE'),
         ('10', '10. MMC'),
         ('11', '11. MMNC'),
-        ('12', 'P9. PMBC'),
-        ('13', '10. VB'),
-        ('14', '11. VCP'),
+        ('12', '12. PMBC'),
+        ('13', '13. VB'),
+        ('14', '14. VCP'),
     )
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
@@ -456,7 +458,7 @@ class Tipo_Estructural(models.Model):
                                 default=False)
 
     mca1d = models.BooleanField(verbose_name="4. Sistemas con muros de concreto armado de poco espesor,dispuestos en una sola dirección \
-                                             (algunos sistemas tipo túnel) (MCAMD)",
+                                             (algunos sistemas tipo túnel) (MCA1D)",
                                 help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, \
                                           dispuestos en una dirección o poca área transversal de muro en la dirección ortogonal (menor al 25%).",
                                 default=False)
