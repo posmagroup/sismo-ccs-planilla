@@ -1,11 +1,6 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
-from floppyforms.gis.widgets import BaseOsmWidget
 from forms import RequiredInlineFormSet
-from django.forms.models import ModelForm
-from django.contrib.gis.geos import MultiPolygon, Polygon
-from django.contrib.gis.db import models
-from olwidget.admin import GeoModelAdmin
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -29,46 +24,12 @@ from widgets import Select_Polygon_Widget
 
 #region  1.Poligono (Modelo Poligono)
 
-#
-#class PoligonoAdmin(admin.ModelAdmin):
-#
-#    class  Media:
-#        js = ("js/sismo_caracas_validaciones.js",)
-#        css = {
-#            'all':("stylesheets/tipo_estructural.css",)
-#        }
-
-
-#    def get_model_perms(self, request):
-#        """
-#        Return empty perms dict thus hiding the model from admin index.
-#        """
-#        return {}
-
-
-class PoligonoInline(admin.StackedInline):
-    model = Poligono
-    can_delete = False
-    can_add = False
-    verbose_name_plural = 'Poligono'
-    max_num = 1
-
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-class PoligonoAdmin(GeoModelAdmin):
-
+class PoligonoAdmin(admin.GeoModelAdmin):
 
     options = {
-        'default_lat': 44,
-        'default_lon': -72,
+        'default_lat':  10.50882052,
+        'default_lon': -66.89968507,
         }
-
-
 
 #endregion
 
@@ -149,24 +110,16 @@ class EstructuraAdmin(admin.ModelAdmin):
         """
         return {}
 #
-class EstructuraInlineForm(ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super(EstructuraInlineForm, self).__init__(*args, **kwargs)
-        estructura_admin = admin.site._registry[Estructura]
-        model_field = self._meta.model._meta.get_field('poligono')
-        self.fields['poligono'].widget = Select_Polygon_Widget()
-
-
-
 
 class EstructuraInline(admin.StackedInline):
     model = Estructura
-    form = EstructuraInlineForm
     can_delete = False
     verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
-
+#    formfield_overrides = {
+#        model.poligono : {'widget': Select_Polygon_Widget()},
+#
+#    }
     fieldsets = (
         (None, {
             'fields': (
@@ -180,6 +133,14 @@ class EstructuraInline(admin.StackedInline):
                 )
         }),
     )
+
+
+
+#    class Media:
+#        css = {
+#            "all": ("OpenLayers/theme/default/style.css","OpenLayers/style.css",)
+#        }
+#        js = ("OpenLayers/lib/OpenLayers.js",)
 
 
 
@@ -702,10 +663,10 @@ class InspeccionAdmin(admin.ModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js","js/lib/OpenLayers.js","js/widget_poligono.js")
+        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js")
 
         css = {
-            'all':("stylesheets/tipo_estructural.css","js/theme/default/style.css","stylesheets/style.css",)
+            'all':("stylesheets/tipo_estructural.css",)
         }
 
 

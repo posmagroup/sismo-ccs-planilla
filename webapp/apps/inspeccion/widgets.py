@@ -1,8 +1,5 @@
 from django.template.loader import render_to_string
-from django.utils.safestring import mark_safe
 from django.forms import widgets
-
-
 
 
 class Select_Polygon_Widget(widgets.Widget):
