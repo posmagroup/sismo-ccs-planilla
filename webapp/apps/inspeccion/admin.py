@@ -158,8 +158,6 @@ class EstructuraInlineForm(ModelForm):
         self.fields['poligono'].widget = Select_Polygon_Widget()
 
 
-
-
 class EstructuraInline(admin.StackedInline):
     model = Estructura
     form = EstructuraInlineForm
@@ -180,6 +178,11 @@ class EstructuraInline(admin.StackedInline):
                 )
         }),
     )
+    class Media:
+        css = {
+            "all": ("OpenLayers/theme/default/style.css","OpenLayers/style.css",)
+        }
+        js = ("OpenLayers/lib/OpenLayers.js",)
 
 
 
@@ -702,10 +705,10 @@ class InspeccionAdmin(admin.ModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js","js/lib/OpenLayers.js","js/widget_poligono.js")
+        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js")
 
         css = {
-            'all':("stylesheets/tipo_estructural.css","js/theme/default/style.css","stylesheets/style.css",)
+            'all':("stylesheets/tipo_estructural.css",)
         }
 
 
