@@ -50,7 +50,7 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = False
 
-
+SITE_ID = 1
 #============================================================
 # Project URLs and media Settings.
 #============================================================
@@ -68,6 +68,10 @@ STATIC_ROOT = os.path.join(VAR_ROOT,  'static')
 
 MEDIA_ROOT = os.path.join(PROJECT_DIR, 'media')
 IMPERAVI_UPLOAD_PATH = MEDIA_ROOT
+
+
+
+OLWIDGET_STATIC_URL = os.path.join(STATIC_URL,  'olwidget')
 
 
 if not os.path.exists(VAR_ROOT):
@@ -120,9 +124,10 @@ TEMPLATE_CONTEXT_PROCESSORS += (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     )
@@ -157,9 +162,9 @@ COMPRESS_JS_FILTERS = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'portal69grados',                      # Or path to database file if using sqlite3.
-        'USER': '69grados',                      # Not used with sqlite3.
-        'PASSWORD': '69grados123',                  # Not used with sqlite3.
+        'NAME': '',                      # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -193,9 +198,11 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.gis',
     'floppyforms',
+    'django.contrib.flatpages',
     'braces',
     # Third Party Apps
     'south',
+    'olwidget',
 
 
     # Project Apps.

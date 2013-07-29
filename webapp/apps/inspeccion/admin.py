@@ -1,9 +1,11 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
+from floppyforms.gis.widgets import BaseOsmWidget
 from forms import RequiredInlineFormSet
 from django.forms.models import ModelForm
 from django.contrib.gis.geos import MultiPolygon, Polygon
 from django.contrib.gis.db import models
+from olwidget.admin import GeoModelAdmin
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -23,16 +25,18 @@ from models import Esquema_Elevacion
 from models import Anexo
 from models import Poligono
 
+from widgets import Select_Polygon_Widget
+
 #region  1.Poligono (Modelo Poligono)
 
-
-class PoligonoAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
+#
+#class PoligonoAdmin(admin.ModelAdmin):
+#
+#    class  Media:
+#        js = ("js/sismo_caracas_validaciones.js",)
+#        css = {
+#            'all':("stylesheets/tipo_estructural.css",)
+#        }
 
 
 #    def get_model_perms(self, request):
@@ -41,6 +45,7 @@ class PoligonoAdmin(admin.ModelAdmin):
 #        """
 #        return {}
 
+
 class PoligonoInline(admin.StackedInline):
     model = Poligono
     can_delete = False
@@ -48,10 +53,19 @@ class PoligonoInline(admin.StackedInline):
     verbose_name_plural = 'Poligono'
     max_num = 1
 
+
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
         css = {
             'all':("stylesheets/tipo_estructural.css",)
+        }
+
+class PoligonoAdmin(GeoModelAdmin):
+
+
+    options = {
+        'default_lat': 44,
+        'default_lon': -72,
         }
 
 
@@ -123,7 +137,7 @@ class EntrevistadoInline(admin.StackedInline):
 
 #region  4.Identificación y ubicación de la edificación (Modelo Estructura)
 
-class EstructuraAdmin(admin.OSMGeoAdmin):
+class EstructuraAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
@@ -134,30 +148,17 @@ class EstructuraAdmin(admin.OSMGeoAdmin):
         Return empty perms dict thus hiding the model from admin index.
         """
         return {}
-
+#
 class EstructuraInlineForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EstructuraInlineForm, self).__init__(*args, **kwargs)
         estructura_admin = admin.site._registry[Estructura]
         model_field = self._meta.model._meta.get_field('poligono')
-
-
-#        p = [x for x in Poligono.objects.all()[:1]]
-#
-#        union = p[0].geom
-#
-#        for multi_poligono in Poligono.objects.all()[:3]:
-#
-#            union.append(multi_poligono.geom.cascaded_union)
-
-        #print union
+        self.fields['poligono'].widget = Select_Polygon_Widget()
 
 
 
-
-        #self.fields['poligono'].initial = Poligono.objects.get(pk=3).geom
-        self.fields['poligono'].widget = estructura_admin.get_map_widget(model_field)()
 
 class EstructuraInline(admin.StackedInline):
     model = Estructura
@@ -179,6 +180,8 @@ class EstructuraInline(admin.StackedInline):
                 )
         }),
     )
+
+
 
 
 #endregion
@@ -687,19 +690,11 @@ class AnexoInline(admin.StackedInline):
         js = ("js/sismo_caracas_validaciones.js",)
 
 
-
-
-
-
-
-
-
-
 #endregion
 
 #region  Admin (inlines )de  Inspeccion
 
-class InspeccionAdmin(admin.GeoModelAdmin):
+class InspeccionAdmin(admin.ModelAdmin):
     inlines = ( EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
 
     verbose_name = 'Datos Generales'
@@ -707,15 +702,17 @@ class InspeccionAdmin(admin.GeoModelAdmin):
     exclude = ('cod_pla',)
 
     class  Media:
-        js = ("js/periodo_construccion.js","js/jquery.js","js/charCount.js","js/sismo_caracas_validaciones.js")
+        js = ("js/jquery-1.8.2.min.js","js/charCount.js","js/periodo_construccion.js","js/sismo_caracas_validaciones.js","js/lib/OpenLayers.js","js/widget_poligono.js")
 
-
+        css = {
+            'all':("stylesheets/tipo_estructural.css","js/theme/default/style.css","stylesheets/style.css",)
+        }
 
 
 #endregion
 
 #region  Registro de modelos  en el admin
-admin.site.register(Poligono,admin.OSMGeoAdmin)
+admin.site.register(Poligono, PoligonoAdmin)
 admin.site.register(Participante,ParticipanteAdmin)
 admin.site.register(Esquema_Planta,Esquema_PlantaAdmin)
 admin.site.register(Esquema_Elevacion,Esquema_ElevacionAdmin)

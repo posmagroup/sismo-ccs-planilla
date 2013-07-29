@@ -37,7 +37,7 @@ class  UserProfileAdmin(admin.ModelAdmin):
         return {}
 
 
-admin.site.unregister(Site)
+#admin.site.unregister(Site)
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(UserProfile,UserProfileAdmin)
