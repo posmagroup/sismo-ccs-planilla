@@ -261,44 +261,6 @@
 
     }
 
-    function opciones_tipo_estrcutural_predominante(referencia_div, excluir){
-
-        counter = 0;
-        zero_counter = 0;
-        $(referencia_div).find('input[type=checkbox]').each(function () {
-
-
-            name = this.name;
-            if (name.search(excluir) ==-1){
-
-                val = (this.checked ? "1" : "0");
-                counter = counter +1;
-                if (val==0){
-
-                    zero_counter=zero_counter+1;
-
-                }
-
-
-
-            }
-
-
-        });
-        if (zero_counter==counter){
-
-            return false;
-        }
-        else{
-
-            return true;
-
-        }
-
-
-    }
-
-
 
     $(document).ready(function($) {
 
@@ -442,12 +404,110 @@
         // validacion de twitter
 
 
-
+        // validacion de del combo de los tipos estructurales
         $("#tipo_estructural_set-group").find('input[type=checkbox]').change(function() {
 
 
-            val = (this.checked ? "1" : "0");
-            alert(val);
+            $('#id_tipo_estructural_set-0-tipo_predomi').find('option').remove() ;
+
+            $("#tipo_estructural_set-group").find('input[type=checkbox]').each(function () {
+
+                valor_check = (this.checked ? "1" : "0");
+
+                id_check = this.id;
+
+
+                if (valor_check==1){
+
+
+                    label =$('label[for='+id_check+']').text();
+                    if (label.indexOf("(PCA)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="1">1. PCA</option>');
+
+                    }
+
+                    if (label.indexOf("(PCAP)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="2">2. PCAP</option>');
+
+                    }
+
+                    if (label.indexOf("(MCA2D)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="3">3. MCA2D</option>');
+
+                    }
+
+                    if (label.indexOf("(MCA1D)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="4">4. MCA1D</option>');
+
+                    }
+
+                    if (label.indexOf("(PA)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="5">5. PA</option>');
+
+                    }
+
+                    if (label.indexOf("(PAPT)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="6">6. PAPT</option>');
+
+                    }
+
+                    if (label.indexOf("(PAD)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="7">7. PAD</option>');
+
+                    }
+
+                    if (label.indexOf("(PAC)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="8">8. PAC</option>');
+
+                    }
+
+                    if (label.indexOf("(PRE)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="9">9. PRE</option>');
+
+                    }
+
+                    if (label.indexOf("(MMC)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="10">10. MMC</option>');
+
+                    }
+
+                    if (label.indexOf("(MMNC)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="11">11. MMNC</option>');
+
+                    }
+
+                    if (label.indexOf("(PMBC)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="12">12. PMBC</option>');
+
+                    }
+
+                    if (label.indexOf("(VB)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="13">13. VB</option>');
+
+                    }
+
+                    if (label.indexOf("(VCP)") >= 0){
+
+                        $('#id_tipo_estructural_set-0-tipo_predomi').append('<option value="14">14. VCP</option>');
+
+                    }
+
+                }
+
+            });
 
         });
 
@@ -462,7 +522,9 @@
 
                //alert('Debe seleccionar al menos una opción en la sección: Usos de la edificación');
 
-               error('Debe seleccionar al menos una opción','#uso_set-0')
+               alert('Se detectaron errores en la planilla');
+
+               error('Debe seleccionar al menos una opción','#uso_set-0');
 
 
                return false;
@@ -472,8 +534,9 @@
            if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
 
                 //alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
+               alert('Se detectaron errores en la planilla');
 
-               error('Debe seleccionar al menos una opción','#tipo_estructural_set-0')
+               error('Debe seleccionar al menos una opción','#tipo_estructural_set-0');
                 return false;
             }
 
@@ -481,8 +544,8 @@
             if (!validar_al_menos_uno_seleccionado('#capacidad_ocupacion_set-group .inline-related','__prefix__')){
 
                 //alert('Debe seleccionar al menos una opción en la sección: Capacidad de ocupacion');
-
-                error('Debe seleccionar al menos una opción','#capacidad_ocupacion_set-0')
+                alert('Se detectaron errores en la planilla');
+                error('Debe seleccionar al menos una opción','#capacidad_ocupacion_set-0');
                 return false;
             }
 
