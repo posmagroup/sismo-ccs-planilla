@@ -107,7 +107,8 @@
 
             if (val.length==0){
 
-                alert('Debe especificar el uso, en la seccion: Uso de la edificación;');
+                //alert('Debe especificar el uso, en la seccion: Uso de la edificación;');
+                error('Debe especificar el uso','#uso_set-0');
                 return false;
             }
             else{
@@ -132,7 +133,8 @@
 
             if (val==""){
 
-                alert('Debe especificar la separacion entre los edificios en la sección: Irregularidades');
+                //alert('Debe especificar la separacion entre los edificios en la sección: Irregularidades');
+                error('Debe especificar la separacion entre los edificios','#irregularidad_set-0');
                 return false;
             }
             else{
@@ -158,7 +160,8 @@
 
             if (val=='---------'){
 
-                alert('Debe especificar la pendiente del terreno en la sección: Condición Terreno');
+                //alert('Debe especificar la pendiente del terreno en la sección: Condición Terreno');
+                error('Debe especificar la pendiente del terreno','#condicion_terreno_set-0');
                 return false;
             }
 
@@ -166,7 +169,8 @@
 
             if (val=='---------'){
 
-                alert('Debe especificar la localización del terreno en la sección: Condición Terreno');
+                //alert('Debe especificar la localización del terreno en la sección: Condición Terreno');
+                error('Debe especificar la localización del terreno','#condicion_terreno_set-0');
                 return false;
             }
             else{
@@ -192,7 +196,9 @@
 
             if (val=='---------'){
 
-                alert('Debe especificar la pendiente del talud en la sección: Condición Terreno');
+                //alert('Debe especificar la pendiente del talud en la sección: Condición Terreno');
+                error('Debe especificar la pendiente del talud','#condicion_terreno_set-0');
+
                 return false;
             }
 
@@ -200,7 +206,8 @@
 
             if (val=='---------'){
 
-                alert('Debe especificar la separación del talud en la sección: Condición Terreno');
+                //alert('Debe especificar la separación del talud en la sección: Condición Terreno');
+                error('Debe especificar la separación del talud','#condicion_terreno_set-0');
                 return false;
             }
             else{
@@ -245,6 +252,52 @@
 
 
     }
+
+    function error(error, referencia_div){
+
+        mensaje ='<ul class="errorlist"><li>'+error+'</li></ul>';
+
+        $(mensaje).insertBefore($(referencia_div));
+
+    }
+
+    function opciones_tipo_estrcutural_predominante(referencia_div, excluir){
+
+        counter = 0;
+        zero_counter = 0;
+        $(referencia_div).find('input[type=checkbox]').each(function () {
+
+
+            name = this.name;
+            if (name.search(excluir) ==-1){
+
+                val = (this.checked ? "1" : "0");
+                counter = counter +1;
+                if (val==0){
+
+                    zero_counter=zero_counter+1;
+
+                }
+
+
+
+            }
+
+
+        });
+        if (zero_counter==counter){
+
+            return false;
+        }
+        else{
+
+            return true;
+
+        }
+
+
+    }
+
 
 
     $(document).ready(function($) {
@@ -388,6 +441,18 @@
         });
         // validacion de twitter
 
+
+
+        $("#tipo_estructural_set-group").find('input[type=checkbox]').change(function() {
+
+
+            val = (this.checked ? "1" : "0");
+            alert(val);
+
+        });
+
+
+
         $('#inspeccion_form').submit(function()
         {
 
@@ -395,21 +460,29 @@
             // Validacion de " Al menos uno" para los campos booleanos multiopcion.
            if (!validar_al_menos_uno_seleccionado('#uso_set-group .inline-related','__prefix__')){
 
-               alert('Debe seleccionar al menos una opción en la sección: Usos de la edificación');
+               //alert('Debe seleccionar al menos una opción en la sección: Usos de la edificación');
+
+               error('Debe seleccionar al menos una opción','#uso_set-0')
+
+
                return false;
            }
 
 
            if (!validar_al_menos_uno_seleccionado('#tipo_estructural_set-group .inline-related','__prefix__')){
 
-                alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
+                //alert('Debe seleccionar al menos una opción en la sección: Tipo Estructural');
+
+               error('Debe seleccionar al menos una opción','#tipo_estructural_set-0')
                 return false;
             }
 
 
             if (!validar_al_menos_uno_seleccionado('#capacidad_ocupacion_set-group .inline-related','__prefix__')){
 
-                alert('Debe seleccionar al menos una opción en la sección: Capacidad de ocupacion');
+                //alert('Debe seleccionar al menos una opción en la sección: Capacidad de ocupacion');
+
+                error('Debe seleccionar al menos una opción','#capacidad_ocupacion_set-0')
                 return false;
             }
 

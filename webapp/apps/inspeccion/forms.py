@@ -1,7 +1,6 @@
-from django.forms import forms
-from django.forms.models import BaseInlineFormSet, BaseModelForm
-
-from models import Poligono
+from django.forms.models import BaseInlineFormSet
+from django.forms.models import ModelForm
+from django.contrib.gis import admin
 
 class RequiredInlineFormSet(BaseInlineFormSet):
     """
