@@ -297,6 +297,9 @@ class Periodo_ConstruccionAdmin(admin.ModelAdmin):
                 )
         }),
         )
+    class  Media:
+        js = ("js/periodo_construccion.js",)
+
 
 #endregion
 #region Admin Anio_Construccion
@@ -455,7 +458,7 @@ class Esquema_PlantaAdmin(admin.ModelAdmin):
         """
         return {}
 #endregion
-#region Inline squema_Planta
+#region Inline Esquema_Planta
 class Esquema_PlantaInline(admin.StackedInline):
     """
         Clase que permite inlcuir el modelo
