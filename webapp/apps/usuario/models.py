@@ -1,16 +1,10 @@
 from django.db import models
-
-
 from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     """
-    Purpose:
-        Defines a profile model for handling users
-        from django user model.
+        Clase para proveerle un perfil a los usuarios.
 
-    Features:
-        1) Has a foreign key  to django user.
     """
     user = models.ForeignKey(User, name="Usuario",unique=True)
     nomb_persona = models.CharField("Nombre",max_length=100)

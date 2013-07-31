@@ -1,6 +1,5 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
-from forms import RequiredInlineFormSet
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -20,11 +19,18 @@ from models import Esquema_Elevacion
 from models import Anexo
 from models import Poligono
 
-from widgets import Select_Polygon_Widget
+from forms import EstructuraInlineForm
+from forms import RequiredInlineFormSet
 
-#region  1.Poligono (Modelo Poligono)
+#region  Admin Poligono
 
 class PoligonoAdmin(admin.GeoModelAdmin):
+    """
+        Admin de la clase Poligono.
+        Hereda de GeoModelAdmin permitiendo
+        que django se encarge de la visualizacion
+        de los poligonos.
+    """
 
     options = {
         'default_lat':  10.50882052,
@@ -32,59 +38,71 @@ class PoligonoAdmin(admin.GeoModelAdmin):
         }
 
 #endregion
-
-#region  2.Datos de los participantes (Modelo Participante)
-
+#region Admin Participante
 class ParticipanteAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-
+    """
+        Admin de la clase Participante.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
+#endregion
+#region Inline Participante
 class ParticipanteInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Participante
+    formset = RequiredInlineFormSet
     can_delete = False
     can_add = False
     verbose_name_plural = 'Datos de los participantes'
     max_num = 1
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
 #endregion
-
-#region  3.Datos del entrevistado (Modelo Entrevistado)
+#region Admin Entrevistado
 
 class EntrevistadoAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
+    """
+        Admin de la clase Entrevistado.
+    """
 
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
+#endregion
+#region Inline Entrevistado
 class EntrevistadoInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Entrevistado
     verbose_name_plural = 'Datos del Entrevistado'
     max_num = 1
     formset = RequiredInlineFormSet
 
-
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('cod_ocup','nom_entrev'),
@@ -95,32 +113,43 @@ class EntrevistadoInline(admin.StackedInline):
         )
 
 #endregion
-
-#region  4.Identificación y ubicación de la edificación (Modelo Estructura)
-
+#region Admin Estructura
 class EstructuraAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
+    """
+        Admin de la clase Estructura.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-#
-
+#endregion
+#region Inline Estructura
 class EstructuraInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo.
+
+        En esta clase es que se debe sobreescribir el form
+        para estructura para que use EstructuraInlineForm (forms.py)
+        que es el form que llama al widget de los mapas
+        Ejemplo : form=EstructuraInlineForm
+
+    """
     model = Estructura
     can_delete = False
     verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
-#    formfield_overrides = {
-#        model.poligono : {'widget': Select_Polygon_Widget()},
-#
-#    }
-    fieldsets = (
+
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('nombre_n','n_pisos'),
@@ -134,28 +163,15 @@ class EstructuraInline(admin.StackedInline):
         }),
     )
 
-
-
-#    class Media:
-#        css = {
-#            "all": ("OpenLayers/theme/default/style.css","OpenLayers/style.css",)
-#        }
-#        js = ("OpenLayers/lib/OpenLayers.js",)
-
-
-
-
 #endregion
-
-#region  5.Uso de la Edificación (Modelo Uso)
-
+#region Admin Uso
 class UsoAdmin(admin.ModelAdmin):
-
-    fieldsets = (
+    """
+        Admin de la clase Uso.
+    """
+    fieldsets = (#Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
-
-
                 ('u_gubernam','u_educativ'),
                 ('u_bomberos','u_dep_recr'),
                 ('u_pr_civil', 'u_cultural'),
@@ -169,24 +185,32 @@ class UsoAdmin(admin.ModelAdmin):
             }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
+#endregion
+#region Inline Uso
 class UsoInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo.
+    """
     model = Uso
     can_delete = False
     verbose_name_plural = 'Uso de la edificación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
 
@@ -205,50 +229,49 @@ class UsoInline(admin.StackedInline):
             }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-
 #endregion
-
-#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
-
-
+#region Admin Capacidad_Ocupación
 class Capacidad_OcupacionAdmin(admin.ModelAdmin):
-
-    fieldsets = (
+    """
+        Admin de la clase Capacidad_Ocupacion.
+    """
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
 
-
                 ('habitantes','t_o_manana'),
                 ('t_o_tarde','t_o_noche'),
-
 
                 ),
             }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
+#endregion
+#region Inline Capacidad_Ocupacion
 class Capacidad_OcupacionInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Capacidad_Ocupacion
     can_delete = False
     verbose_name_plural = 'Capacidad de Ocupación. (Debe seleccionar al menos uno).'
     max_num = 1
     formset = RequiredInlineFormSet
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
 
@@ -260,55 +283,57 @@ class Capacidad_OcupacionInline(admin.StackedInline):
                 ),
             }),
         )
-
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 #endregion
-
-#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
-
-
+#region Admin Periodo_Construccion
 class Periodo_ConstruccionAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/periodo_construccion.js",)
-
-    fieldsets = (
+    """
+        Admin de la clase  Periodo_Construccion.
+    """
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('periodo','anio_inici', 'anio_fin'),
 
-
-
                 )
         }),
         )
+    class  Media:
+        js = ("js/periodo_construccion.js",)
 
 
+#endregion
+#region Admin Anio_Construccion
 class Anio_ConstruccionAdmin(admin.ModelAdmin):
-
-    #exclude = ('fecha_inf',)
-
+    """
+        Admin de la clase  Anio_Construccion..
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
+#endregion
+#region Inline Anio_Construccion
 class Anio_ConstruccionInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Anio_Construccion
     can_delete = False
     verbose_name_plural = 'Año de construcción'
     max_num = 1
-    #exclude = ('fecha_inf',)
     formset = RequiredInlineFormSet
 
-
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('anio','periodo'),
@@ -319,47 +344,45 @@ class Anio_ConstruccionInline(admin.StackedInline):
                 )
         }),
         )
-
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
 #endregion
-
-#region  8.Condicion del terreno (Modelo Condicion_Terreno)
-
-
+#region  Admin  Condicion_Terreno
 class Condicion_TerrenoAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
+    """
+        Admin de la clase  Condicion_Terreno..
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
+#endregion
+#region Inline Condicion_Terreno
 class Condicion_TerrenoInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Condicion_Terreno
     can_delete = False
     verbose_name_plural = 'Condición del terreno'
     max_num = 1
     formset = RequiredInlineFormSet
 
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
 #endregion
-
-#region  9.Tipo Estructural (Modelo Tipo_Estructural)
-
-
+#region Admin Tipo_Estructural
 class Tipo_EstructuralAdmin(admin.ModelAdmin):
-
-    fieldsets = (
+    """
+        Admin de la clase  Tipo_Estructural.
+    """
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('pca','pcap'),
@@ -369,20 +392,18 @@ class Tipo_EstructuralAdmin(admin.ModelAdmin):
                 ('pre','mmc'),
                 ('mmnc','vb'),
                 ('vcp'),
-#                ('n_pisos_nc','n_pisos_bc'),
-#                ('esq_planta','esq_elevac'),
                 )
         }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
 
@@ -421,103 +442,99 @@ class Media:
 
 
 #endregion
-
-#region  10.Esquema Planta (Modelo Esquema_Planta)
-
-
-
+#region  Admin Esquema_Planta
 class Esquema_PlantaAdmin(admin.ModelAdmin):
-
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
+    """
+        Admin de la clase  Esquema_Planta.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
-
-
-
+#endregion
+#region Inline Esquema_Planta
 class Esquema_PlantaInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Esquema_Planta
     can_delete = False
     verbose_name_plural = 'Esquema de planta'
     max_num = 1
     formset = RequiredInlineFormSet
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 #endregion
-
-#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
-
-
-
+#region  Admin Esquema_Elevacion
 class Esquema_ElevacionAdmin(admin.ModelAdmin):
-
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
+    """
+        Admin de la clase  Esquema_Planta.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
-
-
-
+#endregion
+#region Inline Esquema_Elevacion
 class Esquema_ElevacionInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Esquema_Elevacion
     can_delete = False
     verbose_name_plural = 'Esquema de Elevación'
     max_num = 1
     formset = RequiredInlineFormSet
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
 #endregion
-
-#region  12.Irregularidades (Modelo Irregularidad)
-
+#region  Admin  Irregularidad
 class IrregularidadAdmin(admin.ModelAdmin):
-
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
+    """
+        Admin de la clase Irregularidad.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
-
-
+#endregion
+#region Inline Irregularidad
 class IrregularidadInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Irregularidad
     can_delete = False
     verbose_name_plural = 'Irregularidades'
     max_num = 1
     formset = RequiredInlineFormSet
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('a_viga_alt','f_asim_mas'),
@@ -530,23 +547,13 @@ class IrregularidadInline(admin.StackedInline):
                 )
         }),
     )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-
-
 #endregion
-
-#region  13.Grados de deterioro (Modelo  Grado_Deterioro)
-
-
-
+#region  Admin Grado_Deterioro
 class Grado_DeterioroAdmin(admin.ModelAdmin):
-
-    fieldsets = (
+    """
+        Admin de la clase Irregularidad.
+    """
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('ec_agri_es','ea_corr_ac'),
@@ -557,26 +564,32 @@ class Grado_DeterioroAdmin(admin.ModelAdmin):
         }),
         )
 
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
-
+#endregion
+#region Inline Grado_Deterioro
 class Grado_DeterioroInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Grado_Deterioro
     can_delete = False
     verbose_name_plural = 'Grado de deterioro'
     max_num = 1
     formset = RequiredInlineFormSet
-    fieldsets = (
+    fieldsets = ( #Redefine que campos se muestran y como se agrupan
         (None, {
             'fields': (
                 ('ec_agri_es','agrietamie'),
@@ -585,77 +598,82 @@ class Grado_DeterioroInline(admin.StackedInline):
 
                 )
         }),
-        )
-
-    class Media:
-        css = {
-            'all':("stylesheets/tipo_estructural.css",)
-        }
-
-
+    )
 
 #endregion
-
-#region  14.Observaciones (Modelo Observacion)
-
-
+#region Admin  Observacion
 class ObservacionAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
+    """
+        Admin de la clase Observacion.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
+#endregion
+#region Inline Observacion
 class ObservacionInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Observacion
     can_delete = False
-    verbose_name_plural = 'Observaciones (máximo 140 caracteres)'
+    verbose_name_plural = 'Observaciones (máximo 500 caracteres)'
     max_num = 1
     formset = RequiredInlineFormSet
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
-
 
 #endregion
-
-#region  15.Anexos (Modelo Anexo)
-
+#region  Admin Anexo
 class AnexoAdmin(admin.ModelAdmin):
-
-    list_display = ('foto_facha', 'pla_esca', 'show_image')
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
+    """
+        Admin de la clase Anexo.
+    """
     def get_model_perms(self, request):
         """
-        Return empty perms dict thus hiding the model from admin index.
+            Sobreescritura del metodo de los permisos.
+            Se devuelve una lista vacia para que este
+            modelo no se muestre en el admin pero aun
+            permita incluirlo como inline dentro de
+            inspeccion
+
         """
         return {}
-
-
+#endregion
+#region Inline Anexo
 class AnexoInline(admin.StackedInline):
+    """
+        Clase que permite inlcuir el modelo
+        como un inline en el admin de inspeccion.
+        Usa el form 'RequiredInlineFormSet(forms.py)'
+        para mantener las validaciones propias del admin
+        de este modelo
+    """
     model = Anexo
     can_delete = False
     verbose_name_plural = 'Anexos'
     max_num = 1
     formset = RequiredInlineFormSet
-    list_display = ('foto_facha', 'pla_esca', 'show_image')
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
 #endregion
-
-#region  Admin (inlines )de  Inspeccion
-
+#region  Admin Inspeccion
 class InspeccionAdmin(admin.ModelAdmin):
+    """
+        Admin de la clase Inspeccion.
+        Usa como inlines los demas modelos
+        con el fin de que se agregue toda la
+        data desde una misma estructura y
+        la visualizacion sea lo mas exacta
+        posible con relacion a la planilla fisica.
+    """
     inlines = ( EntrevistadoInline,EstructuraInline, UsoInline,Capacidad_OcupacionInline,Anio_ConstruccionInline,Condicion_TerrenoInline,Tipo_EstructuralInline,Esquema_PlantaInline,Esquema_ElevacionInline,IrregularidadInline, Grado_DeterioroInline,ObservacionInline,AnexoInline )
 
     verbose_name = 'Datos Generales'
@@ -669,9 +687,7 @@ class InspeccionAdmin(admin.ModelAdmin):
             'all':("stylesheets/tipo_estructural.css",)
         }
 
-
 #endregion
-
 #region  Registro de modelos  en el admin
 admin.site.register(Poligono, PoligonoAdmin)
 admin.site.register(Participante,ParticipanteAdmin)
@@ -689,5 +705,4 @@ admin.site.register(Condicion_Terreno,Condicion_TerrenoAdmin)
 admin.site.register(Periodo_Construccion,Periodo_ConstruccionAdmin)
 admin.site.register(Anio_Construccion,Anio_ConstruccionAdmin)
 admin.site.register(Inspeccion,InspeccionAdmin)
-
 #endregion

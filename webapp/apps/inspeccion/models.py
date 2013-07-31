@@ -1,16 +1,31 @@
 # -*- coding: utf8 -*-
 import os
-
 from django.conf import settings
 from django.contrib.auth.models import User
-
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import MultiPolygon, Polygon #<-- Esto no se está usando en ningún lado.
 
+#region  Modelo Poligono
 
-#region  1.Datos Generales (Modelo Inspeccion, Poligono)
 class Poligono(models.Model):
 
+    """
+        Clase para gestionar el modelo Geografico.
+
+        Los atributos de esta clase se generaron
+        a partir de la informacion suminitsrada por
+        Datasource, que no son mas que los atributos
+        que trae el shapefile por cada pligono.
+
+        Esta clase de desarrollo para que pueda ser
+        usada en el modelo de Estructura como un
+        Foreing Key. Adicionalmente servira
+        para almacenar los poligonos suministrados
+        en el (los) shapefile(s).
+
+        Mas información:
+        https://docs.djangoproject.com/en/1.4/ref/contrib/gis/tutorial/
+        En la seccion : Importing Spatial Data
+    """
     fid_edific = models.IntegerField()
     layer = models.CharField(max_length=12)
     gm_type = models.CharField(max_length=17)
@@ -29,15 +44,21 @@ class Poligono(models.Model):
     def __unicode__(self):
         return u'Poligono %s ' % (self.id)
 
-
+#endregion
+#region  Modelo Inspeccion
 class  Inspeccion(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling Inspections
+        Clase que define los atributos representados
+        en la planila fisica para el levantamiento
+        de inspecciones.
 
-    Features:
-        1) Some fields are mandatory.
+        Es el encabezado de la planilla definido
+        en la seccion 'Datos fenerales'.
+
+        Los atributos siguen el nombramiento,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
     fecha = models.DateField(verbose_name="Fecha",
@@ -64,30 +85,64 @@ class  Inspeccion(models.Model):
     def __unicode__(self):
         return u'Inspección  #%s  (Coloque el siguiente número en la Planilla Física: %s) ' % (self.cod_pla,self.cod_pla)
 
+
     def fx(self):
+        """
+            Metodo que retorna un identificador
+            unico o codigo para identificar
+            la inspeccion.
+
+            Por el momento retorna el mismo id
+            con el que se guarda la planilla ya
+            que el cliente no ha especificado
+            cual es el patron de generacion del
+            codigo.
+        """
         return self.id
 
+
     def save(self):
-        super(Inspeccion, self).save()  # Por qué se llama dos veces a save()?
-        self.cod_pla = self.fx()
-        super(Inspeccion, self).save()
+        """
+            Sobreescritura del metodo save del modelo.
 
+            Aca se manejara la asignacion de los usuarios
+            (inspector, supervisor,revisor) que manipulen
+            la inspeccion segun sea el caso.
 
-#region  2.Datos de los participantes (Modelo Participante)
+            Tambien se 'calcula' el codigo de la inspeccion.
+
+        """
+        super(Inspeccion, self).save()  # Invocacion al metodo original
+        self.cod_pla = self.fx()        #Asignacion del codigo de la planilla.
+
+#endregion
+#region  Modelo Participante
 class Participante(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling users
-        to include in the inspection model
+        Define los tipos de usuario que manipulan
+        las inspecciones (Supervisor,Revisor e Inspector).
 
-    Features:
-        1) All fields are not mandatory.
+        Esta clase hace uso de la clase User de Django.
     """
 
-    limit_inspector = models.Q(groups__name='Inspector')
-    limit_revisor = models.Q(groups__name='Revisor')
-    limit_supervisor = models.Q(groups__name='Supervisor')
+    limit_inspector = models.Q(groups__name='Inspector')    # Define un subconjunto de los usuarios
+                                                            # que incluye unicamente a los que poseen
+                                                            # el rol de inspector. Se usa para limitar
+                                                            # las opciones del campo inspector a traves
+                                                            # de limit_choices_to=limit_inspector
+
+    limit_revisor = models.Q(groups__name='Revisor')        # Define un subconjunto de los usuarios
+                                                            # que incluye unicamente a los que poseen
+                                                            # el rol de revisor. Se usa para limitar
+                                                            # las opciones del campo revisor a traves
+                                                            # de limit_choices_to=limit_revisor
+
+    limit_supervisor = models.Q(groups__name='Supervisor')  # Define un subconjunto de los usuarios
+                                                            # que incluye unicamente a los que poseen
+                                                            # el rol de supervisor. Se usa para limitar
+                                                            # las opciones del campo supervisor a traves
+                                                            # de limit_choices_to=limit_supervisor
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspección")
     inspector = models.ForeignKey(User, verbose_name='Inspector',
@@ -109,19 +164,19 @@ class Participante(models.Model):
     def __unicode__(self):
         return u'Datos de los participantes, consultar para mas detalles. '
 
-
-#region  3.Datos del Entrevistado (Modelo Entrevistado)
+#endregion
+#region Modelo Entrevistado
 class Entrevistado(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling Interviewee
-        to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la 'seccion datos
+        del entrevistado'.
 
-    Features:
-        1) Some fields are mandatory.
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
-
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspección")
     cod_ocup = models.CharField(verbose_name="Relación con la Edif",
                                 help_text="Tipo de condición que tiene el entrevistado, con relación a la edificación",
@@ -144,37 +199,44 @@ class Entrevistado(models.Model):
 
     def __unicode__(self):
         return u' Entrevistado: Nombre: %s  -Telefono: %s  -Email: %s' % (self.nom_entrev, self.tlf_entrev, self.email_entr)
-
-
-#region  4.Identificación y ubicación de la edificación (Modelo Estructura)
+#endregion
+#region  Modelo Estructura
 class Estructura(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling Estrcutures
-        to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Identificacion y ubicacion de la edificacion'.
 
-    Features:
-        1) Some fields are not mandatory.
+        Esta clase tiene una Foreign Key al modelo
+        Poligono para permitir la seleccion del
+        poligono que corresponde a la inspeccion.
 
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
 
     inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
-    nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",max_length=100)
+    nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",
+                                max_length=100)
     n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
-    n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",help_text="Número de semi-sotanos que posee la estructura",default=0)
-    n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",default=0)
-    ciudad = models.CharField(verbose_name="Ciudad",help_text="Ciudad donde se realizó la inspección",max_length=100,null= True, blank=True)
-    urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",max_length=100,null= True, blank=True)
-    sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
-    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
-    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
-    #poligono = models.PolygonField(verbose_name="Edificación",srid=4326, null=True,blank=True)
-    #objects = models.GeoManager()
+    n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",
+                                    help_text="Número de semi-sotanos que posee la estructura",default=0)
+    n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",
+                                    default=0)
+    ciudad = models.CharField(verbose_name="Ciudad",help_text="Ciudad donde se realizó la inspección",max_length=100,
+                              null= True, blank=True)
+    urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",
+                              max_length=100,null= True, blank=True)
+    sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,
+                              null= True, blank=True)
+    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",
+                             max_length=100,null= True, blank=True)
+    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,
+                                      null= True, blank=True)
     poligono = models.ForeignKey(Poligono, null=True,blank=True,default=None)
-
-
 
     class  Meta:
         verbose_name = 'Estructura'
@@ -182,18 +244,25 @@ class Estructura(models.Model):
 
     def __unicode__(self):
         return u'  Estructura, consultar para mas detalles. '
-
-
-#region  5.Uso de la Edificación (Modelo Uso)
+#endregion
+#region Modelo Uso
 class  Uso(models.Model):
-
     """
-    Purpose:
-        Defines a  model for handling uses
-         to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Uso de la edificacion'.
 
-    Features:
-        1) All fields are not mandatory.
+        Para este modelo es necesaria una validacion que
+        garantice la seleccion de al menos
+        una de la opciones presentadas.
+
+        Adicionalmente, si se selecciona la opcion
+        'otros' es obligatorio especificar el nombre
+        del uso.
+
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
@@ -222,17 +291,22 @@ class  Uso(models.Model):
 
     def __unicode__(self):
         return u' Usos, consultar para mas detalles. '
-
-
-#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
+#endregion
+#region Modelo Capacidad_Ocupacion
 class Capacidad_Ocupacion(models.Model):
 
     """
-    Purpose:
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Capacidad de ocupacion'.
 
+        Para este modelo es necesaria una validacion que
+        garantice la seleccion de al menos
+        una de la opciones presentadas.
 
-    Features:
-        1) .
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
@@ -247,23 +321,20 @@ class Capacidad_Ocupacion(models.Model):
 
     def __unicode__(self):
         return u'Capacidad de Ubicación,consultar para mas detalles. '
-
-
-#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
+#endregion
+#region  Modelo Periodo_Construccion
 class Periodo_Construccion(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling the
-        time frames.
+        Clase creada para la administracion
+        de los periodos de construccion.
 
-    Features:
-        1) fecha_infer is calculated according to
-        user choice.
+        Periodos de construccion es uno de los
+        atributos de la seccion 'Año de construccion'.
+
     """
-
-    # Defining possible choices
-    # for the periodo field in the model.
+    # Posibles valores para definir el rango de años que
+    # ocupa el periodo.
     PERIODO_CHOICES = (
         ('1', 'Antes de'),
         ('2', 'Entre'),
@@ -297,16 +368,25 @@ class Periodo_Construccion(models.Model):
             pass
         return u'  consultar para mas detalles. '
 
-
+#endregion
+#region Modelo Anio_Construccion
 class Anio_Construccion(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling Estrcutures
-        to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Año de construccion'.
 
-    Features:
-        1) All fields are not mandatory.
+        Para este modelo  es necesario que:
+
+            1) Si se  introduce el año, el periodo
+            de construccion se debe inferir.
+            2) Si se selecciona un periodo de construccion
+            se debe inferir la fecha y dar feedback al usuario
+            de esta inferencia.
+
+        Para la seleccion de los periodos esta clase cuenta con una
+        Foreign Key al modelo Periodo_Construccion.
     """
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspección")
@@ -324,21 +404,32 @@ class Anio_Construccion(models.Model):
     def __unicode__(self):
         return u'Año de Construcción, consultar para mas detalles. '
 
-
-#region  8.Condicion del terreno (Modelo Condicion_Terreno)
+#endregion
+#region Modelo Condicion_Terreno
 class Condicion_Terreno(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling terrain conditions
-         to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Condicion del terreno'.
 
-    Features:
-        1) Drenaje and  forma_terr fields are mandatory.
+         Para este modelo  es necesario que:
+
+            1) Si se selecciona la opcion Ladera. se deben
+            especificar los valores de los campos 'pendiente
+            del terreno (pend_terr)' y 'localizada sobre la mitad
+            superior de la ladera (l_m_ladera)'
+            2)Si se selecciona la opcion Base o Cima. se deben
+            especificar los valores de los campos 'pendiente
+            del talud (pend_talud)' y 'suparacion al talud (sep_talud)'
+
+
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
-    # Defining possible choices
-    # for the forma_terr field in the model.
+    #Opciones para la forma del terreno
     FORMA_TERRENO_CHOICES = (
         ('1', 'Planice'),
         ('2', 'Ladera'),
@@ -346,29 +437,25 @@ class Condicion_Terreno(models.Model):
         ('4', 'Cima')
     )
 
-    # Defining possible choices
-    # for the pend_terr field in the model.
+    #Opciones para la pendiente del terreno
     PENDIENTE_TERRENO_CHOICES = (
         ('1', '20º-45º'),
         ('2', 'Mayor a 45º')
     )
 
-    # Defining possible choices
-    # for the pend_talud field in the model.
+    #Opciones para la pendiente del talud
     PENDIENTE_TALUD_CHOICES = (
         ('1', '20º-45º'),
         ('2',  'Mayor a 45º')
     )
 
-    # Defining possible choices
-    # for the sep_talud field in the model.
+    #Opciones para la separacion del talud
     SEPARACION_TALUD_CHOICES = (
         ('1', 'Menor a H del talud'),
         ('2',  'Mayor a H del talud')
     )
 
-    # Defining possible choices
-    # for the sep_talud field in the model.
+    #Opciones para el drenaje
     DRENAJE_TALUD_CHOICES = (
         ('1', 'Si'),
         ('2',  'No')
@@ -384,8 +471,9 @@ class Condicion_Terreno(models.Model):
                                  max_length=1, choices=PENDIENTE_TERRENO_CHOICES, blank=True, null=True)
 
     l_m_ladera = models.CharField(verbose_name="Localizada sobre la mitad superior de la ladera",
-                                  help_text="Ubicación de la edificacion en una ladera con respecto a la altura total del terreno. \
-                                             Responde la pregunta ¿La edificación esta construida en la mitad superior de la ladera?",
+                                  help_text="Ubicación de la edificacion en una ladera con respecto a la altura total. \
+                                   del terreno  Responde la pregunta ¿La edificación esta construida en la mitad . \
+                                   superior de la ladera?",
                                   choices=DRENAJE_TALUD_CHOICES, max_length=1, blank=True, null=True)
 
     pend_talud = models.CharField(verbose_name="Pendiente del talud",
@@ -397,8 +485,8 @@ class Condicion_Terreno(models.Model):
                                  max_length=1, choices=SEPARACION_TALUD_CHOICES, blank=True, null=True)
 
     drenaje = models.CharField(verbose_name="Drenajes",
-                               help_text="Si la edificaicón esta ubicada sobre el curso de una quebrada, o un cauce intermitente",
-                               max_length=1, choices=DRENAJE_TALUD_CHOICES)
+                               help_text="Si la edificaicón esta ubicada sobre el curso de una quebrada, . \
+                               o un cauce intermitente", max_length=1, choices=DRENAJE_TALUD_CHOICES)
 
     class  Meta:
         verbose_name = 'Condición del Terreno'
@@ -406,22 +494,30 @@ class Condicion_Terreno(models.Model):
 
     def __unicode__(self):
         return u' Condición: Forma del Terreno %s ' % (self.forma_terr)
-
-
-#region  9.Tipo Estructural (Modelo Tipo_Estructural)
+#endregion
+#region Tipo Estructural (Modelo Tipo_Estructural)
 class Tipo_Estructural(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling structures types
-         to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Tipo Estructural'.
 
-    Features:
-        1) All fields are not mandatory.
+        Para este modelo es necesaria una validacion que
+        garantice la seleccion de al menos
+        una de la opciones presentadas.
+
+        Tambien es necesario que se especifique el
+        tipo estructural predominante. Para esto se debe
+        llenar el combo con las opciones que el
+        usuario vaya seleccionando.
+
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
-    # Defining possible choices
-    # for the forma_terr field in the model.
+   #Opciones iniciales del tipo estrcutural predominante
     TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES = (
         ('1', '1. PCA'),
         ('2', '2. PCAP'),
@@ -442,75 +538,83 @@ class Tipo_Estructural(models.Model):
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
     pca = models.BooleanField(verbose_name="1. Pórticos de concreto armado (PCA)",
                               help_text="Sistema estructural formado por columnas y vigas de concreto armado. \
-                                         En esta estructura las paredes no interfieren con el desplazamiento lateral del pórtico y \
-                                         tienen estabilidad propia para movimientos en y fuera de su plano.",
+                              En esta estructura las paredes no interfieren con el desplazamiento lateral .\
+                              del pórtico y tienen estabilidad propia para movimientos en y fuera de su plano.",
                               default=False)
 
-    pcap = models.BooleanField(verbose_name="2. Pórticos de concreto armado rellenos con paredes de bloques de arcilla o de concreto (PCAP)",
+    pcap = models.BooleanField(verbose_name="2. Pórticos de concreto armado rellenos con paredes de bloques de . \
+                                            arcilla o de concreto (PCAP)",
                                help_text="Sistema estructural formado por columnas y vigas de concreto armado. \
-                                          En esta estructura las paredes  interfieren con el desplazamiento lateral del pórtico, por estar \
-                                          embutidas en todo el marco del pórtico. Las paredes pueden ser de bloques de arcilla o concreto",
+                                          En esta estructura las paredes  interfieren con el desplazamiento lateral. \
+                                          del pórtico, por estar  embutidas en todo el marco del pórtico. Las paredes . \
+                                          pueden ser de bloques de arcilla o concreto",
                                default=False)
 
     mca2d = models.BooleanField(verbose_name="3. Muros de concreto armado en dos direcciones horizontales (MCA2D)",
-                                help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, \
-                                           dispuestos en dos direcciones ortogonales, en proporciones de área transversal similar o mayor al 25%.",
+                                help_text="Sistema estructural resistente a cargas verticales y horizontales formado por. \
+                                 muros de concreto armado, dispuestos en dos direcciones ortogonales, en proporciones . \
+                                 de área transversal similar o mayor al 25%.",
                                 default=False)
 
-    mca1d = models.BooleanField(verbose_name="4. Sistemas con muros de concreto armado de poco espesor,dispuestos en una sola dirección \
-                                             (algunos sistemas tipo túnel) (MCA1D)",
-                                help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, \
-                                          dispuestos en una dirección o poca área transversal de muro en la dirección ortogonal (menor al 25%).",
+    mca1d = models.BooleanField(verbose_name="4. Sistemas con muros de concreto armado de poco espesor,dispuestos en una. \
+                                sola dirección (algunos sistemas tipo túnel) (MCA1D)",
+                                help_text="Sistema estructural resistente a cargas verticales y horizontales formado . \
+                                por muros de concreto armado, dispuestos en una dirección o poca área transversal de muro. \
+                                en la dirección ortogonal (menor al 25%).",
                                 default=False)
 
     pa = models.BooleanField(verbose_name="5. Pórticos de acero (PA)",
-                             help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección \
-                                       abierta tanto en columnas como vigas.",
+                             help_text="Sistema estructural resistente a cargas verticales y horizontales formado por . \
+                              perfiles metálicos de sección  abierta tanto en columnas como vigas.",
                              default=False)
 
     papt = models.BooleanField(verbose_name="6. Pórticos de acero con perfiles tubulares (PAPT)",
-                               help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección \
-                                         cerrada tanto en columnas como vigas.",
+                               help_text="Sistema estructural resistente a cargas verticales y horizontales formado . \
+                               por perfiles metálicos de sección  cerrada tanto en columnas como vigas.",
                                default=False)
 
     pad = models.BooleanField(verbose_name="7. Pórticos de acero diagonalizados (PAD)",
-                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección \
-                                        abierta o cerrada tanto en columnas como vigas, con arriostramientos concéntricos o excéntricos.",
+                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por. \
+                               perfiles metálicos de sección  abierta o cerrada tanto en columnas como vigas, con . \
+                               arriostramientos concéntricos o excéntricos.",
                               default=False)
 
     pac = models.BooleanField(verbose_name="8. Pórticos de acero con cerchas (PAC)",
-                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por perfiles metálicos de sección \
-                                        abierta tanto en columnas como vigas y sistema de losa de entrepiso o techo compuesto por cerchas metálicas.",
+                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por. \
+                              perfiles metálicos de sección abierta tanto en columnas como vigas y sistema de losa de . \
+                              entrepiso o techo compuesto por cerchas metálicas.",
                               default=False)
 
     pre = models.BooleanField(verbose_name="9. Sistemas pre-fabricados a base de grandes paneles o de pórticos (PRE)",
-                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por paneles o pórticos de concreto \
-                                        armado prefabricados en taller.",
+                              help_text="Sistema estructural resistente a cargas verticales y horizontales formado por . \
+                              paneles o pórticos de concreto  armado prefabricados en taller.",
                               default=False)
 
     mmc = models.BooleanField(verbose_name="10. Sistemas cuyos elementos portantes sean muros de mampostería confinada (MMC)",
-                              help_text="Sistema resistente a cargas verticales y horizontales donde  los estructurales son los muros de mamposteria \
-                                        confinados por machones y viga en la totalidad de su perímetro.",
+                              help_text="Sistema resistente a cargas verticales y horizontales donde  los estructurales . \
+                              son los muros de mamposteria  confinados por machones y viga en la totalidad de su perímetro.",
                               default=False)
 
     mmnc = models.BooleanField(verbose_name="11. Sistemas cuyos elementos portantes sean muros de mampostería no confinada (MMNC)",
-                               help_text="Sistema resistente a cargas verticales y horizontales donde los estructurales son los muros de mamposteria \
-                                         no confinados por machones o viga en la totalidad de su perímetro.",
+                               help_text="Sistema resistente a cargas verticales y horizontales donde los estructurales . \
+                               son los muros de mamposteria no confinados por machones o viga en la totalidad de su perímetro.",
                                default=False)
 
     vb = models.BooleanField(verbose_name="13. Viviendas de bahareque de un piso (VB)",
-                             help_text="Sistema estructural rural de un piso formado por troncos de caña o similar y barro como material aglomerante, con techo liviano.",
+                             help_text="Sistema estructural rural de un piso formado por troncos de caña o similar . \
+                             y barro como material aglomerante, con techo liviano.",
                              default=False)
 
     vcp = models.BooleanField(verbose_name="14. Viviendas de construcción precaria (tiera, madera, zinc, etc.) (VCP)",
-                              help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales reciclados o livianos, como zinc, madera, tierra.",
+                              help_text="Sistema estructural de contrucción precaria donde se utilizan  materiales . \
+                              reciclados o livianos, como zinc, madera, tierra.",
                               default=False)
 
     pmbc = models.BooleanField(verbose_name="12. Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción (PMBC)",
                                help_text="Sistemas mixtos de pórticos y de mamposteria de baja calidad de construcción",
                                default=False)
 
-    tipo_predomi = models.CharField(verbose_name="indique el Nº del tipo estructural predominante",
+    tipo_predomi = models.CharField(verbose_name="Indique el Nº del tipo estructural predominante",
                                     help_text="", max_length=3, choices=TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES)
 
     class  Meta:
@@ -520,20 +624,22 @@ class Tipo_Estructural(models.Model):
     def __unicode__(self):
         return u' Tipo Estructural, consultar para mas detalles. '
 
-
-#region  10.Esquema Planta (Modelo Esquema_Planta)
+#endregion
+#region Modelo Esquema_Planta
 class Esquema_Planta(models.Model):
 
     """
-    Purpose:
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Esquema planta'.
 
 
-    Features:
-        1) .
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
-    # Defining possible choices
-    # for the esq_planta field in the model.
+   #Opciones para esquema planta
     ESQUEMA_PLANTA_CHOICES = (
         ('1', 'H'),
         ('2', 'T'),
@@ -549,9 +655,9 @@ class Esquema_Planta(models.Model):
     esq_planta = models.CharField(verbose_name="Esquema de  Planta",
                                   max_length=1, choices=ESQUEMA_PLANTA_CHOICES,
                                   help_text="Describe la forma de la planta del edificio, es decir, vista desde arriba. \
-                                            Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal' \
-                                            se cumpla cuando el cociente entre el largo y ancho del menor rectangula que inscriba al \
-                                            edificio en planta sea mayor a 5.")
+                                  Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Horizontal'  \
+                                  se cumpla cuando el cociente entre el largo y ancho del menor rectangulo que inscriba \
+                                  al  edificio en planta sea mayor a 5.")
 
     class  Meta:
         verbose_name = 'Esquema Planta'
@@ -560,20 +666,22 @@ class Esquema_Planta(models.Model):
     def __unicode__(self):
         return u'Esquema Planta, consultar para mas detalles. '
 
-
-#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
+#endregion
+#region Modelo Esquema_Elevacion
 class Esquema_Elevacion(models.Model):
 
     """
-    Purpose:
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Esquema de elevacion'.
 
 
-    Features:
-        1) .
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
-    # Defining possible choices
-    # for the esq_elevac field in the model.
+    #Opciones para el esquema de elevacion
     ESQUEMA_ELEVACION_CHOICES = (
         ('1', 'T'),
         ('2', 'Piramide Invertida'),
@@ -589,8 +697,8 @@ class Esquema_Elevacion(models.Model):
     esq_elevac = models.CharField(verbose_name="Esquema de Elevación",
                                   max_length=1, choices=ESQUEMA_ELEVACION_CHOICES,
                                   help_text="Describe la forma de elevación del edificio, es decir, vista desde un lateral. \
-                                            Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Vertical' \
-                                            se cumpla cuando el cociente entre la altura del edificio y la menor dimensión en planta exceda a 4.")
+                                  Si se coloca 'Ninguno' corresponde a una forma irregular. En caso de 'Esbeltez Vertical' \
+                                  se cumpla cuando el cociente entre la altura del edificio y la menor dimensión en planta exceda a 4.")
 
     class  Meta:
         verbose_name = 'Esquema Elevación'
@@ -599,75 +707,79 @@ class Esquema_Elevacion(models.Model):
     def __unicode__(self):
         return u'Esquema Elevación, consultar para mas detalles. '
 
-
-#region  12.Irregularidades (Modelo Irregularidad)
+#endregion
+#region Modelo Irregularidad
 class Irregularidad(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling irregularity
-         to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Irregularidades'.
 
-    Features:
-        1) sep_edif field is mandatory.
+        La seleccion es libre, no es necesario que se selecciones al menos
+        una pues es posible que no existan irregularidades.
+
+        Si se selecciona cualquiera de las opciones de adosamiento se debe
+        especificar un valor para la separacion entre edificios.
+
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
     a_viga_alt = models.BooleanField(verbose_name="Ausencia de vigas altas en una o dos direcciones",
-                                     help_text="Irregularidad que describe la ausencia de vigas altas en una o dos direcciones ortogonales \
-                                               de la estructura. Una viga alta es considerada cuando su altura es mayor que el espesor \
-                                               o altura de la losa.",
+                                     help_text="Irregularidad que describe la ausencia de vigas altas en una o dos \
+                                     direcciones ortogonales de la estructura. Una viga alta es considerada cuando su  \
+                                     altura es mayor que el espesor  o altura de la losa.",
                                      default=False)
-
     p_entrep_b = models.BooleanField(verbose_name="Presencia de al menos  un entrepiso débil ó blando",
-                                     help_text="Irregularidad que describe la presencia de una planta baja o entrepiso libre o blando. \
-                                               Esta condición se cumple cuando:i) la diferencia de la sección transversal de paredes de un piso con \
-                                               respecto a las siguientes es más del 50%, ii) más del 50% de los pórticos de un piso no presentan paredes o \
-                                               iii) cuando existe una discontinuidad en vertical de elementos resistentes como la presencia de muros y \
-                                               luego cambia a columnas.",
+                                     help_text="Irregularidad que describe la presencia de una planta baja o entrepiso  \
+                                     libre o blando. Esta condición se cumple cuando:i) la diferencia de la sección \
+                                     transversal de paredes de un piso con respecto a las siguientes es más del 50%, \
+                                     ii) más del 50% de los pórticos de un piso no presentan paredes o iii) cuando \
+                                     existe una discontinuidad en vertical de elementos resistentes como la presencia de \
+                                     muros y  luego cambia a columnas.",
                                      default=False)
-
     p_column_c = models.BooleanField(verbose_name="Presencia de columnas cortas",
-                                     help_text="Irregularidad caracterizada cuando una o varias columnas de concreto armado presenta una porción de su \
-                                               altura sin restricciones laterales como paredes. Esta condición no se cumple cuando la totalidad de la \
-                                               altura presenta o carece de restricciones laterales.",
+                                     help_text="Irregularidad caracterizada cuando una o varias columnas de concreto \
+                                     armado presenta una porción de su  altura sin restricciones laterales como paredes.\
+                                     Esta condición no se cumple cuando la totalidad de la altura presenta o carece de \
+                                     restricciones laterales.",
                                      default=False)
-
     disc_eje_c = models.BooleanField(verbose_name="Discontinuidad de ejes de columnas o paredes portantes",
-                                     help_text="Irregularidad que describe la interrupción o variación en planta de los ejes de elementos verticales, \
-                                               muro o columna en dos pisos consecutivos. La variación debe ser mayor a 1/3 de la dimensión horizontal \
-                                               del miembro inferior en la dirección del deslizamiento.",
+                                     help_text="Irregularidad que describe la interrupción o variación en planta de los \
+                                      ejes de elementos verticales, muro o columna en dos pisos consecutivos. \
+                                      La variación debe ser mayor a 1/3 de la dimensión horizontal del miembro inferior\
+                                      en la dirección del deslizamiento.",
                                      default= False)
-
     abert_losa = models.BooleanField(verbose_name="Aberturas significativas en losas",
-                                     help_text="Irregularidad que describe cuando el área total de aberturas de un piso sea mayor a un 20% del area total de la planta.",
+                                     help_text="Irregularidad que describe cuando el área total de aberturas de un piso \
+                                      sea mayor a un 20% del area total de la planta.",
                                      default=False)
-
     f_asim_mas = models.BooleanField(verbose_name="Fuerte asimetría de masas o rigideces en planta",
-                                     help_text="Irregularidad que describe la presencia  de muros estructurales, paredes, núcleo de ascensores, núcleo de \
-                                               escaleras u otro, excéntricas en la estructura, que generen asimetría de masas y/o rigideces.",
+                                     help_text="Irregularidad que describe la presencia  de muros estructurales, paredes,\
+                                     núcleo de ascensores, núcleo de \
+                                     escaleras u otro, excéntricas en la estructura, que generen asimetría de masas y/o rigideces.",
                                      default=False)
-
     aus_mur_1d = models.BooleanField(verbose_name="Ausencia de muros en una dirección",
-                                     help_text="Irregularidad que describe la ausencia de muros en una dirección, esta condicion se cumple en los sistemas \
-                                               estructurales con muros en una dirección.",
+                                     help_text="Irregularidad que describe la ausencia de muros en una dirección, esta \
+                                     condicion se cumple en los sistemas  estructurales con muros en una dirección.",
                                      default= False)
-
     ados_los_l = models.BooleanField(verbose_name="Adosamiento: Losa contra losa",
-                                     help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos \
-                                               para evitar el choque y a la vez las alturas de losas de entre piso se encuentran a la misma cota o elevación.",
+                                     help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una\
+                                     distancia suficiente entre ellos para evitar el choque y a la vez las alturas de \
+                                     losas de entre piso se encuentran a la misma cota o elevación.",
                                      default= False)
-
     ados_los_c = models.BooleanField(verbose_name="Adosamiento:Losa contra columna",
-                                     help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una distancia suficiente entre ellos \
-                                               para evitar el choque y a la vez las alturas de losas de entre piso no se encuentran a la misma cota o \
-                                               elevación.",
+                                     help_text="Irregularidad que describe cuando dos edificios adyacentes no poseen una \
+                                     distancia suficiente entre ellos  para evitar el choque y a la vez las alturas de \
+                                     losas de entre piso no se encuentran a la misma cota o  elevación.",
                                      default= False)
-
     estr_frag = models.BooleanField(verbose_name="Estructura frágil", help_text="Descripcion estructura fragil", default= False)
     sep_edif = models.IntegerField(verbose_name="Separación entre edifcio (cm)",
-                                   help_text="Valor de la menor separación entre los edificios adyacentes. Se debe activar en caso de que halla adosamiento \
-                                             de lo contrario no.",
+                                   help_text="Valor de la menor separación entre los edificios adyacentes. Se debe \
+                                   activar en caso de que halla adosamiento  de lo contrario no.",
                                    null=True, blank=True)
 
     class  Meta:
@@ -677,56 +789,59 @@ class Irregularidad(models.Model):
     def __unicode__(self):
         return u' Irregularidades, consultar para mas detalles. '
 
-
-#region  13.Grados de deterioro (Modelo  Grado_Deterioro)
+#endregion
+#region  Modelo  Grado_Deterioro
 class Grado_Deterioro(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling damage
-         to include in the inspection model
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Grados de deterioro'.
 
-    Features:
-        1) sep_edif field is mandatory.
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
 
-    # Defining possible choices
-    # for the ec_agri_es,ea_corr_ac,agrietamie fields in the model.
+
+    # Opciones del grado de deterioro
     GRADO_DETERIORO_CHOICES = (
         ('1', 'Ninguno'),
         ('2', 'Moderado'),
         ('3', 'Severo')
     )
 
-    # Defining possible choices
-    # for the e_mantenim field in the model.
+
+    # Opciones  del estado general del mantenimiento
     GRADO_DETERIORO_MANTENIMIENTO_CHOICES = (
         ('1', 'Bueno'),
         ('2', 'Regular'),
         ('3', 'Bajo')
     )
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
-    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de concreto armado y/o corrosión en acero de refuerzo",
-                                  help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de concreto como: columnas, vigas, \
-                                            muros o losas, en términos de agrietamiento en éstos, presencia de corrosión del acero de refuezo, pérdida del \
-                                            recubrimiento entre otros.",
+    ec_agri_es = models.CharField(verbose_name="Estructura de Concreto:  Agrietamiento en elementos estructurales de \
+                                  concreto armado y/o corrosión en acero de refuerzo",
+                                  help_text="Describe el grado de mantenimiento que poseen los elementos estructurales \
+                                  de concreto como: columnas, vigas,  muros o losas, en términos de agrietamiento en \
+                                  éstos, presencia de corrosión del acero de refuezo, pérdida del recubrimiento entre otros.",
                                   max_length=1, choices=GRADO_DETERIORO_CHOICES)
 
-    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de conexiones y/o pandeo de elementos",
-                                  help_text="Describe el grado de mantenimiento que poseen los elementos estructurales de acero como: sistema de piso, columnas, \
-                                            vigas o arriostramientos de perfiles de sección abierta o cerrada, en términos de pandeo, fractura en conexiones, \
-                                            corrosión entre otros.",
+    ea_corr_ac = models.CharField(verbose_name="Estructura de Acero: Corrosión en elementos de acero y/o deterioro de \
+                                  conexiones  y/o pandeo de elementos",
+                                  help_text="Describe el grado de mantenimiento que poseen los elementos estructurales \
+                                  de acero como: sistema de piso, columnas, vigas o arriostramientos de perfiles de \
+                                  sección abierta o cerrada, en términos de pandeo, fractura en conexiones, corrosión entre otros.",
                                   max_length=1, choices=GRADO_DETERIORO_CHOICES)
 
     agrietamie = models.CharField(verbose_name="Agrietamiento en paredes de relleno",
-                                  help_text="Describe la presencia de grietas en las paredes de bloques de concreto o arcilla, \
-                                            si estas presentan una abertura mayor a los 2mm.",
+                                  help_text="Describe la presencia de grietas en las paredes de bloques de concreto o \
+                                   arcilla, si estas presentan una abertura mayor a los 2mm.",
                                   max_length=1, choices=GRADO_DETERIORO_CHOICES)
 
     e_mantenim = models.CharField(verbose_name="Estado general de mantenimiento",
-                                  help_text="Describe el estado de mantenimiento en general de la estructura en terminos de humedad o filtración, deterioro y abandono.",
+                                  help_text="Describe el estado de mantenimiento en general de la estructura en terminos  \
+                                  de humedad o filtración, deterioro y abandono.",
                                   max_length=1, choices=GRADO_DETERIORO_MANTENIMIENTO_CHOICES)
-
 
     class  Meta:
         verbose_name = 'Grado de Deterioro'
@@ -735,21 +850,25 @@ class Grado_Deterioro(models.Model):
     def __unicode__(self):
         return u' Grados de Deterioro, consultar para mas detalles. '
 
-
-#region  14.Observaciones (Modelo Observacion)
+#endregion
+#region  Modelo Observacion
 class Observacion(models.Model):
 
     """
-    Purpose:
-        Defines a  model for handling the
-        time frames.
+        Clase que define los atributos representados
+        en la planila fisica para la seccion
+        'Observaciones'.
 
-    Features:
-        1) fecha_infer is calculated according to
-        user choice.
+        Para este modelo se debe validar la cantidad de caracteres
+        para el campo observacion, con una maximo establecido actualmente
+        en 500 caracteres.
+
+        Los atributos siguen el nombramiento ,
+        textos de ayuda, tipos de datos y descripciones
+        especificadas por el cliente.
     """
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspección")
-    observacion = models.TextField(max_length=140, null=True, blank=True)
+    observacion = models.TextField(max_length=500, null=True, blank=True)
 
     class  Meta:
         verbose_name = 'Observación'
@@ -758,15 +877,14 @@ class Observacion(models.Model):
     def __unicode__(self):
         return u'Observaciones, consultar para mas detalles. '
 
-
-#region  15.Anexos (Modelo Anexo)
+#endregion
+#region Modelo Anexo
 class Anexo(models.Model):
 
+
     """
-    Purpose:
-
-
-    Features:
+        Clase que define  atributos adicionales
+        para la planila fisica.
 
     """
 
@@ -796,3 +914,7 @@ class Anexo(models.Model):
 
     def __unicode__(self):
         return u'Anexos, consultar para mas detalles. '
+
+
+
+#endregion
