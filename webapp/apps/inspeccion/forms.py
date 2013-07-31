@@ -2,6 +2,9 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.models import ModelForm
 from django.contrib.gis import admin
 
+from models import Estructura
+from widgets import Select_Polygon_Widget
+
 class RequiredInlineFormSet(BaseInlineFormSet):
     """
     Generates an inline formset that is required
@@ -16,3 +19,11 @@ class RequiredInlineFormSet(BaseInlineFormSet):
         form.empty_permitted = False
         return form
 
+
+class EstructuraInlineForm(ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(EstructuraInlineForm, self).__init__(*args, **kwargs)
+        estructura_admin = admin.site._registry[Estructura]
+        model_field = self._meta.model._meta.get_field('poligono')
+        self.fields['poligono'].widget = Select_Polygon_Widget()

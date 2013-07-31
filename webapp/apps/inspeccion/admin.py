@@ -20,7 +20,7 @@ from models import Esquema_Elevacion
 from models import Anexo
 from models import Poligono
 
-from widgets import Select_Polygon_Widget
+from forms import EstructuraInlineForm
 
 #region  1.Poligono (Modelo Poligono)
 
@@ -116,10 +116,7 @@ class EstructuraInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Identificación y ubicación de la edificación'
     max_num = 1
-#    formfield_overrides = {
-#        model.poligono : {'widget': Select_Polygon_Widget()},
-#
-#    }
+    #form=EstructuraInlineForm
     fieldsets = (
         (None, {
             'fields': (
@@ -133,8 +130,6 @@ class EstructuraInline(admin.StackedInline):
                 )
         }),
     )
-
-
 
 #    class Media:
 #        css = {
@@ -214,7 +209,6 @@ class UsoInline(admin.StackedInline):
 #endregion
 
 #region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
-
 
 class Capacidad_OcupacionAdmin(admin.ModelAdmin):
 

@@ -265,7 +265,18 @@
     $(document).ready(function($) {
 
 
-        if ($(".field-foto_facha").find("a").attr("href") != undefined){
+      /*  $.get('/mapa/', function(data) {
+
+
+            $(data).insertAfter($("#id_estructura_set-0-poligono"));
+
+
+
+        });*/
+
+
+
+         if ($(".field-foto_facha").find("a").attr("href") != undefined){
 
             file_path = $(".field-foto_facha").find("a").attr("href").split('/');
             len =   $(".field-foto_facha").find("a").attr("href").split('/').length -1;
