@@ -29,24 +29,25 @@ Luego, para instalar:
 	$ sudo make install
 	$ cd ..
 
-Para crear la base de datos con acceso a tipos de datos geográficos, debe ejecutarse los siguientes comandos en una consola de postgresql:
+En Debian, la instalación puede hacerse de la siguiente manera:
 
-	$ createdb  <db name>
-	$ psql <db name>
-	> CREATE EXTENSION postgis;
-	
+    $ sudo apt-get -u install postgresql-9.1 postgis postgresql-9.1-postgis-2.0 postgresql-9.1-postgis-2.0-scripts
+
+
+Para crear la base de datos con acceso a tipos de datos geográficos debe ejecutase los siguientes comandos:
+
+	$ psql                                          # Inicia una consola de postgresql usando postgres como base de datos por defecto.
+    > CREATE USER <usuario> PASSWORD '<passwd>';    # Crea el usuario que usará la base de datos.
+    > CREATE DATABASE <db name>                     # Crea una base de datos con nombre <db name>.
+    > \c <db name>                                  # Se conecta a <db name>
+	> CREATE EXTENSION postgis;                     # Agrega soporte para información geográfica a <db name>.
+    > \q                                            # Salir.
+
+
 Esto habrá habilitado nuestra base de datos para albergar data geográfica.
 
 
-Luego debemos crear un usuario con los permisos necesarios para poder accesar la bD de postgresql, en una consola colocamos:
-	
-	$ sudo su postgres -c psql template1
-	postgres#= CREATE USER funvisis WITH PASSWORD 'funvisis' CREATEDB;  # sustituir funvisis por el nombre deseado, igual para la clave.
-	postgres#=\q
-
-
 Para más información, revisar la documentación oficial: https://docs.djangoproject.com/en/dev/ref/contrib/gis/install/postgis/   y  http://www.postgresql.org/docs/8.0/static/sql-createuser.html
-
 
 GeoDjango:
 ----------
@@ -72,6 +73,7 @@ Una vez que estén todas las dependencias instaladas, debe configurarse en el ar
         'USER':'funvisis',
         'PASSWORD':'funvisis',
         'HOST':'localhost',
+        'PORT':'5432'
         }
 	} # Sustituir los valores por los establecidos en los pasos anteriores.
 
@@ -134,7 +136,7 @@ Definimos entonces un modelo geográfico (modificar el mismo modelo de inspecci�
 Nótese que ``Poligono`` está heredando de la clase Models, pero esta vez la clase Models viene de ``django.contrib.gis.db`` y no de ``django.db`` como es lo usual.
 Esto transforma nuestra clase en una clase geográfica, pudiendo acceder a la data de postgis como si fuesen tipos de campo normales de django.
 
-Una vez hecho esto, debe correrse ``syncdb`` y ``migrate`` para que sean actualizadas las tablas en BD
+Una vez hecho esto, debe ejecutarse ``syncdb`` y ``migrate`` para que sean actualizadas las tablas en BD
 
 	
 Importación de los datos:
@@ -169,6 +171,17 @@ para esto usaremos la herramienta ``LayerMapping`` de django. Hagamos un script 
 Esto mapea el campo de tipo ``POLYGON`` al campo ``poligono`` en nuestro modelo.
 
 Para más información, revisar la documentación de django: https://docs.djangoproject.com/en/dev/ref/contrib/gis/layermapping/#django.contrib.gis.utils.LayerMapping
+
+
+*NOTA*: En caso de recibir el error: 
+
+    LayerMapError: Could not translate between the data source and model geometry: permiso denegado a la relación spatial_ref_sys
+
+Deben darse permisos al usuario:
+
+    ALTER TABLE spatial_ref_sys OWNER TO <usuario>;
+
+
 
 Otros links de interés:
 -----------------------
