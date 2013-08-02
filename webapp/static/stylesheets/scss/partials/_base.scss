@@ -1,0 +1,49 @@
+$less-grid-element: unquote("#root");
+// This import applies a global reset to any page that imports this stylesheet.
+@import "less/reset";
+
+// Import 'lees' framework
+@import "less";
+/*@import "partials/global";*/
+@import "partials/default";
+//@import "partials/drag&drop";
+
+@import "compass/css3";
+@import "compass/layout";
+
+// Import files for image sprites.
+@import "compass/utilities/sprites/sprite-img";
+@import "compass/utilities/sprites/base";
+
+// Import files for text-wrap.
+@import "compass/typography/text/force-wrap";
+//@import "partials/dropdown";
+
+@import "compass/typography/lists/bullets";
+
+// Define margins and rows
+$margin1: 6px;
+$margin2: 12px;
+$margin3: 24px;
+$margin4: 48px;
+$margin5: 72px;
+
+$qt-row: $margin1;
+$half-row: $margin2;
+$one-row: $margin3;
+$two-rows: $margin4;
+$three-rows: $margin5;
+
+$img-header-background : url("/static/images/botonsocios.png");
+
+// Define other values
+$columns: 10;
+
+
+// Define colors
+
+$red:#B51212;
+$gray:#717070;
+$orange: #FF6600;
+
+
