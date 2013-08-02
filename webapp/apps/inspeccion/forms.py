@@ -1,5 +1,6 @@
 from django.forms.models import BaseInlineFormSet
-
+from django.forms.models import ModelForm
+from django.contrib.gis import admin
 
 class RequiredInlineFormSet(BaseInlineFormSet):
     """
@@ -14,3 +15,4 @@ class RequiredInlineFormSet(BaseInlineFormSet):
         form = super(RequiredInlineFormSet, self)._construct_form(i, **kwargs)
         form.empty_permitted = False
         return form
+

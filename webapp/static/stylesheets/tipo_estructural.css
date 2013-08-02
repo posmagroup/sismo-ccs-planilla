@@ -92,3 +92,14 @@ form .aligned p.help {
 
 
 } */
+
+
+ul.messagelist li {
+    font-size: 18px;
+    display: block;
+    padding: 4px 5px 4px 25px;
+    margin: 0 0 3px 0;
+    border-bottom: 1px solid #ddd;
+    color: red;
+
+}

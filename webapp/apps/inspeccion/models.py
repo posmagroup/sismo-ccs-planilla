@@ -19,7 +19,7 @@ class Poligono(models.Model):
     shape_leng = models.FloatField()
     shape_area = models.FloatField()
     otro_conta = models.CharField(max_length=250)
-    geom = models.MultiPolygonField(srid=4326)
+    geom = models.PolygonField(srid=4326)
     objects = models.GeoManager()
 
     class  Meta:
@@ -62,7 +62,7 @@ class  Inspeccion(models.Model):
         verbose_name_plural = 'Inspecciones'
 
     def __unicode__(self):
-        return u'Inspección  #%s' % self.cod_pla
+        return u'Inspección  #%s  (Coloque el siguiente número en la Planilla Física: %s) ' % (self.cod_pla,self.cod_pla)
 
     def fx(self):
         return self.id
@@ -159,41 +159,22 @@ class Estructura(models.Model):
 
     """
 
-    inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspección")
-    nombre_n = models.CharField(verbose_name="Nombre o Nº",
-                                help_text="Nombre o número de la casa o edificio", max_length=100)
 
-    n_pisos = models.IntegerField(verbose_name="Nº de Pisos",
-                                  help_text="Número de pisos que posee la estructura")
+    inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+    nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",max_length=100)
+    n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
+    n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",help_text="Número de semi-sotanos que posee la estructura",default=0)
+    n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",default=0)
+    ciudad = models.CharField(verbose_name="Ciudad",help_text="Ciudad donde se realizó la inspección",max_length=100,null= True, blank=True)
+    urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",max_length=100,null= True, blank=True)
+    sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,null= True, blank=True)
+    calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",max_length=100,null= True, blank=True)
+    pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,null= True, blank=True)
+    #poligono = models.PolygonField(verbose_name="Edificación",srid=4326, null=True,blank=True)
+    #objects = models.GeoManager()
+    poligono = models.ForeignKey(Poligono, null=True,blank=True,default=None)
 
-    n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",
-                                     help_text="Número de semi-sotanos que posee la estructura", default=0)
 
-    n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",
-                                    help_text="Número de sótanos que posee la estructura", default=0)
-
-    ciudad = models.CharField(verbose_name="Ciudad",
-                              help_text="Ciudad donde se realizó la inspección",
-                              max_length=100, null=True, blank=True)
-
-    urb_barrio = models.CharField(verbose_name="Urb.,Barrio",
-                                  help_text="Urb/Barrio donde se realizó la inspección",
-                                  max_length=100, null=True, blank=True)
-
-    sector = models.CharField(verbose_name="Sector",
-                              help_text="Sector donde se realizó la inspección",
-                              max_length=100, null=True, blank=True)
-
-    calle = models.CharField(verbose_name="Calle, Vereda",
-                             help_text="Calle o vereda donde se realizó la inspección",
-                             max_length=100, null=True, blank=True)
-
-    pto_referencia = models.CharField(verbose_name="Punto de referencia",
-                                      help_text="Punto de referencia",
-                                      max_length=100, null=True, blank=True)
-
-    poligono = models.PolygonField(verbose_name="Edificación", srid=4326)
-    objects = models.GeoManager()
 
     class  Meta:
         verbose_name = 'Estructura'
@@ -450,12 +431,12 @@ class Tipo_Estructural(models.Model):
         ('6', '6. PAPT'),
         ('7', '7. PAD'),
         ('8', '8. PAC'),
-        ('9', 'P9. RE'),
+        ('9', '9. RE'),
         ('10', '10. MMC'),
         ('11', '11. MMNC'),
-        ('12', 'P9. PMBC'),
-        ('13', '10. VB'),
-        ('14', '11. VCP'),
+        ('12', '12. PMBC'),
+        ('13', '13. VB'),
+        ('14', '14. VCP'),
     )
 
     inspeccion = models.ForeignKey(Inspeccion, verbose_name="Inspeccion")
@@ -477,7 +458,7 @@ class Tipo_Estructural(models.Model):
                                 default=False)
 
     mca1d = models.BooleanField(verbose_name="4. Sistemas con muros de concreto armado de poco espesor,dispuestos en una sola dirección \
-                                             (algunos sistemas tipo túnel) (MCAMD)",
+                                             (algunos sistemas tipo túnel) (MCA1D)",
                                 help_text="Sistema estructural resistente a cargas verticales y horizontales formado por muros de concreto armado, \
                                           dispuestos en una dirección o poca área transversal de muro en la dirección ortogonal (menor al 25%).",
                                 default=False)
