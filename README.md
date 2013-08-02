@@ -8,6 +8,8 @@ PostgreSQL:
 PostgreSQL es el servidor de base de datos que utiliza el proyecto de sismo-caracas. Se puede descargar e instalar un servidor 
 postgreSQL desde la página oficial: http://www.postgresql.org/download/
 
+Para este proyecto se está usando la versión *PostgreSQL 9.1*.
+
 PostGIS:
 --------
 
