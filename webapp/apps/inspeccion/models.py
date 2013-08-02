@@ -914,7 +914,5 @@ class Anexo(models.Model):
 
     def __unicode__(self):
         return u'Anexos, consultar para mas detalles. '
-
-
-
 #endregion
+

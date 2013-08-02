@@ -1,12 +1,9 @@
 from datetime import date
-import json
-from django.http.response import HttpResponse
+
 
 from braces.views import AjaxResponseMixin, JSONResponseMixin
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
-from django.utils import simplejson
-from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 
 from models import Periodo_Construccion, Poligono
