@@ -98,18 +98,40 @@ Definimos entonces un modelo geográfico (modificar el mismo modelo de inspecci�
 
 	from django.contrib.gis.db import models
 
-	class Poligono(models.Model):
+    class Poligono(models.Model):
+        fid_edific = models.IntegerField()
+        layer = models.CharField(max_length=12)
+        gm_type = models.CharField(max_length=17)
+        elevation = models.FloatField()
+        xdata0 = models.IntegerField()
+        shape_leng = models.FloatField()
+        shape_area = models.FloatField()
+        otro_conta = models.CharField(max_length=250)
+        # acá viene la magia de geodjango
+        poligono = models.MultiPolygonField(null=True, blank=True)
+        objects = models.GeoManager()
 
-		# acá viene la magia de geodjango
-		poligono = models.MultiPolygonField(null=True, blank=True)
-		objects = models.GeoManager()
-		
-	class  Inspeccion(models.Model):
+	class Estructura(models.Model):
 
-		fecha = models.DateField(verbose_name="Fecha", help_text="Día en que se levantó la información de campo mediante la planilla de inspección",auto_now=False,null= True, blank=True)
-		hor_inicio = models.CharField(verbose_name="Hora de Inicio",help_text="Hora en que se inició la inspección",max_length=100,null= True, blank=True)
-		hora_fin = models.CharField(verbose_name="Hora de culminación",help_text="Hora en que se terminó la inspección",max_length=100,null= True, blank=True)
-		poligono = models.ForeignKey(Poligono,verbose_name="Polìgono", blank=True, null=True) # <--
+        inspeccion = models.ForeignKey(Inspeccion,verbose_name="Inspección")
+        nombre_n = models.CharField(verbose_name="Nombre o Nº",help_text="Nombre o número de la casa o edificio",
+                                    max_length=100)
+        n_pisos = models.IntegerField(verbose_name="Nº de Pisos",help_text="Número de pisos que posee la estructura")
+        n_semi_sot = models.IntegerField(verbose_name="Nº de Semi-Sótanos",
+                                        help_text="Número de semi-sotanos que posee la estructura",default=0)
+        n_sotanos = models.IntegerField(verbose_name="Nº de Sótanos",help_text="Número de sótanos que posee la estructura",
+                                        default=0)
+        ciudad = models.CharField(verbose_name="Ciudad",help_text="Ciudad donde se realizó la inspección",max_length=100,
+                                  null= True, blank=True)
+        urb_barrio = models.CharField(verbose_name="Urb.,Barrio",help_text="Urb/Barrio donde se realizó la inspección",
+                                  max_length=100,null= True, blank=True)
+        sector = models.CharField(verbose_name="Sector",help_text="Sector donde se realizó la inspección",max_length=100,
+                                  null= True, blank=True)
+        calle = models.CharField(verbose_name="Calle, Vereda",help_text="Calle o vereda donde se realizó la inspección",
+                                 max_length=100,null= True, blank=True)
+        pto_referencia = models.CharField(verbose_name="Punto de referencia",help_text="Punto de referencia",max_length=100,
+                                          null= True, blank=True)
+        poligono = models.ForeignKey(Poligono, null=True,blank=True,default=None) # <--
 	
 Nótese que ``Poligono`` está heredando de la clase Models, pero esta vez la clase Models viene de ``django.contrib.gis.db`` y no de ``django.db`` como es lo usual.
 Esto transforma nuestra clase en una clase geográfica, pudiendo acceder a la data de postgis como si fuesen tipos de campo normales de django.
@@ -125,13 +147,26 @@ para esto usaremos la herramienta ``LayerMapping`` de django. Hagamos un script 
 
 	from django.contrib.gis.utils import LayerMapping
 	from apps.inspeccion.models import Poligono # <--  Esta la clase que tiene el tipo de dato geoespacial.
-	
-	mapping = {
-			'poligono' : 'POLYGON', # <--  Esta este es el atributo de la clase que es de tipo models.MultiPolygonField
-	}
 
-	lm = LayerMapping(Poligono, 'edif_candelaria.shp', mapping) # <--  Poligono es la clase que importamos, luego viene la ruta al shapefile ('edif_candelaria.shp') y mapping queda igual.
-	lm.save(verbose=True)
+
+    mapping = {
+        'fid_edific' : 'FID_Edific',
+        'layer' : 'LAYER',
+        'gm_type' : 'GM_TYPE',
+        'elevation' : 'ELEVATION',
+        'xdata0' : 'xdata0',
+        'shape_leng' : 'Shape_Leng',
+        'shape_area' : 'Shape_Area',
+        'otro_conta' : 'otro_conta',
+        'geom' : 'POLYGON',
+
+       }
+
+    ds = DataSource(VAR_ROOT + '/Edif_Candelaria.shp')
+
+    lm = LayerMapping(Poligono, ds, mapping)
+
+    lm.save(verbose=True)
 
 Esto mapea el campo de tipo ``POLYGON`` al campo ``poligono`` en nuestro modelo.
 

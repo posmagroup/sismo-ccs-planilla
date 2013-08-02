@@ -1,4 +1,9 @@
 
+<link rel="stylesheet" href="/static/OpenLayers/theme/default/style.css" type="text/css">
+<link rel="stylesheet" href="/static/OpenLayers/style.css" type="text/css">
+<script src="/static/OpenLayers/lib/OpenLayers.js"></script>
+<script src="/static/js/jquery-1.8.2.min.js"></script>
+
 
 <script type="text/javascript">
     var lon = 5;
@@ -30,6 +35,8 @@
     }
     function onFeatureSelect(feature) {
         selectedFeature = feature;
+        
+
         popup = new OpenLayers.Popup.FramedCloud("chicken",
                 feature.geometry.getBounds().getCenterLonLat(),
                 null,
@@ -45,9 +52,9 @@
 
 
     function onFeatureUnselect(feature) {
-        map.removePopup(feature.popup);
+        /*map.removePopup(feature.popup);
         feature.popup.destroy();
-        feature.popup = null;
+        feature.popup = null;*/
     }
 
     function init(){
@@ -120,7 +127,7 @@
 </script>
 
 
-<div id="map" class="smallmap"></div>
+<div id="map"></div>
     
-  
+
 

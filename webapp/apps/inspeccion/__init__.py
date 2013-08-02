@@ -1,14 +1,8 @@
 from django.contrib.gis.gdal.datasource import DataSource
-from django.contrib.gis.geos import MultiPolygon, Polygon
 from django.contrib.gis.utils import LayerMapping
-from models import Poligono, Inspeccion
+from models import Poligono
 from webapp.settings import VAR_ROOT
-#
-#from django.db import connection
-#
-#
-#
-#
+
 mapping = {
     'fid_edific' : 'FID_Edific',
     'layer' : 'LAYER',

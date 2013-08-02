@@ -90,27 +90,8 @@ class Year_By_Periodo_ConstruccionView(JSONResponseMixin, AjaxResponseMixin, Det
 
 
 
+def get_map(request, *args, **kwargs):
 
-class DatabasePolygonView(JSONResponseMixin, AjaxResponseMixin, DetailView):
-    model = Poligono
-    template_name = '404.html'
-
-    def get_object(self,request, *args, **kwargs):
-
-
-        p = [x.geom.kml for x in Poligono.objects.all()[:20]]
-
-        return p
-
-    def get_ajax(self, request, *args, **kwargs):
-
-        obj = self.get_object(request, *args, **kwargs)
-        print obj
-        return HttpResponse(obj, mimetype="text/json")
-
-
-def get_mapa(request, *args, **kwargs):
-
-    template_name ='mapa.html'
+    template_name ='map_widget.html'
 
     return render_to_response(template_name,context_instance=RequestContext(request))
