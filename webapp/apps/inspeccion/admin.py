@@ -1,6 +1,8 @@
 # -*- coding: utf8 -*-
 from django.contrib.gis import admin
 from forms import RequiredInlineFormSet
+from django.contrib.admin import SimpleListFilter
+
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -41,9 +43,9 @@ class ParticipanteAdmin(admin.ModelAdmin):
             'all': ("stylesheets/tipo_estructural.css",)
         }
 
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
+#    def get_model_perms(self, request):
+#        """ Return empty perms dict thus hiding the model from admin index. """
+#        return {}
 
 
 class ParticipanteInline(admin.StackedInline):
@@ -248,9 +250,10 @@ class Anio_ConstruccionAdmin(admin.ModelAdmin):
 
     #exclude = ('fecha_inf',)
 
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
+#    def get_model_perms(self, request):
+#        """ Return empty perms dict thus hiding the model from admin index. """
+#        return {}
+    pass
 
 
 class Anio_ConstruccionInline(admin.StackedInline):
@@ -532,7 +535,17 @@ class AnexoInline(admin.StackedInline):
         js = ("js/sismo_caracas_validaciones.js",)
 
 
-#region  Admin (inlines )de  Inspeccion
+class YearOfInspectionFilter(SimpleListFilter):
+    title = u"año de inspección"
+    parameter_name = "year"
+
+    def lookups(self, request, model_admin):
+        return sorted([(p.id, "%s" % p) for p in Periodo_Construccion.objects.all()])
+
+    def queryset(self, request, queryset):
+        pass
+
+
 class InspeccionAdmin(admin.ModelAdmin):
     """ The main admin class"""
 
@@ -544,6 +557,8 @@ class InspeccionAdmin(admin.ModelAdmin):
     verbose_name = 'Datos Generales'
     verbose_name_plural = 'Datos Generales'
     exclude = ('cod_pla',)
+
+    list_filter = (YearOfInspectionFilter,)
 
     class  Media:
         js = ("js/jquery-1.8.2.min.js",
@@ -557,7 +572,7 @@ class InspeccionAdmin(admin.ModelAdmin):
         }
 
 admin.site.register(Poligono, PoligonoAdmin)
-admin.site.register(Participante, ParticipanteAdmin)
+#admin.site.register(Participante, ParticipanteAdmin)
 admin.site.register(Esquema_Planta, Esquema_PlantaAdmin)
 admin.site.register(Esquema_Elevacion, Esquema_ElevacionAdmin)
 admin.site.register(Entrevistado, EntrevistadoAdmin)
