@@ -389,6 +389,7 @@ class TipoEstructuralFilter(SimpleListFilter):
             return Inspeccion.objects.filter(tipo_estructural__tipo_predomi=self.value)
 
 
+
 class InspeccionAdmin(admin.ModelAdmin):
     """ The main admin class"""
 
@@ -402,6 +403,27 @@ class InspeccionAdmin(admin.ModelAdmin):
     exclude = ('cod_pla',)
 
     list_filter = [YearOfInspectionFilter, TipoEstructuralFilter]
+
+    list_display = ('cod_insp', 'tipo_str_predom', 'anio_const',)
+
+    def anio_const(self, obj):
+        """ Retorna el año de inspección """
+        return "%s" % obj.anio_construccion_set.all()[0].anio
+
+    def cod_insp(self, obj):
+        """ Retorna el código de la inspección """
+        return "Inspección %s" % obj.id
+
+    def tipo_str_predom(self, obj):
+        """ Retorna el tipo de estructura predominante """
+        tipo = obj.tipo_estructural_set.all()[0]
+        valor = tipo.TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES[int(tipo.tipo_predomi)]
+
+        return "%s" % valor[1]
+
+    anio_const.short_description = "Año de Construcción"
+    cod_insp.short_description = "Código de la Inspección"
+    tipo_str_predom.short_description = "Tipo Estructural Predominante"
 
     class  Media:
         js = ("js/jquery-1.8.2.min.js",
