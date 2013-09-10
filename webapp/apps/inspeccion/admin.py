@@ -1,8 +1,9 @@
 # -*- coding: utf8 -*-
+
 from django.contrib.gis import admin
-from forms import RequiredInlineFormSet
 from django.contrib.admin import SimpleListFilter
 
+from forms import RequiredInlineFormSet
 
 from models import Entrevistado
 from models import Condicion_Terreno
@@ -34,18 +35,19 @@ class PoligonoAdmin(admin.GeoModelAdmin):
     }
 
 
-#region  2.Datos de los participantes (Modelo Participante)
-class ParticipanteAdmin(admin.ModelAdmin):
+#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
+class Periodo_ConstruccionAdmin(admin.ModelAdmin):
 
     class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
+        js = ("js/periodo_construccion.js",)
 
-#    def get_model_perms(self, request):
-#        """ Return empty perms dict thus hiding the model from admin index. """
-#        return {}
+    fieldsets = (
+        (None, {
+            'fields': (
+                ('periodo', 'anio_inici', 'anio_fin'),
+            )
+        }),
+    )
 
 
 class ParticipanteInline(admin.StackedInline):
@@ -57,19 +59,6 @@ class ParticipanteInline(admin.StackedInline):
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
-
-
-#region  3.Datos del entrevistado (Modelo Entrevistado)
-class EntrevistadoAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
 
 
 class EntrevistadoInline(admin.StackedInline):
@@ -86,19 +75,6 @@ class EntrevistadoInline(admin.StackedInline):
             )
         }),
     )
-
-
-#region  4.Identificación y ubicación de la edificación (Modelo Estructura)
-class EstructuraAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index.  """
-        return {}
 
 
 class EstructuraInline(admin.StackedInline):
@@ -122,42 +98,11 @@ class EstructuraInline(admin.StackedInline):
         }),
     )
 
-
-
 #    class Media:
 #        css = {
 #            "all": ("OpenLayers/theme/default/style.css","OpenLayers/style.css",)
 #        }
 #        js = ("OpenLayers/lib/OpenLayers.js",)
-
-
-#region  5.Uso de la Edificación (Modelo Uso)
-class UsoAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('u_gubernam', 'u_educativ'),
-                ('u_bomberos', 'u_dep_recr'),
-                ('u_pr_civil',  'u_cultural'),
-                ('u_policial', 'u_industri'),
-                ('u_militar', 'u_comercia'),
-                ('u_viv_pop', 'u_oficina'),
-                ('u_viv_unif', 'u_religios'),
-                ('u_viv_mult', 'u_otros'),
-                ('u_med_asis'),
-            ),
-        }),
-    )
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
 
 
 class UsoInline(admin.StackedInline):
@@ -189,28 +134,6 @@ class UsoInline(admin.StackedInline):
         }
 
 
-#region  6.Capacidad de Ocupación (Modelo Capacidad_Ocupación)
-class Capacidad_OcupacionAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('habitantes', 't_o_manana'),
-                ('t_o_tarde', 't_o_noche'),
-            ),
-        }),
-    )
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
-
-
 class Capacidad_OcupacionInline(admin.StackedInline):
     model = Capacidad_Ocupacion
     can_delete = False
@@ -231,31 +154,6 @@ class Capacidad_OcupacionInline(admin.StackedInline):
         }
 
 
-#region  7.Año de Construccion (Modelo Periodo_Construccion y Anio_Construccion)
-class Periodo_ConstruccionAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/periodo_construccion.js",)
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('periodo', 'anio_inici', 'anio_fin'),
-            )
-        }),
-    )
-
-
-class Anio_ConstruccionAdmin(admin.ModelAdmin):
-
-    #exclude = ('fecha_inf',)
-
-#    def get_model_perms(self, request):
-#        """ Return empty perms dict thus hiding the model from admin index. """
-#        return {}
-    pass
-
-
 class Anio_ConstruccionInline(admin.StackedInline):
     model = Anio_Construccion
     can_delete = False
@@ -263,6 +161,9 @@ class Anio_ConstruccionInline(admin.StackedInline):
     max_num = 1
     #exclude = ('fecha_inf',)
     formset = RequiredInlineFormSet
+
+    def periodo(self, instance):
+        return sorted([(p.id, "%s" % p) for p in Periodo_Construccion.objects.all()])
 
     fieldsets = (
         (None, {
@@ -277,18 +178,6 @@ class Anio_ConstruccionInline(admin.StackedInline):
         js = ("js/sismo_caracas_validaciones.js",)
 
 
-#region  8.Condicion del terreno (Modelo Condicion_Terreno)
-class Condicion_TerrenoAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-    def get_model_perms(self, request):
-        """
-        Return empty perms dict thus hiding the model from admin index.
-        """
-        return {}
-
 
 class Condicion_TerrenoInline(admin.StackedInline):
     model = Condicion_Terreno
@@ -299,33 +188,6 @@ class Condicion_TerrenoInline(admin.StackedInline):
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
-
-
-#region  9.Tipo Estructural (Modelo Tipo_Estructural)
-class Tipo_EstructuralAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('pca', 'pcap'),
-                ('mca2d', 'mca1d'),
-                ('pa', 'papt'),
-                ('pad', 'pac'),
-                ('pre', 'mmc'),
-                ('mmnc', 'vb'),
-                ('vcp'),
-            )
-        }),
-    )
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index."""
-        return {}
 
 
 class Tipo_EstructuralInline(admin.StackedInline):
@@ -350,24 +212,10 @@ class Tipo_EstructuralInline(admin.StackedInline):
         }),
     )
 
-
-class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-
-#region  10.Esquema Planta (Modelo Esquema_Planta)
-class Esquema_PlantaAdmin(admin.ModelAdmin):
-
     class Media:
         css = {
             'all': ("stylesheets/tipo_estructural.css",)
         }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
 
 
 class Esquema_PlantaInline(admin.StackedInline):
@@ -383,19 +231,6 @@ class Esquema_PlantaInline(admin.StackedInline):
         }
 
 
-#region  11.Esquema de Elevaciòn (Modelo Esquema_Elevacion)
-class Esquema_ElevacionAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index."""
-        return {}
-
-
 class Esquema_ElevacionInline(admin.StackedInline):
     model = Esquema_Elevacion
     can_delete = False
@@ -407,19 +242,6 @@ class Esquema_ElevacionInline(admin.StackedInline):
         css = {
             'all': ("stylesheets/tipo_estructural.css",)
         }
-
-
-#region  12.Irregularidades (Modelo Irregularidad)
-class IrregularidadAdmin(admin.ModelAdmin):
-
-    class Media:
-        css = {
-            'all': ("stylesheets/tipo_estructural.css",)
-        }
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
 
 
 class IrregularidadInline(admin.StackedInline):
@@ -447,26 +269,30 @@ class IrregularidadInline(admin.StackedInline):
         }
 
 
-#region  13.Grados de deterioro (Modelo  Grado_Deterioro)
-class Grado_DeterioroAdmin(admin.ModelAdmin):
-
-    fieldsets = (
-        (None, {
-            'fields': (
-                ('ec_agri_es', 'ea_corr_ac'),
-                ('agrietamie', 'e_mantenim'),
-            )
-        }),
-    )
+class Esquema_ElevacionInline(admin.StackedInline):
+    model = Esquema_Elevacion
+    can_delete = False
+    verbose_name_plural = 'Esquema de Elevación'
+    max_num = 1
+    formset = RequiredInlineFormSet
 
     class Media:
         css = {
             'all': ("stylesheets/tipo_estructural.css",)
         }
 
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
+
+class Esquema_ElevacionInline(admin.StackedInline):
+    model = Esquema_Elevacion
+    can_delete = False
+    verbose_name_plural = 'Esquema de Elevación'
+    max_num = 1
+    formset = RequiredInlineFormSet
+
+    class Media:
+        css = {
+            'all': ("stylesheets/tipo_estructural.css",)
+        }
 
 
 class Grado_DeterioroInline(admin.StackedInline):
@@ -490,37 +316,15 @@ class Grado_DeterioroInline(admin.StackedInline):
         }
 
 
-#region  14.Observaciones (Modelo Observacion)
-class ObservacionAdmin(admin.ModelAdmin):
-
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index."""
-        return {}
-
 class ObservacionInline(admin.StackedInline):
     model = Observacion
     can_delete = False
     verbose_name_plural = 'Observaciones (máximo 140 caracteres)'
     max_num = 1
     formset = RequiredInlineFormSet
-    class  Media:
-        js = ("js/sismo_caracas_validaciones.js",)
-
-
-#region  15.Anexos (Modelo Anexo)
-class AnexoAdmin(admin.ModelAdmin):
-
-    list_display = ('foto_facha', 'pla_esca', 'show_image')
 
     class  Media:
         js = ("js/sismo_caracas_validaciones.js",)
-
-    def get_model_perms(self, request):
-        """ Return empty perms dict thus hiding the model from admin index. """
-        return {}
 
 
 class AnexoInline(admin.StackedInline):
@@ -536,6 +340,8 @@ class AnexoInline(admin.StackedInline):
 
 
 class YearOfInspectionFilter(SimpleListFilter):
+    """ Adds a filter by 'periodo de construccion' to the admin list."""
+
     title = u"año de inspección"
     parameter_name = "year"
 
@@ -543,7 +349,24 @@ class YearOfInspectionFilter(SimpleListFilter):
         return sorted([(p.id, "%s" % p) for p in Periodo_Construccion.objects.all()])
 
     def queryset(self, request, queryset):
-        pass
+        if self.value() is not None:
+            return Inspeccion.objects.filter(anio_construccion__periodo=self.value)
+        return Inspeccion.objects.all()
+
+
+class TipoEstructuralFilter(SimpleListFilter):
+    """ Adds a filter by 'tipo estructural' to the admin list."""
+
+    title = u"tipología"
+    parameter_name = "tipo"
+
+    def lookups(self, request, model_admin):
+        return Tipo_Estructural.TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES
+
+    def queryset(self, request, queryset):
+        if self.value() is not None:
+            return Inspeccion.objects.filter(tipo_estructural__tipo_predomi=self.value)
+        return Inspeccion.objects.all()
 
 
 class InspeccionAdmin(admin.ModelAdmin):
@@ -558,7 +381,7 @@ class InspeccionAdmin(admin.ModelAdmin):
     verbose_name_plural = 'Datos Generales'
     exclude = ('cod_pla',)
 
-    list_filter = (YearOfInspectionFilter,)
+    list_filter = (YearOfInspectionFilter, TipoEstructuralFilter)
 
     class  Media:
         js = ("js/jquery-1.8.2.min.js",
@@ -573,17 +396,17 @@ class InspeccionAdmin(admin.ModelAdmin):
 
 admin.site.register(Poligono, PoligonoAdmin)
 #admin.site.register(Participante, ParticipanteAdmin)
-admin.site.register(Esquema_Planta, Esquema_PlantaAdmin)
-admin.site.register(Esquema_Elevacion, Esquema_ElevacionAdmin)
-admin.site.register(Entrevistado, EntrevistadoAdmin)
-admin.site.register(Estructura, EstructuraAdmin)
-admin.site.register(Capacidad_Ocupacion, Capacidad_OcupacionAdmin)
-admin.site.register(Grado_Deterioro, Grado_DeterioroAdmin)
-admin.site.register(Uso, UsoAdmin)
-admin.site.register(Anexo, AnexoAdmin)
-admin.site.register(Irregularidad, IrregularidadAdmin)
-admin.site.register(Tipo_Estructural, Tipo_EstructuralAdmin)
-admin.site.register(Condicion_Terreno, Condicion_TerrenoAdmin)
+#admin.site.register(Esquema_Planta, Esquema_PlantaAdmin)
+#admin.site.register(Esquema_Elevacion, Esquema_ElevacionAdmin)
+#admin.site.register(Entrevistado, EntrevistadoAdmin)
+#admin.site.register(Estructura, EstructuraAdmin)
+#admin.site.register(Capacidad_Ocupacion, Capacidad_OcupacionAdmin)
+#admin.site.register(Grado_Deterioro, Grado_DeterioroAdmin)
+#admin.site.register(Uso, UsoAdmin)
+#admin.site.register(Anexo, AnexoAdmin)
+#admin.site.register(Irregularidad, IrregularidadAdmin)
+#admin.site.register(Tipo_Estructural, Tipo_EstructuralAdmin)
+#admin.site.register(Condicion_Terreno, Condicion_TerrenoAdmin)
 admin.site.register(Periodo_Construccion, Periodo_ConstruccionAdmin)
-admin.site.register(Anio_Construccion, Anio_ConstruccionAdmin)
+#admin.site.register(Anio_Construccion, Anio_ConstruccionAdmin)
 admin.site.register(Inspeccion, InspeccionAdmin)

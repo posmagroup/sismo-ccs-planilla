@@ -284,7 +284,7 @@ class Periodo_Construccion(models.Model):
 
     class  Meta:
         verbose_name = 'Período de Construcción'
-        verbose_name_plural = 'Período de Construcción'
+        verbose_name_plural = 'Períodos de Construcción'
 
     def __unicode__(self):
         if (self.periodo == '1'):
@@ -554,8 +554,8 @@ class Esquema_Planta(models.Model):
                                             edificio en planta sea mayor a 5.")
 
     class  Meta:
-        verbose_name = 'Esquema Planta'
-        verbose_name_plural = 'Esquema Planta'
+        verbose_name = 'Esquema de Planta'
+        verbose_name_plural = 'Esquemas de Planta'
 
     def __unicode__(self):
         return u'Esquema Planta, consultar para mas detalles. '
