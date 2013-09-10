@@ -27,13 +27,6 @@ from forms import EstructuraInlineForm
 
 
 class PoligonoAdmin(admin.GeoModelAdmin):
-    """
-        Admin de la clase Poligono.
-        Hereda de GeoModelAdmin permitiendo
-        que django se encarge de la visualizacion
-        de los poligonos.
-    """
-
     options = {
         'default_lat':  10.50882052,
         'default_lon': -66.89968507,
@@ -377,15 +370,15 @@ class YearOfInspectionFilter(SimpleListFilter):
         return sorted([(p.id, "%s" % p) for p in Periodo_Construccion.objects.all()])
 
     def queryset(self, request, queryset):
+        print self.value()
         if self.value() is not None:
             return Inspeccion.objects.filter(anio_construccion__periodo=self.value)
-        return Inspeccion.objects.all()
 
 
 class TipoEstructuralFilter(SimpleListFilter):
     """ Adds a filter by 'tipo estructural' to the admin list."""
 
-    title = u"tipología estructural."
+    title = u"tipología estructural predominante."
     parameter_name = "tipo"
 
     def lookups(self, request, model_admin):
@@ -394,7 +387,6 @@ class TipoEstructuralFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         if self.value() is not None:
             return Inspeccion.objects.filter(tipo_estructural__tipo_predomi=self.value)
-        return Inspeccion.objects.all()
 
 
 class InspeccionAdmin(admin.ModelAdmin):
@@ -409,7 +401,7 @@ class InspeccionAdmin(admin.ModelAdmin):
     verbose_name_plural = 'Datos Generales'
     exclude = ('cod_pla',)
 
-    list_filter = (YearOfInspectionFilter, TipoEstructuralFilter)
+    list_filter = [YearOfInspectionFilter, TipoEstructuralFilter]
 
     class  Media:
         js = ("js/jquery-1.8.2.min.js",
