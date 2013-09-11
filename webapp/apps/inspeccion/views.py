@@ -92,19 +92,3 @@ def get_map(request, *args, **kwargs):
     template_name ='map_widget.html'
 
     return render_to_response(template_name,context_instance=RequestContext(request))
-
-
-import csv
-from django.http import HttpResponse
-
-
-def response_csv(request):
-    # Create response object.
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = "attachment; filename='somefile.csv'"
-
-    writer = csv.writer(response)
-    writer.writerow(['1', '2', '3'])
-    writer.writerow(['culo', 'peo', 'seis'])
-
-    return response
