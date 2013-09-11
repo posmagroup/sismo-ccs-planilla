@@ -399,10 +399,10 @@ def return_csv(self, request, queryset):
         for obj in queryset:
             writer.writerow(['Identificador', 'Fecha de Inspección', 'Hora de Inicio', 'Hora de Finalización'])
             writer.writerow([
-                            "%s" % obj.id,
-                            "%s" % obj.fecha,
-                            "%s" % obj.hor_inicio,
-                            "%s" % obj.hora_fin,
+                            "%s," % obj.id,
+                            "%s," % obj.fecha,
+                            "%s," % obj.hor_inicio,
+                            "%s\n" % obj.hora_fin,
                             ])
 
         return response
