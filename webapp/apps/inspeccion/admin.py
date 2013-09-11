@@ -370,7 +370,6 @@ class YearOfInspectionFilter(SimpleListFilter):
         return sorted([(p.id, "%s" % p) for p in Periodo_Construccion.objects.all()])
 
     def queryset(self, request, queryset):
-        print self.value()
         if self.value() is not None:
             return Inspeccion.objects.filter(anio_construccion__periodo=self.value)
 
@@ -389,6 +388,27 @@ class TipoEstructuralFilter(SimpleListFilter):
             return Inspeccion.objects.filter(tipo_estructural__tipo_predomi=self.value)
 
 
+# Actions
+def return_csv(self, request, queryset):
+        import csv
+        from django.http import HttpResponse
+        """ Acción para el admin que retorna las inspecciones seleccionadas como un CSV """
+        response = HttpResponse(content_type="text/csv")
+        response["Content-Disposition"] = 'attachment; filename="listado_inspecciones_sismocaracas.csv"'
+        writer = csv.writer(response)
+        for obj in queryset:
+            writer.writerow(['Identificador', 'Fecha de Inspección', 'Hora de Inicio', 'Hora de Finalización'])
+            writer.writerow([
+                            "%s" % obj.id,
+                            "%s" % obj.fecha,
+                            "%s" % obj.hor_inicio,
+                            "%s" % obj.hora_fin,
+                            ])
+
+        return response
+
+return_csv.short_description = "Generar archivo separado por comas (CSV)"
+
 
 class InspeccionAdmin(admin.ModelAdmin):
     """ The main admin class"""
@@ -403,8 +423,8 @@ class InspeccionAdmin(admin.ModelAdmin):
     exclude = ('cod_pla',)
 
     list_filter = [YearOfInspectionFilter, TipoEstructuralFilter]
-
     list_display = ('cod_insp', 'tipo_str_predom', 'anio_const',)
+    actions = [return_csv]
 
     def anio_const(self, obj):
         """ Retorna el año de inspección """
@@ -418,12 +438,7 @@ class InspeccionAdmin(admin.ModelAdmin):
         """ Retorna el tipo de estructura predominante """
         tipo = obj.tipo_estructural_set.all()[0]
         valor = tipo.TIPO_ESTRUCTURAL_PREDOMINANTE_CHOICES[int(tipo.tipo_predomi)]
-
         return "%s" % valor[1]
-
-    anio_const.short_description = "Año de Construcción"
-    cod_insp.short_description = "Código de la Inspección"
-    tipo_str_predom.short_description = "Tipo Estructural Predominante"
 
     class  Media:
         js = ("js/jquery-1.8.2.min.js",
@@ -435,6 +450,12 @@ class InspeccionAdmin(admin.ModelAdmin):
         css = {
             'all': ("stylesheets/tipo_estructural.css",)
         }
+
+    # Short descriptions for listing
+    anio_const.short_description = "Año de Construcción"
+    cod_insp.short_description = "Código de la Inspección"
+    tipo_str_predom.short_description = "Tipo Estructural Predominante"
+
 
 admin.site.register(Poligono, PoligonoAdmin)
 admin.site.register(Periodo_Construccion, Periodo_ConstruccionAdmin)
