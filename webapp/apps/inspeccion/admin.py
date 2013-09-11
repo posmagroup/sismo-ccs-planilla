@@ -402,7 +402,7 @@ def return_csv(self, request, queryset):
                             "%s," % obj.id,
                             "%s," % obj.fecha,
                             "%s," % obj.hor_inicio,
-                            "%s," % obj.hora_fin,
+                            "%s\n" % obj.hora_fin,
                             ])
 
         return response
