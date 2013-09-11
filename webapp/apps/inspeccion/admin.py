@@ -394,11 +394,17 @@ def return_csv(self, request, queryset):
         from django.http import HttpResponse
         """ Acción para el admin que retorna las inspecciones seleccionadas como un CSV """
         response = HttpResponse(content_type="text/csv")
-        response["Content-Dispostion"] = 'attachment; filename="listado_inspecciones_sismocaracas.csv"'
+        response["Content-Disposition"] = 'attachment; filename="listado_inspecciones_sismocaracas.csv"'
         writer = csv.writer(response)
         for obj in queryset:
-            writer.writerow(['hola'])
-            print obj
+            writer.writerow(['Identificador', 'Fecha de Inspección', 'Hora de Inicio', 'Hora de Finalización'])
+            writer.writerow([
+                            "%s" % obj.id,
+                            "%s" % obj.fecha,
+                            "%s" % obj.hor_inicio,
+                            "%s" % obj.hora_fin,
+                            ])
+
         return response
 
 return_csv.short_description = "Generar archivo separado por comas (CSV)"
