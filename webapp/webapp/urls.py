@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 admin.autodiscover()
 
-from apps.inspeccion.views import Periodo_Construccion_By_YearView, Year_By_Periodo_ConstruccionView, get_map, response_csv
+from apps.inspeccion.views import Periodo_Construccion_By_YearView, Year_By_Periodo_ConstruccionView, get_map
 
 urlpatterns = patterns('',
 
@@ -23,8 +23,6 @@ urlpatterns = patterns('',
     url('^pages/', include('django.contrib.flatpages.urls')),
 
     url('^mapa/', get_map),
-
-    url('^csv/', response_csv),
 
     url(r'^public/(?P<path>.*)$',
         'django.views.static.serve',
